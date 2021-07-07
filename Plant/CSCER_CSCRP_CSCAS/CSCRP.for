@@ -1948,7 +1948,7 @@
 
           ! IDETO FILES
           ! NB. Renaming of Overview and Evaluate handled by CSM
-          FNAMEOV = 'Overview.'//out
+          FNAMEOV = 'OVERVIEW.'//out !TF Fixed file name.
           FNAMEEVAL = 'Evaluate.'//out
           FNAMEMEAS = 'Measured.'//out
           CALL GETLUN (FNAMEEVAL,fnumeval)
