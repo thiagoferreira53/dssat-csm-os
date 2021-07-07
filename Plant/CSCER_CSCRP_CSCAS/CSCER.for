@@ -7869,7 +7869,7 @@
               WRITE (fnumwrk,*) 'Writing OVERVIEW'
               
               FNAMETMP = ' '
-              FNAMETMP(1:12) = 'Overview.'//out
+              FNAMETMP(1:12) = 'OVERVIEW.'//out ! TF 03/11/2020 - Fixed file name 
               
               IF (FILEIOT(1:2).EQ.'DS') THEN
                 IF (RUN.EQ.1 .AND. RUNI.EQ.1) THEN
