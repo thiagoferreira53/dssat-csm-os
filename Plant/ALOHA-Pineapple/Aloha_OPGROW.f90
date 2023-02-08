@@ -11,7 +11,9 @@
         NSTRES, PLTPOP, RLV, ROOTN,  RTDEP, RTWT, SKWT,   &
         STMWT, STOVN, STOVWT, SWFAC, TURFAC, WTNCAN,      &
         WTNGRN, WTNUP, YRPLT,                             &
-        VNAM, VWATM, CNAM)    !Output for Overview.OUT 
+        VNAM, VWATM, CNAM)!,                                & !Output for Overview.OUT
+       !SRADGRO, PARGRO, SUMSRADGRO, SUMSRAD, SUMPARGRO, SUMPAR,
+       !TMAXGRO, SUMTMAXGRO, SUMTMAX,TBASE, SUMDTT, DTT, SUMDTTGRO, GDDFR)     
 
       USE Aloha_mod
       IMPLICIT  NONE
@@ -29,6 +31,9 @@
       REAL BASLFWT, SKWT, TOPWT 
       REAL STOVN, GRAINN, STOVWT, ROOTN, WTNVEG, WTNGRN, PCNVEG, PCNGRN
       REAL VNAM, VWATM, CNAM
+      REAL TBASE, DTT, SUMDTT, TMAXGRO, SUMTMAXGRO, TEMPM
+      REAL SUMTMAX, TMAX, SUMDTTGRO, SUMSRAD, SRAD, SUMSRADGRO, GDDFR
+      REAL SUMPAR, SUMPARGRO, SRADGRO, PARGRO  
 
       INTEGER I, LEAFNO
       INTEGER DAP,YRPLT,YRDOY
@@ -201,7 +206,7 @@
             WTLF = LFWT * PLTPOP      !leaf, g/m2
             LWAD = LFWT * GM2KG       !leaf, kg/ha
             SWAD = STMWT* GM2KG       !stem, kg/ha
-            VWAD = LWAD + SWAD        !veg,  kg/ha
+            VWAD = LWAD + SWAD + BWAD !veg,  kg/ha
                       
             
             BWAD = BASLFWT * GM2KG    !basal, kg/ha
@@ -238,15 +243,15 @@
             ENDIF        
             
             XLAI   = LAI
-            IF (WTLF .GT. 0.0) THEN
-               !SLA  = LAI * 10000 / WTLF   ! SLA es el área específica de la hoja dividida entre su peso seco. Por lo que creo que lo correcto es:
-                                            
-               SLA  = LAI * 10000 / LWAD
-            
+            IF (WTLF .GT. 0.0) THEN        ! En esta fï¿½rmula los valores de SLA obtenidos son 10 veces mayores a los de la literatura de Bartholomew pag 123
+               SLA  = LAI * 10000 / WTLF   !   pero es que en este libro en el grï¿½fico las unidades son m2/kg. Esta fï¿½rmula calcula SLA en cm2/g.
+           !                               ! SLA es el ï¿½rea especï¿½fica de la hoja dividida entre su peso seco.
                
-                                           ! Puesto que SLA = LAI*10000 / WTLF  (divide el área de las hoja en una hectárea (Lo que es correcto) 
-                                           ! entre gramos de hoja por metro cuadrado (que es incorrecto) que es lo que representa WTLF), ya que
-                                           ! debería ser Kg de hoja en una hectárea. No es lo mismo gr/m2 que Kg/ha (hay un digito demás en el calculo)
+        !    IF (LWAD .GT. 0.0) THEN         !  Estuve confundido con esto, pero luego descubrï¿½ que el asunto es que se debe reportar en                      
+        !       SLA  = LAI * 10000 / LWAD    !  cm2/g, si yo lo calculo como m2/kg entonces los valores deben ser 10 veces menores.
+                                            ! Esta fï¿½rmula calcula SLA en m2/kg
+               
+
                
                
                

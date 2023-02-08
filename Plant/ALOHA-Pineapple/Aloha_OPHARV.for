@@ -14,6 +14,10 @@
      &   PSTRES1, PSTRES2, STGDOY, STOVER, SWFAC,         !Input
      &   TURFAC, VWATM, WTINITIAL, WTNCAN, WTNGRN,        !Input
      &   WTNUP, YIELD, YRDOY, YRPLT)                      !Input
+!    &   EDATE12, EDATE13,
+!    &   EDATE1, EDATE2, EDATE3, EDATE5, EDATE6, EDATE7,
+!    &   BIOMAS1, LAI1, BIOMAS13, LAI13, BIOMAS2, LAI2,
+!    &   BIOMAS3, LAI3, BIOMAS4, LAI4, LN2, LN3, LN4, HIFact)   
 
 !-----------------------------------------------------------------------
       USE Aloha_mod
@@ -32,7 +36,16 @@
 
       INTEGER DMAT 
       INTEGER DNR7, DYNAMIC, ERRNUM, FOUND
-      INTEGER IMAT, IFORC, IHARV, DFR1, DFORC, DHARV, HDAP  
+      INTEGER IMAT, IFORC, IHARV, DFR1, DFORC, DHARV, HDAP
+      !INTEGER DROOT, IROOT, RIDAP, EDATE12
+      !INTEGER DFNL, IFNL, LEDAP, EDATE13
+      !INTEGER DLC1, ILC1, L1DAP, EDATE1
+      !INTEGER DLC2, ILC2, L2DAP, EDATE2
+      !INTEGER DLC3, ILC3, L3DAP, EDATE3
+      !INTEGER DROH, IROH, OHDAF, EDATE5
+      !INTEGER DREA, IREA, EADAF, EDATE6
+      !INTEGER DRLA, IRLA, LADAF, EDATE7
+        
       INTEGER ISDATE, ISENS, LINC, LNUM, LUNIO, MDATE, ISTAGE, RUN
       INTEGER TIMDIF, TRTNUM, YRNR1, YRNR2, YRNR3
       INTEGER YRDOY, YREMRG, YRNR5, YRSIM, YRPLT
@@ -43,6 +56,12 @@
       REAL AGEFAC, BWAH
       REAL CRWNWT, EYEWT, FBIOM, FBTONS, FRTWT, FRUITS
       REAL GPP, GPSM, HI
+      !REAL RIBIO, BIOMAS1, RILAI, LAI1
+      !REAL LEBIO, BIOMAS13, LELAI, LAI13
+      !REAL L1BIO, BIOMAS2, L1LAI, LAI2, L1LN, LN2
+      !REAL L2BIO, BIOMAS3, L2LAI, LAI3, L2LN, LN3
+      !REAL L3BIO, BIOMAS4, L3LAI, LAI4, L3LN, LN4, HIFact
+      
       REAL MAXLAI, NSTRES, PBIOMS, PEYEWT, PSDWT, PLTPOP 
       REAL Pstres1, Pstres2   
       REAL SDRATE
@@ -193,12 +212,12 @@
       PlantStres % ACTIVE = .FALSE.
       PlantStres % NSTAGES = 5
 
-      PlantStres % StageName(0) = 'Planting to Harvest    '
-      PlantStres % StageName(1) = 'Emergence - Foliar C1  '
-      PlantStres % StageName(2) = 'Foliar C1 - Forcing    '
-      PlantStres % StageName(3) = 'Forcing - Open Heart   '
-      PlantStres % StageName(4) = 'Open Heart - EarlyAnthe'
-      PlantStres % StageName(5) = 'EarlyAnthe - Fruit Harv'
+      PlantStres % StageName(0) = 'Planting   to Harvest  ' !PlantStres % StageName(0) = 'Planting to Harvest    '
+      PlantStres % StageName(1) = 'Emergence  - Foliar C3 ' !PlantStres % StageName(1) = 'Emergence - Foliar C1  ' 
+      PlantStres % StageName(2) = 'Forcing    - Open Heart' !PlantStres % StageName(2) = 'Foliar C1 - Forcing    '
+      PlantStres % StageName(3) = 'Open Heart - EarlyAnthe' !PlantStres % StageName(3) = 'Forcing - Open Heart   '
+      PlantStres % StageName(4) = 'EarlyAnthe - LastAnthes' !PlantStres % StageName(4) = 'Open Heart - EarlyAnthe' 
+      PlantStres % StageName(5) = 'LastAnthes - PhMaturity' !PlantStres % StageName(5) = 'EarlyAnthe - Fruit Harv' 
 
       Biomass_kg_ha = BIOMAS * 10. !Convert from g/m2 to kg/ha
 
@@ -246,9 +265,9 @@
 
       PlantStres % ACTIVE = .FALSE.
       SELECT CASE(ISTAGE)
-      CASE(1,2,3,4,5)
+      CASE(1,2,3,4,5)         !CASE(1,2,3,4,5)
         PlantStres % ACTIVE(ISTAGE) = .TRUE.
-      CASE(6)
+      CASE(6)                 !CASE(6)
         PlantStres % ACTIVE(5) = .TRUE.
       END SELECT
 
