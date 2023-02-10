@@ -1648,3 +1648,112 @@ C=======================================================================
         only_dir = full_path(1:pos)        
 
       end subroutine get_dir
+
+C=======================================================================
+C  VERSION CONTROL FUNCTION
+C
+C  Subroutine to check the version on input files
+C-----------------------------------------------------------------------
+C  Revision history
+C
+C  01/27/23 TF  Written
+C-----------------------------------------------------------------------
+
+      SUBROUTINE VCHECK(DIRFILE)
+      
+      USE ModuleDefs
+      USE ModuleData
+
+      IMPLICIT NONE
+
+      SAVE
+     
+      CHARACTER (LEN=*)    DIRFILE
+      CHARACTER*5 VCURRENT
+      CHARACTER (LEN=80)   TLINE
+      CHARACTER (LEN=30)   TLINE2
+      CHARACTER (LEN=1)    COLON
+      INTEGER              L,FNUMERR,FNUMTMP,TVILENT,ERRNUM
+      LOGICAL              FFLAG,FOPEN
+      CHARACTER (len=8)  MODEL
+      CHARACTER*2  CROP
+      CHARACTER*12 REQHEADER
+      
+      TYPE (ControlType) CONTROL
+      CALL GET(CONTROL)
+      
+      CROP = CONTROL % CROP
+      MODEL = CONTROL % MODEL
+      
+      WRITE (VCURRENT,"(I1,'.',I1,'.',I1)")
+     &    VERSION%Major, VERSION%Minor, VERSION%Model
+     
+      REQHEADER = CROP//MODEL(3:6)//VCURRENT
+      
+      
+      INQUIRE (FILE = dirfile,EXIST = fflag)
+      IF (.NOT.fflag) THEN
+        CALL Getlun('ERROR.OUT',fnumerr)
+        OPEN(UNIT=fnumerr,FILE='ERROR.OUT')
+        WRITE (fnumerr,*) ' Could not find input file! '
+        WRITE (fnumerr,*) ' File was: ',dirfile
+        WRITE (fnumerr,*) ' Version code sought was: ',REQHEADER
+        WRITE (*,*) ' Could not find input file! '
+        WRITE (*,*) ' File was: ',dirfile
+        WRITE (*,*) ' Version code sought was: ',REQHEADER
+        WRITE (*,*) ' Program will have to stop'
+        CLOSE (fnumerr)
+        STOP ' '
+      ELSE
+        COLON = 'N'
+        OPEN (UNIT = FNUMTMP,FILE = DIRFILE)
+        READ(FNUMTMP,'(A80)',IOSTAT=ERRNUM) TLINE    !portability
+        IF (ERRNUM < 0) THEN       !EOF - file is empty
+          CALL Getlun('ERROR.OUT',fnumerr)
+          OPEN(UNIT=fnumerr,FILE='ERROR.OUT')
+          WRITE (fnumerr,*) ' Input file empty! '
+          WRITE (fnumerr,*) ' File was: ',dirfile
+          WRITE (*,*) ' Input file empty! '
+          WRITE (*,*) ' File was: ',dirfile(1:60)
+          WRITE (*,*) ' Program will have to stop'
+          CLOSE (fnumerr)
+          STOP ' '
+        ENDIF
+        IF (TVILENT(TLINE).LT.10) THEN
+          CALL Getlun('ERROR.OUT',fnumerr)
+          OPEN(UNIT=fnumerr,FILE='ERROR.OUT')
+          WRITE (fnumerr,*) ' Input file empty! '
+          WRITE (fnumerr,*) ' File was: ',dirfile
+          WRITE (*,*) ' Input file empty! '
+          WRITE (*,*) ' File was: ',dirfile
+          WRITE (*,*) ' Program will have to stop'
+          CLOSE (fnumerr)
+          STOP ' '
+        ENDIF
+        DO L = 1,50
+          IF (COLON.EQ.'Y' .AND. TLINE(L:L).NE.' ') EXIT
+          IF (TLINE(L:L).EQ.':' .OR. TLINE(L:L).EQ.' ') COLON='Y'
+        ENDDO
+        CLOSE (FNUMTMP)
+        IF (TLINE(L:L+13) .NE. REQHEADER) THEN
+          CALL Getlun ('ERROR.OUT',fnumerr)
+          OPEN (UNIT = fnumerr,FILE = 'ERROR.OUT')
+          WRITE(fnumerr,*) ' '
+          WRITE(fnumerr,'(A32)')' Input file not correct version ABC!'
+          WRITE(fnumerr,'(A8,A60)')  '  File: ',dirfile
+          WRITE(fnumerr,'(A11,A15)') '  Version: ',tline(L:L+13)
+          WRITE(fnumerr,'(A18,A15)') '  Needed version: ',REQHEADER
+          WRITE(fnumerr,'(A21)')     '  Program had to stop'
+          WRITE(*,*) ' Input file not correct version!'
+          WRITE(*,*) '  File: ',dirfile
+          WRITE(*,*) '  Version: ',tline(L:L+13)
+          WRITE(*,*) '  Needed version: ',REQHEADER
+          WRITE(*,*) '  Program will have to stop'
+          STOP ' '
+        ENDIF
+      ENDIF
+      
+      RETURN
+      
+      END SUBROUTINE VCHECK
+C-----------------------------------------------------------------------

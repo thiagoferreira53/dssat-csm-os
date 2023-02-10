@@ -397,7 +397,7 @@ C  FO - 05/07/2020 Add new Y4K subroutine call to convert YRDOY
             ENDIF
           !ENDIF
  
-          IF (RNMODE.NE.'T') CALL FVCHECK(CUDIRFLE,GENFLCHK)
+          !IF (RNMODE.NE.'T') CALL FVCHECK(CUDIRFLE,GENFLCHK)
 
           CALL XREADC (FILEIO,TN,RN,SN,ON,CN,'ECO#',econo)
           CALL XREADR (FILEIO,TN,RN,SN,ON,CN,'P1V',p1v)
@@ -526,7 +526,7 @@ C  FO - 05/07/2020 Add new Y4K subroutine call to convert YRDOY
 
         IF (FILEIOT .NE. 'DS4') THEN
           !IF (CUDIRFLE.NE.CUDIRFLP .OR. VARNO.NE.VARNOP) THEN
-           IF (RNMODE.NE.'T') CALL FVCHECK(CUDIRFLE,GENFLCHK)
+           !IF (RNMODE.NE.'T') CALL FVCHECK(CUDIRFLE,GENFLCHK)
             WRITE (fnumwrk,*) ' '
             CALL CUREADC (CUDIRFLE,VARNO,'ECO#',econo)
             CALL CUREADR (CUDIRFLE,VARNO,'P1V',p1v)
@@ -582,7 +582,7 @@ C  FO - 05/07/2020 Add new Y4K subroutine call to convert YRDOY
           !ENDIF
         ENDIF
 
-        IF (RNMODE.NE.'T') CALL FVCHECK(ECDIRFLE,GENFLCHK)
+        !IF (RNMODE.NE.'T') CALL FVCHECK(ECDIRFLE,GENFLCHK)
         IF (PD(1).LE.0.0) CALL ECREADR (ECDIRFLE,ECONO,'P1',PD(1))
         IF (PD2FR(1).LE.0)CALL ECREADR (ECDIRFLE,ECONO,'P2FR1',PD2FR(1))
         IF (PD(2).LE.0.0) CALL ECREADR (ECDIRFLE,ECONO,'P2',PD(2))
@@ -631,7 +631,7 @@ C  FO - 05/07/2020 Add new Y4K subroutine call to convert YRDOY
         CALL ECREADR (ECDIRFLE,ECONO,'PHF3',phintf(3))
         CALL ECREADR (ECDIRFLE,ECONO,'PHL2',phintl(2))
 
-        CALL FVCHECK(SPDIRFLE,GENFLCHK)
+        !CALL FVCHECK(SPDIRFLE,GENFLCHK)
         IF (PD4FR(1).LE.0.0) CALL SPREADR (SPDIRFLE,'P4FR1',PD4FR(1))
         IF (PD4FR(2).LE.0.0) CALL SPREADR (SPDIRFLE,'P4FR2',PD4FR(2))
         IF (ppfpe.LT.0.0)    CALL SPREADR (SPDIRFLE,'PPFPE',ppfpe)

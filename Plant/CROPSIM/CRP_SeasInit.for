@@ -594,7 +594,7 @@ C  FO - 05/07/2020 Add new Y4K subroutine call to convert YRDOY
         no3mn = -99
         
         IF (FILEIOT(1:2).EQ.'DS') THEN
-          IF (RNMODE.NE.'T') CALL FVCHECK(CUDIRFLE,GENFLCHK)
+          !IF (RNMODE.NE.'T') CALL FVCHECK(CUDIRFLE,GENFLCHK)
 
           CALL XREADC (FILEIO,TN,RN,SN,ON,CN,'ECO#',econo)
           CALL XREADR (FILEIO,TN,RN,SN,ON,CN,'VREQ',vreq)
@@ -673,7 +673,7 @@ C  FO - 05/07/2020 Add new Y4K subroutine call to convert YRDOY
           CALL XREADR (FILEIO,TN,RN,SN,ON,CN,'PGERM',pgerm)
           CALL XREADR (FILEIO,TN,RN,SN,ON,CN,'PEMRG',pemrg)
         ELSE
-          IF (RNMODE.NE.'T') CALL FVCHECK(CUDIRFLE,GENFLCHK)
+          !IF (RNMODE.NE.'T') CALL FVCHECK(CUDIRFLE,GENFLCHK)
           CALL CUREADC (CUDIRFLE,VARNO,'ECO#',econo)
           CALL CUREADR (CUDIRFLE,VARNO,'VREQ',vreq)
           IF (VREQ.LT.0.0)CALL CUREADR (CUDIRFLE,VARNO,'VREQX',vreq)
@@ -753,7 +753,7 @@ C  FO - 05/07/2020 Add new Y4K subroutine call to convert YRDOY
 !       Read ecotype information
 !-----------------------------------------------------------------------
 
-        IF (RNMODE.NE.'T') CALL FVCHECK(ECDIRFLE,GENFLCHK)
+        !IF (RNMODE.NE.'T') CALL FVCHECK(ECDIRFLE,GENFLCHK)
         CALL ECREADR (ECDIRFLE,ECONO,'HTSTD',htstd)
         CALL ECREADR (ECDIRFLE,ECONO,'AWNS',awns)
         CALL ECREADR (ECDIRFLE,ECONO,'RS%A',rspca)
@@ -825,7 +825,7 @@ C  FO - 05/07/2020 Add new Y4K subroutine call to convert YRDOY
 !       Read species information
 !-----------------------------------------------------------------------
 
-        IF (RNMODE.NE.'T') CALL FVCHECK(SPDIRFLE,GENFLCHK)
+        !IF (RNMODE.NE.'T') CALL FVCHECK(SPDIRFLE,GENFLCHK)
         CALL SPREADR (SPDIRFLE,'CHFR' ,chfr)
         CALL SPREADR (SPDIRFLE,'CO2CC',co2compc)
         CALL SPREADR (SPDIRFLE,'CO2EX',co2ex)
