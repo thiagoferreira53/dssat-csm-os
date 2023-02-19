@@ -203,17 +203,15 @@ C-----------------------------------------------------------------------
       IF (INDEX('FQ',RNMODE) .LE. 0 .OR. RUN == 1) THEN
         CALL IPSOIL_Inp (RNMODE,FILES,PATHSL,NSENS,ISWITCH)
       ENDIF
-C-----------------------------------------------------------------------
-C     Call VCHECK to read input file headers (.CUL, .ECO, .SPE)
-C-----------------------------------------------------------------------
-      CALL VCHECK(FILEG) !Cultivar file
-      CALL VCHECK(FILEE) !Ecotype file
-      CALL VCHECK(FILEC) !Species file
 
 C-----------------------------------------------------------------------
-C     Call IPVAR 
+C     Call IPVAR and VCHECK to read input file headers
 C-----------------------------------------------------------------------
       IF (CROP .NE. 'FA') THEN
+
+        CALL VCHECK(FILEG) !Cultivar file
+        CALL VCHECK(FILEE) !Ecotype file
+        CALL VCHECK(FILEC) !Species file
         CALL IPVAR (FILEG,NSENS,RNMODE,VARNO,VARTY,VRNAME,PATHGE,
      &              ECONO, MODEL, ATLINE) !, CROP)
       ENDIF

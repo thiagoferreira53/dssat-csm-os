@@ -628,6 +628,12 @@ SDPRO  is less than or equal 0.  Please correct file.
 IPVAR    52
 SDLIP  is less than or equal 0.  Please correct file.
 
+IPVAR    53
+Incorrect version number in genetics input file. Please correct file.
+
+IPVAR    54
+Missing version number in genetics input file. Please correct file.
+
 IPWTH     1
 Simulation date must be AFTER first available weather day.  Correct dates.
 

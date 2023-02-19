@@ -1674,93 +1674,71 @@ C-----------------------------------------------------------------------
       USE ModuleData
 
       IMPLICIT NONE
-
-      SAVE
-     
-      CHARACTER (LEN=*)    DIRFILE
-      CHARACTER*5 VCURRENT
-      CHARACTER (LEN=80)   TLINE
-      CHARACTER (LEN=30)   TLINE2
-      CHARACTER (LEN=1)    COLON
-      INTEGER              L,FNUMERR,FNUMTMP,TVILENT,ERRNUM
-      LOGICAL              FFLAG,FOPEN
-      CHARACTER (len=8)  MODEL
-      CHARACTER*2  CROP
-      CHARACTER*12 REQHEADER
+      EXTERNAL ERROR      
       
+      CHARACTER (LEN=*)    DIRFILE
+      CHARACTER (LEN=80)   TLINE
+      CHARACTER (LEN=1)    COLON
+      INTEGER              L,FNUMTMP,ERRNUM
+      INTEGER              LNUM, FOUND
+      CHARACTER (LEN=8)    MODEL
+      CHARACTER*2          CROP
+      CHARACTER*5          VCURRENT
+      CHARACTER*6          ERRKEY
+      CHARACTER*12         REQHEADER
+      CHARACTER*78         MSG(2)
+      CHARACTER*6          SECTION
+ 
+      PARAMETER (ERRKEY = 'IPVAR ')           
       TYPE (ControlType) CONTROL
       CALL GET(CONTROL)
       
       CROP = CONTROL % CROP
       MODEL = CONTROL % MODEL
       
+      IF(DIRFILE(10:12).EQ."CUL") THEN
+         SECTION="$CULTI"
+      ELSEIF(DIRFILE(10:12).EQ."ECO") THEN
+         SECTION="$ECOTY"
+      ELSEIF(DIRFILE(10:12).EQ."SPE") THEN
+         SECTION="$SPECI"
+      ENDIF
+
+      !Current version
       WRITE (VCURRENT,"(I1,'.',I1,'.',I1)")
      &    VERSION%Major, VERSION%Minor, VERSION%Model
      
+      !Required version
       REQHEADER = CROP//MODEL(3:6)//VCURRENT
+
+      OPEN (UNIT = FNUMTMP, FILE = DIRFILE, STATUS = 'OLD', IOSTAT=ERRNUM)
+
+      CALL FIND(FNUMTMP, SECTION, LNUM, FOUND)
+      BACKSPACE(FNUMTMP)
       
-      
-      INQUIRE (FILE = dirfile,EXIST = fflag)
-      IF (.NOT.fflag) THEN
-        CALL Getlun('ERROR.OUT',fnumerr)
-        OPEN(UNIT=fnumerr,FILE='ERROR.OUT')
-        WRITE (fnumerr,*) ' Could not find input file! '
-        WRITE (fnumerr,*) ' File was: ',dirfile
-        WRITE (fnumerr,*) ' Version code sought was: ',REQHEADER
-        WRITE (*,*) ' Could not find input file! '
-        WRITE (*,*) ' File was: ',dirfile
-        WRITE (*,*) ' Version code sought was: ',REQHEADER
-        WRITE (*,*) ' Program will have to stop'
-        CLOSE (fnumerr)
-        STOP ' '
+      IF (FOUND .EQ. 0) THEN
+          CALL ERROR(ERRKEY, 54, DIRFILE, LNUM)
       ELSE
-        COLON = 'N'
-        OPEN (UNIT = FNUMTMP,FILE = DIRFILE)
-        READ(FNUMTMP,'(A80)',IOSTAT=ERRNUM) TLINE    !portability
-        IF (ERRNUM < 0) THEN       !EOF - file is empty
-          CALL Getlun('ERROR.OUT',fnumerr)
-          OPEN(UNIT=fnumerr,FILE='ERROR.OUT')
-          WRITE (fnumerr,*) ' Input file empty! '
-          WRITE (fnumerr,*) ' File was: ',dirfile
-          WRITE (*,*) ' Input file empty! '
-          WRITE (*,*) ' File was: ',dirfile(1:60)
-          WRITE (*,*) ' Program will have to stop'
-          CLOSE (fnumerr)
-          STOP ' '
-        ENDIF
-        IF (TVILENT(TLINE).LT.10) THEN
-          CALL Getlun('ERROR.OUT',fnumerr)
-          OPEN(UNIT=fnumerr,FILE='ERROR.OUT')
-          WRITE (fnumerr,*) ' Input file empty! '
-          WRITE (fnumerr,*) ' File was: ',dirfile
-          WRITE (*,*) ' Input file empty! '
-          WRITE (*,*) ' File was: ',dirfile
-          WRITE (*,*) ' Program will have to stop'
-          CLOSE (fnumerr)
-          STOP ' '
-        ENDIF
-        DO L = 1,50
+          READ(FNUMTMP,'(A80)',IOSTAT=ERRNUM) TLINE
+      ENDIF
+            
+      DO L = 1,50
           IF (COLON.EQ.'Y' .AND. TLINE(L:L).NE.' ') EXIT
           IF (TLINE(L:L).EQ.':' .OR. TLINE(L:L).EQ.' ') COLON='Y'
         ENDDO
-        CLOSE (FNUMTMP)
-        IF (TLINE(L:L+13) .NE. REQHEADER) THEN
-          CALL Getlun ('ERROR.OUT',fnumerr)
-          OPEN (UNIT = fnumerr,FILE = 'ERROR.OUT')
-          WRITE(fnumerr,*) ' '
-          WRITE(fnumerr,'(A32)')' Input file not correct version ABC!'
-          WRITE(fnumerr,'(A8,A60)')  '  File: ',dirfile
-          WRITE(fnumerr,'(A11,A15)') '  Version: ',tline(L:L+13)
-          WRITE(fnumerr,'(A18,A15)') '  Needed version: ',REQHEADER
-          WRITE(fnumerr,'(A21)')     '  Program had to stop'
-          WRITE(*,*) ' Input file not correct version!'
-          WRITE(*,*) '  File: ',dirfile
-          WRITE(*,*) '  Version: ',tline(L:L+13)
-          WRITE(*,*) '  Needed version: ',REQHEADER
-          WRITE(*,*) '  Program will have to stop'
-          STOP ' '
-        ENDIF
+
+      CLOSE (FNUMTMP)
+
+      IF (TLINE(L:L+13) .NE. REQHEADER) THEN
+        WRITE(MSG(1),'(A28,A11,A1)')'This model requires version ',
+     &    REQHEADER, '.'
+        WRITE(MSG(2),'(A29,A11,A1)')'Your genetic file is version ', 
+     &    TLINE(L:L+13), '.'
+        CALL WARNING(2, ERRKEY, MSG) 
+        CALL ERROR (ERRKEY,53,DIRFILE,LNUM)
       ENDIF
+
+      
       
       RETURN
       
