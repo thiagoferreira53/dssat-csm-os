@@ -1678,46 +1678,53 @@ C-----------------------------------------------------------------------
       
       CHARACTER (LEN=*)    DIRFILE
       CHARACTER (LEN=80)   TLINE
-      CHARACTER (LEN=1)    COLON
+      CHARACTER (LEN=1)    COLON, BLANK
       INTEGER              L,FNUMTMP,ERRNUM
-      INTEGER              LNUM, FOUND
+      INTEGER              LNUM, FOUND, PATHL
       CHARACTER (LEN=8)    MODEL
-      CHARACTER*2          CROP
-      CHARACTER*5          VCURRENT
-      CHARACTER*6          ERRKEY
-      CHARACTER*12         REQHEADER
-      CHARACTER*78         MSG(2)
-      CHARACTER*6          SECTION
+      CHARACTER (LEN=2)    CROP
+      CHARACTER (LEN=3)    FEXTENSION
+      CHARACTER (LEN=5)    VCURRENT
+      CHARACTER (LEN=6)    ERRKEY, SECTION
+      CHARACTER (LEN=12)   REQHEADER
+      CHARACTER (LEN=78)   MSG(2)
  
-      PARAMETER (ERRKEY = 'IPVAR ')           
+      PARAMETER (ERRKEY = 'IPVAR ')
+      PARAMETER (BLANK = ' ')          
       TYPE (ControlType) CONTROL
       CALL GET(CONTROL)
       
       CROP = CONTROL % CROP
       MODEL = CONTROL % MODEL
       
-      IF(DIRFILE(10:12).EQ."CUL") THEN
+      !Get file extension
+      PATHL  = INDEX(DIRFILE,BLANK)
+      FEXTENSION = DIRFILE(PATHL-3:PATHL)
+            
+      IF(FEXTENSION.EQ."CUL") THEN
          SECTION="$CULTI"
-      ELSEIF(DIRFILE(10:12).EQ."ECO") THEN
+      ELSEIF(FEXTENSION.EQ."ECO") THEN
          SECTION="$ECOTY"
-      ELSEIF(DIRFILE(10:12).EQ."SPE") THEN
+      ELSEIF(FEXTENSION.EQ."SPE") THEN
          SECTION="$SPECI"
+      ELSE
+         CALL ERROR (ERRKEY,29,DIRFILE,LNUM)
       ENDIF
 
       !Current version
       WRITE (VCURRENT,"(I1,'.',I1,'.',I1)")
      &    VERSION%Major, VERSION%Minor, VERSION%Model
      
-      !Required version
+      !Required header
       REQHEADER = CROP//MODEL(3:6)//VCURRENT
 
       OPEN (UNIT = FNUMTMP, FILE = DIRFILE, STATUS = 'OLD', IOSTAT=ERRNUM)
 
       CALL FIND(FNUMTMP, SECTION, LNUM, FOUND)
       BACKSPACE(FNUMTMP)
-      
+            
       IF (FOUND .EQ. 0) THEN
-          CALL ERROR(ERRKEY, 54, DIRFILE, LNUM)
+          CALL ERROR(ERRKEY, 54, DIRFILE(PATHL-12:PATHL), LNUM)
       ELSE
           READ(FNUMTMP,'(A80)',IOSTAT=ERRNUM) TLINE
       ENDIF
@@ -1732,13 +1739,11 @@ C-----------------------------------------------------------------------
       IF (TLINE(L:L+13) .NE. REQHEADER) THEN
         WRITE(MSG(1),'(A28,A11,A1)')'This model requires version ',
      &    REQHEADER, '.'
-        WRITE(MSG(2),'(A29,A11,A1)')'Your genetic file is version ', 
+        WRITE(MSG(2),'(A29,A11,A1)')'Your genetic file is version ',
      &    TLINE(L:L+13), '.'
         CALL WARNING(2, ERRKEY, MSG) 
-        CALL ERROR (ERRKEY,53,DIRFILE,LNUM)
+        CALL ERROR (ERRKEY,53,DIRFILE(PATHL-12:PATHL),LNUM)
       ENDIF
-
-      
       
       RETURN
       

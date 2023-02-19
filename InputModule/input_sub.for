@@ -97,7 +97,7 @@ C=======================================================================
       INCLUDE 'COMIBS.blk'
       INCLUDE 'COMSWI.blk'
 
-      CHARACTER*  1 WMODI, RNMODE
+      CHARACTER*  1 WMODI, RNMODE, BLANK
       CHARACTER*  2 CROP,PRCROP
 !      CHARACTER*  6 TRNARG
       CHARACTER*  6 VARNO,VARTY,ERRKEY,ECOTYP,ECONO
@@ -113,9 +113,10 @@ C=======================================================================
       CHARACTER*120 INPUTX
       CHARACTER*120 WTHSTR, FILECTL
       CHARACTER*1000 ATLINE
+      CHARACTER*255 FILEGG, FILEEE,FILECC
 
       INTEGER       NLOOP,FROP,FTYPEN,RUN,IIRV(NAPPL)
-      INTEGER       LUNIO,NYRS,ERRNUM,NSENS,YRIC
+      INTEGER       LUNIO,NYRS,ERRNUM,NSENS,YRIC,PATHL
       INTEGER       IVRGRP,IPLT,ISIM,EXPP,EXPN,TRTN,TRTALL
       INTEGER       NFORC,NDOF,PMTYPE,ISENS, TRTNUM, ROTNUM
       INTEGER       LNSIM,LNCU,LNHAR,LNENV,LNTIL,LNCHE
@@ -138,6 +139,7 @@ C-SUN INTEGER       LNBLNK
 
       PARAMETER (ERRKEY = 'INPUT ')
       PARAMETER (LUNIO  = 21)
+      PARAMETER (BLANK  = ' ')
 
 C-----------------------------------------------------------------------
 C     Get argument from runtime module to determine path and run mode
@@ -203,15 +205,33 @@ C-----------------------------------------------------------------------
       IF (INDEX('FQ',RNMODE) .LE. 0 .OR. RUN == 1) THEN
         CALL IPSOIL_Inp (RNMODE,FILES,PATHSL,NSENS,ISWITCH)
       ENDIF
-
 C-----------------------------------------------------------------------
-C     Call IPVAR and VCHECK to read input file headers
+C     Call IPVAR and VCHECK to check version of input file headers
 C-----------------------------------------------------------------------
       IF (CROP .NE. 'FA') THEN
-
-        CALL VCHECK(FILEG) !Cultivar file
-        CALL VCHECK(FILEE) !Ecotype file
-        CALL VCHECK(FILEC) !Species file
+            
+        PATHL  = INDEX(PATHGE,BLANK)
+        IF (PATHL .LE. 1) THEN
+           FILEGG = FILEG
+         ELSE
+           FILEGG = PATHGE(1:(PATHL-1)) // FILEG
+        ENDIF
+        CALL VCHECK(FILEGG) !Cultivar file
+        PATHL  = INDEX(PATHCR,BLANK)
+        IF (PATHL .LE. 1) THEN
+           FILECC = FILEC
+         ELSE
+           FILECC = PATHGE(1:(PATHL-1)) // FILEC
+        ENDIF
+        CALL VCHECK(FILECC) !Species file
+        PATHL  = INDEX(PATHEC,BLANK)
+        IF (PATHL .LE. 1) THEN
+           FILEEE = FILEE
+         ELSE
+           FILEEE = PATHGE(1:(PATHL-1)) // FILEE
+        ENDIF
+        CALL VCHECK(FILEEE) !Ecotype file
+        
         CALL IPVAR (FILEG,NSENS,RNMODE,VARNO,VARTY,VRNAME,PATHGE,
      &              ECONO, MODEL, ATLINE) !, CROP)
       ENDIF
