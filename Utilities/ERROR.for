@@ -140,10 +140,10 @@ C
             WRITE (MSG(IMSG),'(2A)') 'Error key: ',ERRKEY
             IMSG = IMSG + 1
           ELSE
-            I = MIN(LEN(TRIM(FILE)),37)
-            WRITE (*,'(3A,I5,2A/)')
+            I = MIN(LEN(TRIM(FILE)),80)
+            WRITE (*,'(2A/,1A,I5/,2A/)')
      &    'File: ',FILE(1:I),'   Line: ',LNUM,'   Error key: ',ERRKEY
-            WRITE (ELUN,'(3A,I5,2A/)')
+            WRITE (ELUN,'(2A/,1A,I5/,2A/)')
      &    'File: ',FILE(1:I),'   Line: ',LNUM,'   Error key: ',ERRKEY
             WRITE (MSG(IMSG),'(2A)') 'File: ',TRIM(FILE(1:I))
             WRITE (MSG(IMSG+1),'(A,I5)') '   Line: ',LNUM

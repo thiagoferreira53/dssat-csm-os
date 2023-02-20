@@ -1724,7 +1724,7 @@ C-----------------------------------------------------------------------
       BACKSPACE(FNUMTMP)
             
       IF (FOUND .EQ. 0) THEN
-          CALL ERROR(ERRKEY, 54, DIRFILE(PATHL-12:PATHL), LNUM)
+          CALL ERROR(ERRKEY, 54, DIRFILE, LNUM)
       ELSE
           READ(FNUMTMP,'(A80)',IOSTAT=ERRNUM) TLINE
       ENDIF
@@ -1742,7 +1742,7 @@ C-----------------------------------------------------------------------
         WRITE(MSG(2),'(A29,A11,A1)')'Your genetic file is version ',
      &    TLINE(L:L+13), '.'
         CALL WARNING(2, ERRKEY, MSG) 
-        CALL ERROR (ERRKEY,53,DIRFILE(PATHL-12:PATHL),LNUM)
+        CALL ERROR (ERRKEY,53,DIRFILE,LNUM)
       ENDIF
       
       RETURN
