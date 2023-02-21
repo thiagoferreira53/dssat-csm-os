@@ -1,4 +1,5 @@
-*BAHIA SPECIES COEFICIENTS: CRGRO048 Model                                                                                                                       
+!BAHIA SPECIES COEFICIENTS: CRGRO Model                                                                                                                       
+$SPECIES:G0GRO04.8.1 Last edit: 2023-02-14 GH
                                                                                                                                                                                                         
 !*PHOTOSYNTHESIS PARAMETERS                                                                                                                                                                                                                                                                                                      
  127.0 120.0  0.55                         PARMAX,PHTMAX,KCAN                                                             

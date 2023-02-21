@@ -1,4 +1,5 @@
-*SAFFLOWER SPECIES COEFFICIENTS: CRGRO048 MODEL                                                       
+!SAFFLOWER SPECIES COEFFICIENTS: CRGRO MODEL                                                       
+$SPECIES:SFGRO04.8.1 Last edit: 2023-02-14 GH
                                                                                                     
 !*PHOTOSYNTHESIS PARAMETERS                                                                         
 ! KJB modified next line to run for C version. No other changes, but see notes

@@ -1,4 +1,5 @@
-*PINEAPPLE CULTIVAR COEFFICIENTS: PIALO48 MODEL
+!PINEAPPLE CULTIVAR COEFFICIENTS: PIALO MODEL
+$CULTIVAR:PIALO04.8.1 Last edit: 2023-02-14 GH
 !
 !P1 Growing degree days from white root tips to first leaf emerged
 !P2 Growing degree days from first leaf emerged to Foliar C1

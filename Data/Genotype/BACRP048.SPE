@@ -1,4 +1,5 @@
-$SPECIES:BACRP048.20200721   Last edit: 2020-07-21 CHP
+!BARLEY SPECIES COEFFICIENTS: CSCRP MODEL
+$SPECIES:BACRP04.8.1 Last edit: 2023-02-14 GH
 
 ! Coefficients differ from those used in DSSAT Versions 3.5 and 4.0x.
 ! They have been developed from 'parameters' embedded in the code of

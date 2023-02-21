@@ -1,4 +1,5 @@
-! Canegro Sugarcane Plant Module SPECIES file
+!SUGARCANE SPECIES COEFFICIENTS: SCCAN MODEL
+$SPECIES:SCCAN04.8.1 Last edit: 2023-02-14 GH
 ! This file contains coefficients that are used for ALL cultivars of sugarcane.
 ! DO NOT change these values, unless you are REALLY sure you are right!
 ! Lines starting with an exclamation mark or a '*' are effectively ignored.

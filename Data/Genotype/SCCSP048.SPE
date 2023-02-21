@@ -1,4 +1,5 @@
-!*SUGARCANE SPECIES COEFFICIENTS - SCCSP048 MODEL
+!SUGARCANE SPECIES COEFFICIENTS - SCCSP MODEL
+$SPECIES:SCCSP04.8.1 Last edit: 2023-02-14 GH
 
 *#PHOTOSYNTHESIS PARAMETERS (note: ETPHOT variables not currently used in CASUPRO)
   KCAN        0.50     Light extinction coefficient (KCAN_ECO in the .ECO input file will be used if a value is present there)
@@ -22,7 +23,7 @@
   SLWSLO      0.0004   (ETPHOT) Slope of specific leaf weight as a function of leaf area index  (g/m2)
   NSLOPE      0.3000   (ETPHOT) Slope of leaf nitrogen concentration as a function of leaf area index   (%/m2/m2)
   LNREF       4.90     Value of leaf N above which canopy PG is maximum (for standard cultivar)      
-  PGREF       1.00     Reference value for leaf level photosynthesis used in canopy light response curve (µmol[CO2] / m2-s) [not currently used in CASUPRO]   
+  PGREF       1.00     Reference value for leaf level photosynthesis used in canopy light response curve (Âµmol[CO2] / m2-s) [not currently used in CASUPRO]   
   XPGSLW(10)    0.0 0.001 0.002 0.003 .0035 0.004 0.005 0.006 0.008 0.020    Array of Specific Leaf Weight (SLW) values for table look-up function, used with YPGSLW (g[leaf] / m2[leaf])   
   YPGSLW(10)  0.162 0.679 0.867 0.966 1.000 1.027 1.069 1.100 1.141 1.167    Array of PG values corresponding to SLW values in array XPGSLW (g[CH2O] / m2 / d)
 

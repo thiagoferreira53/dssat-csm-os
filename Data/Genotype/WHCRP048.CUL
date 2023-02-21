@@ -1,4 +1,5 @@
-$CULTIVARS:WHCRP048.20200721   Last edit: 2021-05-06 GH
+!WHEAT CULTIVAR COEFFICIENTS: CSCRP MODEL
+$CULTIVAR:WHCRP04.8.1 Last edit: 2023-02-14 GH
 
 ! Coefficients used in the Cropsim model differ from those used in
 ! earlier DSSAT wheat/barley models. They can be calculated

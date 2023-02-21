@@ -1,4 +1,5 @@
-$SPECIES:CSYCA048.041621    Last edit: 04/16/2021 LPM
+!CASSAVA SPECIES COEFFICIENTS: CSYCA MODEL
+$SPECIES:CSYCA04.8.1 Last edit: 2023-02-14 GH
 
 
 ! Coefficients differ from those used in the CROPSIM cassava model.

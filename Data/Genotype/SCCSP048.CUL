@@ -1,4 +1,5 @@
-*SUGARCANE CULTIVAR COEFFICIENTS: SCCSP048 MODEL 
+!SUGARCANE CULTIVAR COEFFICIENTS: SCCSP MODEL 
+$CULTIVAR:SCCSP04.8.1 Last edit: 2023-02-14 GH
 !  ::::::::::::::::::::::::::::::::::::::::::::::
 !  Fred Royce, Oct 2010, Gainesville, Florida.
 !  ::::::::::::::::::::::::::::::::::::::::::::::
@@ -40,31 +41,31 @@
 !              |             |                       |             |                                                                  |                                                                                |
 ! LIshd        |0.85 - 0.95  | Canopy                | proportion  | PAR intercepted by direct-sun plus mid-level canopy zone         |                                                                                |
 ! -------------+-------------+-----------------------+-------------+------------------------------------------------------------------+--------------------------------------------------------------------------------+
-! TB_1         |     9       | Leaf phenology        | 캜          | Base temperature for leaf appearance and primary stalk emergence |                                                                                |
-! TO1_1        |    27       | Leaf phenology        | 캜          | Lower optimum temperature, leaf development                      |                                                                                |
-! TO2_1        |    32       | Leaf phenology        | 캜          | Upper optimum temperature, leaf development                      |                                                                                |
-! TM_1         |    45       | Leaf phenology        | 캜          | Maximum temperature, leaf development                            |                                                                                |
-! PI1          | 85 - 120    | Leaf phenology        | 캜-day      | Phyllocron interval 1                                            |                                                                                |
-! PI2          | 85 - 170    | Leaf phenology        | 캜-day      | Phyllocron interval 2                                            |                                                                                |
-! DTPI         | 900 - 1600  | Leaf phenology        | 캜-day      | Thermal time threshold at which phyllocron interval changes      |                                                                                |
+! TB_1         |     9       | Leaf phenology        | 째C          | Base temperature for leaf appearance and primary stalk emergence |                                                                                |
+! TO1_1        |    27       | Leaf phenology        | 째C          | Lower optimum temperature, leaf development                      |                                                                                |
+! TO2_1        |    32       | Leaf phenology        | 째C          | Upper optimum temperature, leaf development                      |                                                                                |
+! TM_1         |    45       | Leaf phenology        | 째C          | Maximum temperature, leaf development                            |                                                                                |
+! PI1          | 85 - 120    | Leaf phenology        | 째C-day      | Phyllocron interval 1                                            |                                                                                |
+! PI2          | 85 - 170    | Leaf phenology        | 째C-day      | Phyllocron interval 2                                            |                                                                                |
+! DTPI         | 900 - 1600  | Leaf phenology        | 째C-day      | Thermal time threshold at which phyllocron interval changes      |                                                                                |
 !              |             |                       |             |    from Ph1 to Ph2                                               |                                                                                |
 ! LSFAC        | 0.50 - 0.70 | Leaf phenology        | Ratio       | Ratio of leaf sheath DM to leaf blade DM                         | Clements (1980) pp 111-112                                                     |
 !              |             |                       |             |                                                                  |                                                                                |
 ! -------------+-------------+-----------------------+-------------+------------------------------------------------------------------+--------------------------------------------------------------------------------+
 ! LI1          |.035 - 0.15  | Tiller phenology      | proportion  | Light Interception below which there is little competition for   | Bezuidenhout et al 2003 pp 592-3                                               |
 !              |             |                       |             |    light among tillers                                           |                                                                                |
-! TELOM        | 130 - 300   | Tiller phenology      | 캜-day      | Threshold to tiller emergence (telomechron interval) during early| Concept from Bezuidenhout et al 2003 p 592 (values not based on same paper)    |
+! TELOM        | 130 - 300   | Tiller phenology      | 째C-day      | Threshold to tiller emergence (telomechron interval) during early| Concept from Bezuidenhout et al 2003 p 592 (values not based on same paper)    |
 !              |             |                       |             |    growth prior to light competition among tillers. [TB(2)]      |                                                                                |
-! TB_2         |    16       | Tiller phenology      | 캜          | Base temperature for tiller appearance                           |                                                                                |
-! TO1_2        |    27       | Tiller phenology      | 캜          | Lower optimum temperature, tiller development                    |                                                                                |
-! TO2_2        |    32       | Tiller phenology      | 캜          | Upper optimum temperature, tiller development                    |                                                                                |
-! TM_2         |    45       | Tiller phenology      | 캜          | Maximum temperature, tiller development                          |                                                                                |
-! Ph1P         | 168- 348    | Tiller phenology      | 캜-day      | threshold to sprouting, plant cane    [TB(1)]                    | Robertson et al. 1998 Pg 822 (8 deg base temp)                                 |
-! Ph1R         |  90 - 110   | Tiller phenology      | 캜-day      | threshold to sprouting, ratoon cane                              |                                                                                |
-! Ph2          | 0.7 - 1.5   | Tiller phenology      | mm/캜-day   | Growth rate of primary stalk (rate of emergence for plant cane)  | Robertson et al. 1998 Pg 823                                                   |
-! Ph3          | 1200-1300   | Tiller phenology      | 캜-day      | Threshold for growth of primary stalk and first tillers          |                                                                                |
+! TB_2         |    16       | Tiller phenology      | 째C          | Base temperature for tiller appearance                           |                                                                                |
+! TO1_2        |    27       | Tiller phenology      | 째C          | Lower optimum temperature, tiller development                    |                                                                                |
+! TO2_2        |    32       | Tiller phenology      | 째C          | Upper optimum temperature, tiller development                    |                                                                                |
+! TM_2         |    45       | Tiller phenology      | 째C          | Maximum temperature, tiller development                          |                                                                                |
+! Ph1P         | 168- 348    | Tiller phenology      | 째C-day      | threshold to sprouting, plant cane    [TB(1)]                    | Robertson et al. 1998 Pg 822 (8 deg base temp)                                 |
+! Ph1R         |  90 - 110   | Tiller phenology      | 째C-day      | threshold to sprouting, ratoon cane                              |                                                                                |
+! Ph2          | 0.7 - 1.5   | Tiller phenology      | mm/째C-day   | Growth rate of primary stalk (rate of emergence for plant cane)  | Robertson et al. 1998 Pg 823                                                   |
+! Ph3          | 1200-1300   | Tiller phenology      | 째C-day      | Threshold for growth of primary stalk and first tillers          |                                                                                |
 !              |             |                       |             |    and first leaves above the ground surface                     |                                                                                |
-! Ph4          | 6000-6600   | Tiller phenology      | 캜-day      | Threshold  for tillering and establishment of the foliage        |                                                                                |
+! Ph4          | 6000-6600   | Tiller phenology      | 째C-day      | Threshold  for tillering and establishment of the foliage        |                                                                                |
 !              |             |                       |             |    (currently continuation of Phase 3)                           |                                                                                |
 ! StHrv        |             | Tiller phenology      | tillers     | Number of mature stalks per stool at most recent harvest         |   (will be removed to experimental file)                                       |
 ! RTNFC        |             | Tiller phenology      | tillers     | Number of primary shoots to develop from each mature stalk cut   |                                                                                |

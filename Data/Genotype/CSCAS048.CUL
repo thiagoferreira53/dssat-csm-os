@@ -1,4 +1,5 @@
-$CULTIVARS:CSCAS048.20200721   Last edit: 2021-05-06 GH
+!CASSAVA CULTIVAR COEFFICIENTS: CSCAS MODEL
+$CULTIVAR:CSCAS04.8.1 Last edit: 2023-02-14 GH
 !
 ! Coefficients used in the Cropsim cassava module differ from those used
 ! in the earlier DSSAT cassava model. It is best,therefore,not to attempt
