@@ -42,7 +42,7 @@
 !  RGFILL : Rate of grain fill - mg/day
 !  RMNC   : Root minimum nitrogen concentration (g N/g root dry weight)
 !  TI     : Fraction of a phyllochron interval which occurred as a fraction
-!           of todays daily thermal time
+!           of today's daily thermal time
 !  TNLAB  :
 !  TTMP   :
 !=======================================================================
@@ -51,10 +51,10 @@
      &    DTT, ISTAGE, NH4, NO3, SOILPROP, SW, SWFAC,!Input
      &    SUMDTT, TBASE, TURFAC, WEATHER, XSTAGE,             !Input
      &    AGEFAC, BASLFWT, BIOMAS, CRWNWT, EYEWT, FBIOM,      !Output
-     &    FLRWT, FRTWT, FRUITS, GPP, GPSM, GRAINN, GRORT, SUMSRADGRO, SUMSRAD, SRADGRO,    !Output
+     &    FLRWT, FRTWT, FRUITS, GPP, GPSM, GRAINN, GRORT, SUMSRADGRO, SUMSRAD, SRADGRO, PARGRO, SUMPARGRO, SUMPAR,    !Output
      &    LAI, LFWT, LN, NSTRES, RLV, ROOTN, RTWT, SUMDTTGRO, SUMTMAXGRO, !Output
-     &    SKWT, STMWT, STOVN, STOVWT,  TEMPM, SUMTMAX, TMAXGRO, GDDFR, HIFact, !Output
-     &    UNH4, UNO3, WTNUP, WTINITIAL, XGNP, YIELD)!Output 
+     &    SENESCE, SKWT, STMWT, STOVN, STOVWT,  TEMPM, SUMTMAX, TMAXGRO, GDDFR, BIOMAS4, LAI4, LN2, LN3, LN4, HIFact, !Output
+     &    UNH4, UNO3, WTNUP, WTINITIAL, XGNP, YIELD, BIOMAS1, LAI1, BIOMAS13, LAI13, BIOMAS2, LAI2, BIOMAS3, LAI3)!Output 
 
       USE Aloha_mod
       USE Interface_SenLig_Ceres
@@ -79,29 +79,30 @@
       INTEGER I, ISTAGE, ISTAGE_old, IDURP, TIMDIF, YRDOY
       INTEGER STGDOY(20), DAP1, DAP2, DAP3, DAP4, DAP5, DAP6, DAP7, DAP8, DAP9, DAP10, DAP11, DAP12, DAP13, DAP14, DAP15, DAP16, DAP17, DAP18, DAP19, DAP20, DAP21, YRPLT
       INTEGER DYNAMIC
-      REAL    PLA, LAI, BIOMAS, LFWT, BASLFWT, STMWT, STOVWT, WTINITIAL, SEEDQLY 
-      REAL    RLAE13, RLDW13, RBWTDW13, RSTMWT13, PLA12, PLA13, LFWT12, LFWT13, BASLFWT12, BASLFWT13, STMWT12, STMWT13, ADJGDDF13, ADJTMAX13, ADJSRAD13  !CASE 13
-      REAL    RLAE1, RLDW1, RBWTDW1, RSTMWT1, PLA1, LFWT1, BASLFWT1, STMWT1, GRORTI, RGRORT1, GRORT1, ADJGDDF1, ADJTMAX1, ADJSRAD1  !CASE 1
-      REAL    RLAE2, RLDW2, RBWTDW2, RSTMWT2, PLA2, LFWT2, BASLFWT2, STMWT2, RGRORT2, GRORT2 !CASE 2
-      REAL    RLAE3, RLDW3, RBWTDW3, RSTMWT3, PLA3, LFWT3, BASLFWT3, STMWT3, RGRORT3, GRORT3 !CASE 3
-      REAL    RLAE4, RLDW4, RBWTDW4, RSTMWT4, PLA4, LFWT4, BASLFWT4, STMWT4, RGRORT4, GRORT4, HIFact, YIELDFact !CASE 4
-      REAL    RLAE6, RLDW6, RBWTDW6, RSTMWT6, PLA6, LFWT6, BASLFWT6, STMWT6, RGRORT6, GRORT6 !CASE 6
-      REAL    RLAE7, RLDW7, RBWTDW7, RSTMWT7, PLA7, LFWT7, BASLFWT7, STMWT7, RGRORT7, GRORT7 !CASE 7
-      REAL    RLAE8, RLDW8, RBWTDW8, RSTMWT8, PLA8, LFWT8, BASLFWT8, STMWT8, RGRORT8, GRORT8 !CASE 8
-      REAL    RLAE9, RLDW9, RBWTDW9, RSTMWT9, PLA9, LFWT9, BASLFWT9, STMWT9, RGRORT9, GRORT9 !CASE 9-10
-      REAL    PLAG, RTWT, FLRWT, GROSTM, SENLA, SLAN, GRORT, GDDFR, TMAXGRO
+      REAL    PLA, LAI, BIOMAS, LFWT, BASLFWT, STMWT, STOVWT, WTINITIAL, BIOMAS1, BIOMAS13, BIOMAS2, BIOMAS3, BIOMAS4, SEEDQLY 
+      REAL    RLAE13, RLDW13, RBWTDW13, RSTMWT13, LAI13, PLA12, PLA13, LFWT12, LFWT13, BASLFWT12, BASLFWT13, STMWT12, STMWT13, ADJGDDF13, ADJTMAX13, ADJSRAD13  !CASE 13
+      REAL    RLAE1, RLDW1, RBWTDW1, RSTMWT1, LAI1, PLA1, LFWT1, BASLFWT1, STMWT1, GRORTI, RGRORT1, GRORT1, TI1, ADJGDDF1, ADJTMAX1, ADJSRAD1  !CASE 1
+      REAL    RLAE2, RLDW2, RBWTDW2, RSTMWT2, LAI2, LN2, PLA2, LFWT2, BASLFWT2, STMWT2, RGRORT2, GRORT2, RTI2, TI2 !CASE 2
+      REAL    RLAE3, RLDW3, RBWTDW3, RSTMWT3, LAI3, LN3, PLA3, LFWT3, BASLFWT3, STMWT3, RGRORT3, GRORT3, RTI3, TI3 !CASE 3
+      REAL    RLAE4, RLDW4, RBWTDW4, RSTMWT4, LAI4, LN4, PLA4, LFWT4, BASLFWT4, STMWT4, RGRORT4, GRORT4, RTI4, HIFact, YIELDFact !CASE 4
+      REAL    RLAE6, RLDW6, RBWTDW6, RSTMWT6, LAI6, LN6, PLA6, LFWT6, BASLFWT6, STMWT6, RGRORT6, GRORT6 !CASE 6
+      REAL    RLAE7, RLDW7, RBWTDW7, RSTMWT7, LAI7, LN7, PLA7, LFWT7, BASLFWT7, STMWT7, RGRORT7, GRORT7 !CASE 7
+      REAL    RLAE8, RLDW8, RBWTDW8, RSTMWT8, LAI8, LN8, PLA8, LFWT8, BASLFWT8, STMWT8, RGRORT8, GRORT8 !CASE 8
+      REAL    RLAE9, RLDW9, RBWTDW9, RSTMWT9, LAI9, LN9, PLA9, LFWT9, BASLFWT9, STMWT9, RGRORT9, GRORT9 !CASE 9-10
+      REAL    PLAG, RTWT, FLRWT, GROSTM, SENLA, SLAN, GRORT, GDDFR, TMAXGRO, PLACASE12
       REAL    GDDFRS6, GDDFRS7, GDDFRS8, GDDFRS9, TMAXGROS6, TMAXGROS7, TMAXGROS8, TMAXGROS9, SRADGROS6, SRADGROS7, SRADGROS8, SRADGROS9
+      REAL    PARGROS6, PARGROS7, PARGROS8, PARGROS9
       REAL    GROBSL, GROLF, CUMPH, LN, CUMDEP, SUMP, PLAMX, GROFLR
       REAL    GROCRWN, GROFRT, FRTWT, CRWNWT, SKWT, GROSK, PTF, EYEWT
-      REAL    SWMAX, SWMIN, NDEF3, NSTRES, AGEFAC, LIFAC, SRADGRO
+      REAL    SWMAX, SWMIN, NDEF3, NSTRES, AGEFAC, LIFAC, SRADGRO, PARGRO
       REAL    PAR, CC, TRF2, CARBO, SWFAC, TEMPM  !,TRNU, 
       REAL    DTT, TURFAC, XN, CMF, TOTPLTWT, SUMDTT, GPP, SUMTMAX, SUMDTTGRO, SUMTMAXGRO
-      REAL    PDWI, PGRORT, DM, FBIOM, MAXLAI, PHOTOSYNEYE, FRUITS, SUMSRADGRO, SUMSRAD
+      REAL    PDWI, PGRORT, DM, FBIOM, MAXLAI, PHOTOSYNEYE, FRUITS, SUMSRADGRO, SUMSRAD, SUMPARGRO, SUMPAR
       REAL    YIELD, GPSM, XSTAGE  !, FDMC
 
       REAL    CO2, SRAD, TMIN, TMAX
       REAL    PLTPOP, SDWTPL, PLANTSIZE
-      REAL    G2, G3, P8, PHINT, TBASE      !G2, G3, P4, PHINT, TBASE G2, G3, P7, PHINT, TBASE
+      REAL    G2, G3, P2, P3, P8, PHINT, TBASE      !G2, G3, P4, PHINT, TBASE G2, G3, P7, PHINT, TBASE
       INTEGER PMTYPE, NDOF, NFORCING
       REAL    GRNWT, SDWTAH, SDWTAM, WTNUP, BWAH
       REAL    WTNLF, WTNST, WTNSH, WTNRT, WTNLO
@@ -116,7 +117,7 @@
       TYPE (SwitchType)  ISWITCH
       TYPE (WeatherType) WEATHER
       TYPE (SoilType) SOILPROP
-!      TYPE (ResidueType) SENESCE
+      TYPE (ResidueType) SENESCE
 
       DYNAMIC = CONTROL % DYNAMIC
       CO2  = WEATHER % CO2
@@ -131,6 +132,7 @@
 !=======================================================================
       ISWNIT     = ISWITCH % ISWNIT
       PLA        = 0.0
+      PLACASE12  = 0.0
       LAI        = 0.0
       BIOMAS     = 0.0
       LFWT       = 0.0
@@ -145,6 +147,8 @@
       SUMTMAX = 0.0
       SUMSRADGRO = 0.0
       SUMSRAD = 0.0
+      SUMPARGRO = 0.0
+      SUMPAR = 0.0
       FLRWT  = 0.0
       FRTWT  = 0.0
       CRWNWT = 0.0
@@ -195,6 +199,13 @@
       DTT    = 0.0
       CANNAA = 0.05
       CANWAA = 0.0
+      SUMDTTGRO = 0.0
+      SUMTMAXGRO = 0.0
+      SUMTMAX = 0.0
+      SUMSRADGRO = 0.0
+      SUMSRAD = 0.0
+      SUMPARGRO = 0.0
+      SUMPAR = 0.0
 
       PLAG    = 0.0   ! PLAG (cm^2) is daily green leaf area growth
       GROSTM  = 0.0   ! GROSTM (g/plant/day) is daily stem growth
@@ -210,10 +221,10 @@
      &    AGEFAC, NDEF3, NFAC, NSTRES, RCNP, TCNP, TMNC)  !Output
 
       CALL Aloha_NUPTAK(CONTROL, ISWITCH, 
-     &    ISTAGE, NO3, NH4, PDWI, PGRORT,                 !Input
+     &    ISTAGE, NO3, NH4, PDWI, PGRORT, PLIGRT,         !Input
      &    PLTPOP, PTF, RANC, RCNP, RLV, RTWT, SOILPROP,   !Input
      &    STOVWT, SW, TCNP, XSTAGE,                       !Input
-     &    ROOTN, STOVN, TANC, UNH4, UNO3, WTNUP)          !Output
+     &    ROOTN, SENESCE, STOVN, TANC, UNH4, UNO3, WTNUP) !Output
 
 !=======================================================================
       CASE (SEASINIT)
@@ -223,18 +234,19 @@
       PMTYPE    = PLANTING % PMTYPE
       NFORCING  = PLANTING % NFORCING
       PLANTSIZE = PLANTING % PLANTSIZE
-      NDOF      = PLANTING % NDOF
+      NDOF     = Planting % NDOF
 
       CO2X = SPECIES % CO2X
       CO2Y = SPECIES % CO2Y
-      CC   = SPECIES % CONV
+      CC   = SPECIES % CONV      !modifica PCARB este dato esta en el archivo especies (CONV) y podria ajustar la biomasa con una ecuacion de regresion aqui. Zhang dijo que no tenia datos de uso radiacion use eficience para la piña yo si los tengo. En maiz usan 5g/Mj en piña Zhang uso 2.5 (este es el valor CONV). Estos cambio se darian a partir del ciclo 1.
       CMF  = Species % CMFC
       LIFAC= Species % LIFAC
 
       G2  = CULTIVAR % G2
       G3  = CULTIVAR % G3
-      P8  = CULTIVAR % P8
+      P8  = CULTIVAR % P8                  ! P4  = CULTIVAR % P4   P7  = CULTIVAR % P7 
       PHINT = CULTIVAR % PHINT
+      P2  = CULTIVAR % P2
 
       PLA        = 0.0
       LAI        = 0.0
@@ -258,10 +270,10 @@
      &    AGEFAC, NDEF3, NFAC, NSTRES, RCNP, TCNP, TMNC)  !Output
 
       CALL Aloha_NUPTAK(CONTROL, ISWITCH, 
-     &    ISTAGE, NO3, NH4, PDWI, PGRORT,                 !Input
+     &    ISTAGE, NO3, NH4, PDWI, PGRORT, PLIGRT,         !Input
      &    PLTPOP, PTF, RANC, RCNP, RLV, RTWT, SOILPROP,   !Input
      &    STOVWT, SW, TCNP, XSTAGE,                       !Input
-     &    ROOTN, STOVN, TANC, UNH4, UNO3, WTNUP)          !Output
+     &    ROOTN, SENESCE, STOVN, TANC, UNH4, UNO3, WTNUP) !Output
 
 !=======================================================================
       CASE (RATE)
@@ -273,18 +285,14 @@
         XANC   = TANC*100.0               
         APTNUP = STOVN*10.0*PLTPOP
 
-!      JVJ Value changed because 2 stages in vegetative phase and one stage in reproductive phase were included
-!      IF (ISTAGE .LT. 7) THEN     
-       IF (ISTAGE .LT. 10) THEN                      
+        IF (ISTAGE .LT. 10) THEN                      !IF (ISTAGE .LT. 7) THEN     JVJ Value changed because 2 stages in vegetative phase and one stage in reproductive phase were included
           CALL Aloha_NFACTO (DYNAMIC, 
      &      ISTAGE, TANC, XSTAGE,                           !Input
      &      AGEFAC, NDEF3, NFAC, NSTRES, RCNP, TCNP, TMNC)  !Output
         ENDIF
       ENDIF
 
-!     JVJ Value changed because 2 stages in vegetative phase and one stage in reproductive phase were included
-!     IF (ISTAGE .GT. 5) RETURN   
-      IF (ISTAGE .GT. 8) RETURN                     
+      IF (ISTAGE .GT. 8) RETURN                     ! IF (ISTAGE .GT. 5) RETURN   JVJ Value changed because 2 stages in vegetative phase and one stage in reproductive phase were included
 
 !-----------------------------------------------------------------
 
@@ -299,9 +307,7 @@
 
       TEMPM = 0.6*TMIN + 0.4*TMAX
       SELECT CASE (ISTAGE)
-!       JVJ Value changed because 2 stages in vegetative phase and one stage in reproductive phase were included
-!       CASE (1,2,3,7,8,9)  
-        CASE (1,2,3,4,5,10,11,12,13)                          
+        CASE (1,2,3,4,5,10,11,12,13)    !CASE (1,2,3,4,5,6,10,11,12)                      ! CASE (1,2,3,7,8,9)  JVJ Value changed because 2 stages in vegetative phase and one stage in reproductive phase were included
           IF (TEMPM .LE. 25.0) THEN
              PRFT = 1.0-0.001*(TEMPM-25.0)**2              !  PRFT   : Photosynthetic reduction factor for low and high temperatures
            ELSEIF (TEMPM .LT. 29.0) THEN
@@ -309,9 +315,7 @@
            ELSE
              PRFT = 0.1                                !OTRA OPORTUNIDAD DE MODIFICAR LO DE CLIMA CALIENTE, PERO HAY QUE VER EL IMPACTO SOBRE LA BIOMASA DE PRFT
           ENDIF
-!       JVJ Value changed because 2 stages in vegetative phase and one stage in reproductive phase were included
-!       CASE (4,5,6) 
-        CASE (6,7,8,9)                                   
+        CASE (6,7,8,9)                                   !CASE (4,5,6) JVJ Value changed because 2 stages in vegetative phase and one stage in reproductive phase were included
           PRFT = 1.0-0.005*((0.4*TMIN+0.6*TMAX)-26.)**2
           PRFT = AMAX1 (PRFT,0.0)
       END SELECT
@@ -327,20 +331,17 @@
          TRF2 = 1.65                                          ! 
       ENDIF
 
-!     JVJ Value changed because 2 stages in vegetative phase and one stage in reproductive phase were included
-!     IF (ISTAGE .GE. 4 .AND. ISTAGE .LT. 7) THEN    
-      IF (ISTAGE .GE. 8 .AND. ISTAGE .LT. 10) THEN                 
-         CARBO = PCARB*AMIN1(PRFT,0.55+0.45*SWFAC,NSTRES)
+      IF (ISTAGE .GE. 5 .AND. ISTAGE .LT. 10) THEN                 !IF (ISTAGE .GE. 4 .AND. ISTAGE .LT. 7) THEN    JVJ Value changed because 2 stages in vegetative phase and one stage in reproductive phase were included
+         CARBO = PCARB*AMIN1(PRFT,0.55+0.45*SWFAC,NSTRES)          !IF (ISTAGE .GE. 8 .AND. ISTAGE .LT. 10) THEN ojo la linea anterior estaba as� el 25/03/2021
        ELSE
          CARBO = PCARB*AMIN1(PRFT,SWFAC,NSTRES)
       ENDIF
       DTT = AMAX1 (DTT,0.0)
-
-!-----------------------------------------------------------------
-! IF (ISTAGE .LE. 3) THEN   JVJ Value changed because 2 stages in vegetative phase and one stage in reproductive phase were included
-! IF (ISTAGE .LE. 3) THEN  debe ser 4 para que deje de producir hojas a partir de forza.
-! Originalmente lo hab�a modificado como 5 pero era 4. Sucer� lo mismo m�s abajo?
-      IF (ISTAGE .LE. 4) THEN                                    
+      
+!----------------------------------------------------------------- OJO AQUI LOGRO MODIFICAR EL NUMERO DE HOJAS
+      IF (ISTAGE .LE. 4) THEN                                    ! Creo que si aqu� en lugar de LE coloco LT deja de salir m�s hojas o modificarse LAI (no recuerdo que es) despu�s de forza.
+!                                                                ! IF (ISTAGE .LE. 3) THEN  debe ser 4 para que deje de producir hojas a partir de forza.
+!        Calculate leaf emergence                                ! Originalmente lo hab�a modificado como 5 pero era 4. Sucer� lo mismo m�s abajo?
 !        The first 5 leaves grow faster than other leaves, used for maize
 !         
          !PC = 1.0                                                                        ! PC Used to compute fraction of phyllochron interval occurring today
@@ -367,15 +368,21 @@
          IF (ISTAGE .LE. 4) THEN                                
             IF (TEMPM .GE. TBASE) THEN
                IF ((LN*PLTPOP) .LE. (13*PLTPOP)) THEN        
-                    TI = (-0.07260309 * (LOG(GDDFR/(TMAXGRO/SRADGRO)))**2 + 0.29041612 * (LOG(GDDFR/(TMAXGRO/SRADGRO))) - 0.15937426)/PC 
+                    TI1       = -0.07260309 * (LOG(GDDFR/(TMAXGRO/SRADGRO)))**2 + 0.29041612 * (LOG(GDDFR/(TMAXGRO/SRADGRO))) - 0.15937426  !y = -0.07260309x2 + 0.29041612x - 0.15937426 R² = 0.97140069
+                    TI     = TI1/PC
+                 
                    ENDIF
 
                IF ((LN*PLTPOP) .LE. (26*PLTPOP)) THEN
-                    TI = (-0.07260309 * (LOG(GDDFR/(TMAXGRO/SRADGRO)))**2 + 0.29041612 * (LOG(GDDFR/(TMAXGRO/SRADGRO))) - 0.15937426)/PC
+                    TI2       = -0.07260309 * (LOG(GDDFR/(TMAXGRO/SRADGRO)))**2 + 0.29041612 * (LOG(GDDFR/(TMAXGRO/SRADGRO))) - 0.15937426  !y = -0.07260309x2 + 0.29041612x - 0.15937426 R² = 0.97140069
+                    TI     = TI2/PC
+                   
                    ENDIF
 
                  IF ((LN*PLTPOP) .LE. (39*PLTPOP)) THEN                   
-                    TI = (-0.07260309 * (LOG(GDDFR/(TMAXGRO/SRADGRO)))**2 + 0.29041612 * (LOG(GDDFR/(TMAXGRO/SRADGRO))) - 0.15937426)/PC
+                    TI3       = -0.07260309 * (LOG(GDDFR/(TMAXGRO/SRADGRO)))**2 + 0.29041612 * (LOG(GDDFR/(TMAXGRO/SRADGRO))) - 0.15937426  !y = -0.07260309x2 + 0.29041612x - 0.15937426 R² = 0.97140069
+                    TI     = TI3/PC
+               
                 
                  ENDIF
                   ENDIF     
@@ -413,18 +420,30 @@
         !
         !      !Root Initiation to Leaf Emergence
         !
+             
 
-         IF ((LN*PLTPOP) .LE. (1)) THEN                                            
-                                                                               
-                                                                               
-                                                                               
-            !PLAG = CMF*1.75*(33.0+7.5*XN)*0.5*TI*TURFAC   
-            LFWT        = LFWT1                    
-            BASLFWT     = BASLFWT1                 
-            STMWT       = STMWT1                   
-            STOVWT= STMWT
+         
+             IF ((LN*PLTPOP) .LE. (1)) THEN                                            
+                                                                                   
+                                                                                   
+                                                                                   
+             !PLAG = CMF*1.75*(33.0+7.5*XN)*0.5*TI*TURFAC   
+             LAI         = LAI1                     
+             LFWT        = LFWT1                    
+             BASLFWT     = BASLFWT1                 
+             STMWT       = STMWT1                   
+             STOVWT= STMWT
+
+
+
 
          ENDIF
+        
+        
+        
+        
+       
+        
 
         GROLF  = PLAG*(1/((85*EXP(-XN*0.012))*TRF2))
         GROBSL = 0.42*GROLF
@@ -464,7 +483,7 @@
         STMWT   = STMWT1   + GROSTM
         PLA     = PLA1     + PLAG
         BIOMAS= (LFWT + STMWT + BASLFWT)*PLTPOP
-
+        BIOMAS1 = BIOMAS
  
 
         IF (GROLF .GT. 0.0) THEN
@@ -479,11 +498,15 @@
         !
 
         IF ((LN*PLTPOP) .GT. (1*PLTPOP) . AND. (LN*PLTPOP) .LT. (13*PLTPOP)) THEN  
-                                                                       
+                                                                                   
+                                                                                   
+                                                                                   
           LFWT    = LFWT2
           BASLFWT = BASLFWT2
           STMWT   = STMWT2
           PLA     = PLA2
+         
+         
 
          ENDIF
         
@@ -542,12 +565,17 @@
         !
 
         IF ((LN*PLTPOP) .GT. (13*PLTPOP) . AND. (LN*PLTPOP) .LT. (26*PLTPOP)) THEN  
- 
-         LFWT    = LFWT3
-         BASLFWT = BASLFWT3
-         STMWT   = STMWT3
-         PLA     = PLA3  
-        ENDIF
+                                                                                   
+                                                                                   
+                                                                                   
+          LFWT    = LFWT3
+          BASLFWT = BASLFWT3
+          STMWT   = STMWT3
+          PLA     = PLA3
+         
+         
+
+         ENDIF
         
         
         
@@ -571,7 +599,7 @@
      &         GROSTM .GT. 0.0) THEN
               GRF   = CARBO*0.9/(GROLF+GROBSL+GROSTM)
               GRORT = CARBO*0.1
-           ELSE
+            ELSE
               GRF = 1.0
            ENDIF
 
@@ -582,6 +610,11 @@
            PLAG   = GROLF*((85.0*EXP(-XN*0.012))*TRF2)
            
         ENDIF
+
+        !LFWT    = LFWT    + GROLF
+        !BASLFWT = BASLFWT + GROBSL
+        !STMWT   = STMWT   + GROSTM
+        !PLA     = PLA     + PLAG
 
         LFWT    = LFWT3    + GROLF
         BASLFWT = BASLFWT3 + GROBSL
@@ -601,15 +634,19 @@
         !
 
         IF ((LN*PLTPOP) .GT. (26*PLTPOP) . AND. (LN*PLTPOP) .LT. (39*PLTPOP)) THEN  
-
+                                                                                   
+                                                                                   
+                                                                                   
           LFWT    = LFWT4
           BASLFWT = BASLFWT4
           STMWT   = STMWT4
           PLA     = PLA4
+         
+         
 
-
-        ENDIF
-
+         ENDIF
+        
+         
         GROLF  = PLAG*(1/((85*EXP(-XN*0.012))*TRF2))
         GROBSL = 0.42*GROLF
         !
@@ -637,6 +674,11 @@
            PLAG   = GROLF*((85.0*EXP(-XN*0.012))*TRF2)
         ENDIF
 
+        !LFWT    = LFWT    + GROLF
+        !BASLFWT = BASLFWT + GROBSL
+        !STMWT   = STMWT   + GROSTM
+        !PLA     = PLA     + PLAG
+
         LFWT    = LFWT4    + GROLF
         BASLFWT = BASLFWT4 + GROBSL
         STMWT   = STMWT4   + GROSTM
@@ -650,7 +692,7 @@
 !-----------------------------------------------------------------
 
        
-
+        
       CASE (5,6)      ! CASE (5,6)                                      ! CASE (3)
         !
         ! Forcing to sepals closed on youngest flowers
@@ -1117,17 +1159,17 @@
       END SELECT 
 
       TOTPLTWT =  LFWT + STMWT + FLRWT + BASLFWT + SKWT
-      DM       = BIOMAS*10.0
+      DM       = BIOMAS*10.0 
       STOVWT   = LFWT + STMWT
       PTF      = (LFWT+BASLFWT+STMWT+FLRWT+SKWT) /
      &           (LFWT+BASLFWT+STMWT+FLRWT+SKWT+RTWT)
       
       IF (ISWNIT .NE. 'N') THEN
         CALL Aloha_NUPTAK(CONTROL, ISWITCH, 
-     &    ISTAGE, NO3, NH4, PDWI, PGRORT,                 !Input
+     &    ISTAGE, NO3, NH4, PDWI, PGRORT, PLIGRT,         !Input
      &    PLTPOP, PTF, RANC, RCNP, RLV, RTWT, SOILPROP,   !Input
      &    STOVWT, SW, TCNP, XSTAGE,                       !Input
-     &    ROOTN, STOVN, TANC, UNH4, UNO3, WTNUP)          !Output
+     &    ROOTN, SENESCE, STOVN, TANC, UNH4, UNO3, WTNUP) !Output
       ENDIF
 
 !-----------------------------------------------------------------
@@ -1144,13 +1186,11 @@ C-----------------------------------------------------------------------
 !-----------------------------------------------------------------------
       CASE (INTEGR)
 !=======================================================================
-
 !     This code used to be in PhaseI subroutine. Put here to make timing match 
 !     with old code.
 !     Some of the code was removed to other subroutines.
       IF (ISTAGE /= ISTAGE_old) THEN
         ISTAGE_OLD = ISTAGE
-        WRITE(*,*) "ISTAGE: ", ISTAGE
 
 !       New stage initialization
         SELECT CASE (ISTAGE)
@@ -1172,12 +1212,15 @@ C-----------------------------------------------------------------------
           LN      = 1                   
           CUMDEP  = 0.0
           
-
+         
+         
          YRDOY   = CONTROL % YRDOY   ! Esto hala la fecha del dia que se cumple la etapa iniciacion de la raiz
          NDOF = TIMDIF(YRPLT, YRDOY) ! Estos son los días desde la siembra hasta que se cumple la etapa que hala de Phenol según su ubicación
          DAP2 = NDOF
          DAP3     = NDOF - DAP1      !Resta los días pasados de la siembra a la etapa que hala de Phenol a los días que habían pasado de la etapa anterior
-                  
+          
+          
+         
          ADJGDDF1 = (SUMDTTGRO - SUMDTT)
          ADJTMAX1 = (SUMTMAXGRO - SUMTMAX)
          ADJSRAD1 = (SUMSRADGRO - SUMSRAD)
@@ -1186,8 +1229,9 @@ C-----------------------------------------------------------------------
          TMAXGRO = (ADJTMAX13 + ADJTMAX1)/(DAP3+DAP1)
          SRADGRO = (ADJSRAD13 + ADJSRAD1)/(DAP3+DAP1)
          
-
          
+         
+         PARGRO =  (SUMPARGRO - SUMPAR)/(DAP3)    ! 
          SEEDQLY = ((1-(BASLFWT12/LFWT12))*PLTPOP) ! este es un factor de calidad de semilla (estimado al momento de la siembra) y usado para ajustar LFWT1
          
          
@@ -1208,19 +1252,21 @@ C-----------------------------------------------------------------------
 
          
          
-          LAI    = PLTPOP*PLA1*0.0001
+          LAI1    = PLTPOP*PLA1*0.0001
           
+          LAI         = LAI1                         !ESTAS 8 FILAS DEBEN ESTAR AQUI PARA QUE SALGAN EN EL OVERVIEW PRIMERA PARTE
           LFWT        = LFWT1                        !PERO TAMBIEN DEBEN DECLARARSE EN CASE 1 DE ARRIBA PARA QUE SALGAN EN EL OVERVIEW
           BASLFWT     = BASLFWT1                     !DE COMPARACION SIMULADOS VRS OBSERVADOS
           STMWT       = STMWT1                      
           STOVWT= STMWT
           BIOMAS= (LFWT + STMWT + BASLFWT)*PLTPOP
+          BIOMAS1 = BIOMAS
+          LAI1 = LAI 
          
+
              
     
       CASE (2)       !CASE (2)    ! Leaf Cycle 1
-
-
           !GROSTM = 0.0  ! Daily stem growth (g/plant/day)
           YRDOY   = CONTROL % YRDOY
           NDOF = TIMDIF(YRPLT, YRDOY)
@@ -1229,6 +1275,7 @@ C-----------------------------------------------------------------------
           GDDFR   = (SUMDTTGRO - SUMDTT)/(DAP5)  !cuando intente hacer esto en CASE (3) debo recordar que debo poner la variable SUMDTTGRO en Phenol Case(3)
           TMAXGRO = (SUMTMAXGRO - SUMTMAX)/(DAP5)
           SRADGRO = (SUMSRADGRO - SUMSRAD)/(DAP5)
+          PARGRO  = (SUMPARGRO - SUMPAR)/(DAP5)
    
              RLAE2    = -0.00042225 * (LOG(GDDFR/(TMAXGRO/SRADGRO)))**2 + 0.00730812 * (LOG(GDDFR/(TMAXGRO/SRADGRO))) - 0.00551540     !y = -0.00042225x2 + 0.00730812x - 0.00551540 R² = 0.8942  Listo variable calibrada en CASE (2) polinomial promedios
              PLA2     = PLA1*EXP(RLAE2*(DAP5))                                                                                                                                                                                                                                      
@@ -1248,14 +1295,18 @@ C-----------------------------------------------------------------------
              RGRORT2 = 3.41064008 * (LOG(GDDFR/(TMAXGRO/SRADGRO)))**2 + 20.16657317 * (LOG(GDDFR/(TMAXGRO/SRADGRO))) - 8.25952711   !y = 3.41064008x2 + 20.16657317x - 8.25952711 R² = 0.8636 Listo variable calibrada en CASE (1) polinomial promedios 
              GRORT2  = GRORT1*EXP((RGRORT2/1000)*(DAP5))                                                                                             
 
-             LAI    = PLTPOP*PLA2*0.0001
+             LAI2    = PLTPOP*PLA2*0.0001
               
 
+             LAI         = LAI2                         !ESTAS 8 FILAS DEBEN ESTAR AQUI PARA QUE SALGAN EN EL OVERVIEW PRIMERA PARTE
              LFWT        = LFWT2                        !PERO TAMBIEN DEBEN DECLARARSE EN CASE 1 DE ARRIBA PARA QUE SALGAN EN EL OVERVIEW
              BASLFWT     = BASLFWT2                     !DE COMPARACION SIMULADOS VRS OBSERVADOS
              STMWT       = STMWT2                       
              STOVWT= STMWT
              BIOMAS= (LFWT + STMWT + BASLFWT)*PLTPOP         
+             BIOMAS2 = BIOMAS
+             LAI2 = LAI
+             LN2  = LN 
             
 
       
@@ -1269,6 +1320,8 @@ C-----------------------------------------------------------------------
           GDDFR   = (SUMDTTGRO - SUMDTT)/(DAP7)  
           TMAXGRO = (SUMTMAXGRO - SUMTMAX)/(DAP7)
           SRADGRO = (SUMSRADGRO - SUMSRAD)/(DAP7)
+          PARGRO  = (SUMPARGRO - SUMPAR)/(DAP7)
+
           
           
              RLAE3    = 0.42242459 * (LOG(GDDFR/(TMAXGRO/SRADGRO)))**2 - 1.70953080 * (LOG(GDDFR/(TMAXGRO/SRADGRO)))  + 1.80173219     !y = 0.42242459x2 - 1.70953080x + 1.80173219 R² = 0.57828588  Listo variable calibrada en CASE (3) polinomial promedios con la ecuación GDD/(TMAX/SRAD)
@@ -1289,14 +1342,19 @@ C-----------------------------------------------------------------------
              RGRORT3 = 1946.55069451 * (LOG(GDDFR/(TMAXGRO/SRADGRO)))**2 - 7623.83657710 * (LOG(GDDFR/(TMAXGRO/SRADGRO))) + 7519.46534541   !y = 1946.55069451x2 - 7623.83657710x + 7519.46534541 R² = 0.5264 Listo variable calibrada en CASE (3) polinomial promedios con la ecuación GDD/(TMAX/SRAD)
              GRORT3  = GRORT2*EXP((RGRORT3/1000)*(GDDFR/(TMAXGRO/SRADGRO)))                                                                                            
 
-             LAI    = PLTPOP*PLA3*0.0001
+             LAI3    = PLTPOP*PLA3*0.0001
               
 
+             LAI         = LAI3                         !ESTAS 8 FILAS DEBEN ESTAR AQUI PARA QUE SALGAN EN EL OVERVIEW PRIMERA PARTE
              LFWT        = LFWT3                        !PERO TAMBIEN DEBEN DECLARARSE EN CASE 1 DE ARRIBA PARA QUE SALGAN EN EL OVERVIEW
              BASLFWT     = BASLFWT3                     !DE COMPARACION SIMULADOS VRS OBSERVADOS
              STMWT       = STMWT3                       
              STOVWT= STMWT
              BIOMAS= (LFWT + STMWT + BASLFWT)*PLTPOP  
+             BIOMAS3 = BIOMAS
+             LAI3 = LAI
+             LN3  = LN 
+
             
 
         
@@ -1310,6 +1368,7 @@ C-----------------------------------------------------------------------
 !          ELSE    
 !             PLANTSIZE = PLANTING % PLANTSIZE
 !          ENDIF
+          
           YRDOY   = CONTROL % YRDOY
           NDOF = TIMDIF(YRPLT, YRDOY)
           DAP8 = NDOF
@@ -1318,6 +1377,7 @@ C-----------------------------------------------------------------------
           GDDFR   = (SUMDTTGRO - SUMDTT)/(DAP9)  
           TMAXGRO = (SUMTMAXGRO - SUMTMAX)/(DAP9)
           SRADGRO = (SUMSRADGRO - SUMSRAD)/(DAP9)
+          PARGRO  = (SUMPARGRO - SUMPAR)/(DAP9)
           
              RLAE4    = 0.02279067 * (LOG(GDDFR/(TMAXGRO/SRADGRO)))**2 - 0.09618739 * (LOG(GDDFR/(TMAXGRO/SRADGRO)))  + 0.15232236     !y = 0.42157206x2 - 1.70530517x + 1.79648701 R² = 0.4883  Listo variable calibrada en CASE (4) polinomial todos con la ecuación GDD/(TMAX/SRAD)
              PLA4     = PLA3*EXP(RLAE4*(GDDFR/(TMAXGRO/SRADGRO)))
@@ -1335,16 +1395,33 @@ C-----------------------------------------------------------------------
              RGRORT4 = -380.88231019 * (LOG(GDDFR/(TMAXGRO/SRADGRO)))**2 + 1533.01000755 * (LOG(GDDFR/(TMAXGRO/SRADGRO))) - 1424.86934789   !y = -380.88231019x2 + 1533.01000755x - 1424.86934789 R² = 0.32845892 Listo variable calibrada en CASE (4) polinomial promedios con la ecuación GDD/(TMAX/SRAD)
              GRORT4  = GRORT3*EXP((RGRORT4/1000)*(GDDFR/(TMAXGRO/SRADGRO)))                                                                                            
 
-             LAI    = PLTPOP*PLA4*0.0001
+             LAI4    = PLTPOP*PLA4*0.0001
               
 
+             LAI         = LAI4                         !ESTAS 8 FILAS DEBEN ESTAR AQUI PARA QUE SALGAN EN EL OVERVIEW PRIMERA PARTE
              LFWT        = LFWT4                        !PERO TAMBIEN DEBEN DECLARARSE EN CASE 1 DE ARRIBA PARA QUE SALGAN EN EL OVERVIEW
              BASLFWT     = BASLFWT4                     !DE COMPARACION SIMULADOS VRS OBSERVADOS
              STMWT       = STMWT4                       
              STOVWT= STMWT
              BIOMAS= (LFWT + STMWT + BASLFWT)*PLTPOP  
+             BIOMAS4 = BIOMAS
+             LAI4 = LAI
+             LN4  = LN
+            
+
+        
+
 
 !-------------------------------------------------------- NEW  JVJ  Case duplicated because 2 stages in vegetative phase were included 
+
+            
+
+
+
+
+
+
+
   
          CASE (5)      !CASE (5)                                                          !  JVJ  Case duplicated because 2 stages in vegetative phase were included 
 !          IF (NFORCING .GE. 2) THEN
@@ -1362,6 +1439,7 @@ C-----------------------------------------------------------------------
           GDDFR   = (SUMDTTGRO - SUMDTT)/(DAP11)  
           TMAXGRO = (SUMTMAXGRO - SUMTMAX)/(DAP11)
           SRADGRO = (SUMSRADGRO - SUMSRAD)/(DAP11)
+          PARGRO  = (SUMPARGRO - SUMPAR)/(DAP11)
           
                   
           FBIOM  = BIOMAS               
@@ -1375,7 +1453,8 @@ C-----------------------------------------------------------------------
           FRTWT  = 0.0
           CRWNWT = 0.0
             
-
+          
+          
 !---------------------------------------------------------NEW END JVJ  Case duplicated because 2 stages in vegetative phase were included  
         CASE (6)        !CASE (6)                               !     CASE (4)
           
@@ -1387,10 +1466,12 @@ C-----------------------------------------------------------------------
           GDDFR   = SUMDTTGRO/DAP13  
           TMAXGRO = SUMTMAXGRO/DAP13
           SRADGRO = SUMSRADGRO/(DAP13)
+          PARGRO  = SUMPARGRO/(DAP13)
 
           GDDFRS6   = GDDFR
           TMAXGROS6 = TMAXGRO
           SRADGROS6 = SRADGRO
+          PARGROS6  = PARGRO
 
              PLA     = AMAX1(PLA3, PLA2)
              LFWT    = AMAX1(LFWT3, LFWT2)
@@ -1422,15 +1503,18 @@ C-----------------------------------------------------------------------
              RGRORT6 = -380.88231019 * (LOG(GDDFR/(TMAXGRO/SRADGRO)))**2 + 1533.01000755 * (LOG(GDDFR/(TMAXGRO/SRADGRO))) - 1424.86934789   !y = -245.38755875x2 + 1164.28810787x - 1323.09661205 R² = 0.0702 Listo variable calibrada en CASE (4) polinomial todos con la ecuación GDD/(TMAX/SRAD)
              GRORT6  = GRORT*EXP((RGRORT6/1000)*(GDDFR/(TMAXGRO/SRADGRO)))                                                                                            
 
-             LAI    = PLTPOP*PLA6*0.0001
+             LAI6    = PLTPOP*PLA6*0.0001
               
 
+             LAI         = LAI6                         !ESTAS 8 FILAS DEBEN ESTAR AQUI PARA QUE SALGAN EN EL OVERVIEW PRIMERA PARTE
              LFWT        = LFWT6                        !PERO TAMBIEN DEBEN DECLARARSE EN CASE 1 DE ARRIBA PARA QUE SALGAN EN EL OVERVIEW
              BASLFWT     = BASLFWT6                     !DE COMPARACION SIMULADOS VRS OBSERVADOS
              STMWT       = STMWT6                       
              STOVWT= STMWT
              BIOMAS= (LFWT + STMWT + BASLFWT)*PLTPOP  
              !BIOMAS6 = BIOMAS
+             LAI6 = LAI
+             LN6  = LN
 
 
 
@@ -1468,10 +1552,12 @@ C         ABIOMS      = BIOMAS
           GDDFR   = (SUMDTTGRO - SUMDTT)/(DAP15)  
           TMAXGRO = (SUMTMAXGRO - SUMTMAX)/(DAP15)
           SRADGRO = (SUMSRADGRO - SUMSRAD)/(DAP15)
+          PARGRO  = (SUMPARGRO - SUMPAR)/(DAP15)
 
           GDDFRS7   = GDDFR
           TMAXGROS7 = TMAXGRO
           SRADGROS7 = SRADGRO
+          PARGROS7  = PARGRO
           
              PLA     = AMAX1(PLA3, PLA2)
              LFWT    = AMAX1(LFWT3, LFWT2)
@@ -1503,14 +1589,22 @@ C         ABIOMS      = BIOMAS
              RGRORT7 = -380.88231019 * (LOG(GDDFR/(TMAXGRO/SRADGRO)))**2 + 1533.01000755 * (LOG(GDDFR/(TMAXGRO/SRADGRO))) - 1424.86934789   !y = -245.38755875x2 + 1164.28810787x - 1323.09661205 R² = 0.0702 Listo variable calibrada en CASE (4) polinomial todos con la ecuación GDD/(TMAX/SRAD)
              GRORT7  = GRORT*EXP((RGRORT7/1000)*(GDDFR/(TMAXGRO/SRADGRO)))                                                                                            
 
-             LAI    = PLTPOP*PLA7*0.0001
+             LAI7    = PLTPOP*PLA7*0.0001
               
 
+             LAI         = LAI7                         !ESTAS 8 FILAS DEBEN ESTAR AQUI PARA QUE SALGAN EN EL OVERVIEW PRIMERA PARTE
              LFWT        = LFWT7                        !PERO TAMBIEN DEBEN DECLARARSE EN CASE 1 DE ARRIBA PARA QUE SALGAN EN EL OVERVIEW
              BASLFWT     = BASLFWT7                     !DE COMPARACION SIMULADOS VRS OBSERVADOS
              STMWT       = STMWT7                       
              STOVWT= STMWT
              BIOMAS= (LFWT + STMWT + BASLFWT)*PLTPOP  
+             !BIOMAS7 = BIOMAS
+             LAI7 = LAI
+             LN7  = LN
+
+
+
+
 
 
 !         Move from Istage 4 because no actual fruits until stage 5
@@ -1539,10 +1633,12 @@ C         ABIOMS      = BIOMAS
           GDDFR   = (SUMDTTGRO - SUMDTT)/(DAP17)  
           TMAXGRO = (SUMTMAXGRO - SUMTMAX)/(DAP17)
           SRADGRO = (SUMSRADGRO - SUMSRAD)/(DAP17)
+          PARGRO  = (SUMPARGRO - SUMPAR)/(DAP17)
 
           GDDFRS8   = GDDFR
           TMAXGROS8 = TMAXGRO
           SRADGROS8 = SRADGRO
+          PARGROS8  = PARGRO
 
              PLA     = AMAX1(PLA3, PLA2)
              LFWT    = AMAX1(LFWT3, LFWT2)
@@ -1574,14 +1670,18 @@ C         ABIOMS      = BIOMAS
              RGRORT8 = -380.88231019 * (LOG(GDDFR/(TMAXGRO/SRADGRO)))**2 + 1533.01000755 * (LOG(GDDFR/(TMAXGRO/SRADGRO))) - 1424.86934789   !y = -245.38755875x2 + 1164.28810787x - 1323.09661205 R² = 0.0702 Listo variable calibrada en CASE (4) polinomial todos con la ecuación GDD/(TMAX/SRAD)
              GRORT8  = GRORT*EXP((RGRORT8/1000)*(GDDFR/(TMAXGRO/SRADGRO)))                                                                                            
 
-             LAI    = PLTPOP*PLA8*0.0001
+             LAI8    = PLTPOP*PLA8*0.0001
               
 
+             LAI         = LAI8                         !ESTAS 8 FILAS DEBEN ESTAR AQUI PARA QUE SALGAN EN EL OVERVIEW PRIMERA PARTE
              LFWT        = LFWT8                        !PERO TAMBIEN DEBEN DECLARARSE EN CASE 1 DE ARRIBA PARA QUE SALGAN EN EL OVERVIEW
              BASLFWT     = BASLFWT8                     !DE COMPARACION SIMULADOS VRS OBSERVADOS
              STMWT       = STMWT8                       
              STOVWT= STMWT
              BIOMAS= (LFWT + STMWT + BASLFWT)*PLTPOP  
+             !BIOMAS8 = BIOMAS
+             LAI8 = LAI
+             LN8  = LN
 
 
 
@@ -1613,10 +1713,12 @@ C         ABIOMS      = BIOMAS
           GDDFR   = (SUMDTTGRO - SUMDTT)/(DAP19)  
           TMAXGRO = (SUMTMAXGRO - SUMTMAX)/(DAP19)
           SRADGRO = (SUMSRADGRO - SUMSRAD)/(DAP19)
+          PARGRO  = (SUMPARGRO - SUMPAR)/(DAP19)
          
           GDDFRS9   = GDDFR
           TMAXGROS9 = TMAXGRO
           SRADGROS9 = SRADGRO
+          PARGROS9  = PARGRO
 
              
              PLA     = AMAX1(PLA3, PLA2)
@@ -1649,15 +1751,18 @@ C         ABIOMS      = BIOMAS
              RGRORT9 = -380.88231019 * (LOG(GDDFR/(TMAXGRO/SRADGRO)))**2 + 1533.01000755 * (LOG(GDDFR/(TMAXGRO/SRADGRO))) - 1424.86934789   !y = -245.38755875x2 + 1164.28810787x - 1323.09661205 R² = 0.0702 Listo variable calibrada en CASE (4) polinomial todos con la ecuación GDD/(TMAX/SRAD)
              GRORT9  = GRORT*EXP((RGRORT9/1000)*(GDDFR/(TMAXGRO/SRADGRO)))                                                                                            
 
-             LAI    = PLTPOP*PLA9*0.0001
+             LAI9    = PLTPOP*PLA9*0.0001
               
 
+             LAI         = LAI9                         !ESTAS 8 FILAS DEBEN ESTAR AQUI PARA QUE SALGAN EN EL OVERVIEW PRIMERA PARTE
              LFWT        = LFWT9                        !PERO TAMBIEN DEBEN DECLARARSE EN CASE 1 DE ARRIBA PARA QUE SALGAN EN EL OVERVIEW
              BASLFWT     = BASLFWT9                     !DE COMPARACION SIMULADOS VRS OBSERVADOS
              STMWT       = STMWT9                       
              STOVWT= STMWT
              BIOMAS= (LFWT + STMWT + BASLFWT)*PLTPOP  
              !BIOMAS9 = BIOMAS
+             LAI9 = LAI
+             LN9  = LN
 
 
           
@@ -1688,8 +1793,9 @@ C         ABIOMS      = BIOMAS
           DAP21 = (DAP13 + DAP15 + DAP17 + DAP19) 
 
           GDDFR   = (((GDDFRS6/DAP21)*DAP13) + ((GDDFRS7/DAP21)*DAP15) + ((GDDFRS8/DAP21)*DAP17) + ((GDDFRS9/DAP21)*DAP19))
-          TMAXGRO = (((TMAXGRO/DAP21)*DAP13) + ((TMAXGROS7/DAP21)*DAP15) + ((TMAXGROS8/DAP21)*DAP17) + ((TMAXGROS9/DAP21)*DAP19))
+          TMAXGRO = (((TMAXGROS6/DAP21)*DAP13) + ((TMAXGROS7/DAP21)*DAP15) + ((TMAXGROS8/DAP21)*DAP17) + ((TMAXGROS9/DAP21)*DAP19))
           SRADGRO = (((SRADGROS6/DAP21)*DAP13) + ((SRADGROS7/DAP21)*DAP15) + ((SRADGROS8/DAP21)*DAP17) + ((SRADGROS9/DAP21)*DAP19))
+          PARGRO  = (((PARGROS6/DAP21)*DAP13) + ((PARGROS7/DAP21)*DAP15) + ((PARGROS8/DAP21)*DAP17) + ((PARGROS9/DAP21)*DAP19))
          
              PLA     = AMAX1(PLA3, PLA2)
              LFWT    = AMAX1(LFWT3, LFWT2)
@@ -1721,15 +1827,18 @@ C         ABIOMS      = BIOMAS
              RGRORT9 = -380.88231019 * (LOG(GDDFR/(TMAXGRO/SRADGRO)))**2 + 1533.01000755 * (LOG(GDDFR/(TMAXGRO/SRADGRO))) - 1424.86934789   !y = -245.38755875x2 + 1164.28810787x - 1323.09661205 R² = 0.0702 Listo variable calibrada en CASE (4) polinomial todos con la ecuación GDD/(TMAX/SRAD)
              GRORT9  = GRORT*EXP((RGRORT9/1000)*(GDDFR/(TMAXGRO/SRADGRO)))                                                                                            
 
-             LAI    = PLTPOP*PLA9*0.0001
+             LAI9    = PLTPOP*PLA9*0.0001
               
 
+             LAI         = LAI9                         !ESTAS 8 FILAS DEBEN ESTAR AQUI PARA QUE SALGAN EN EL OVERVIEW PRIMERA PARTE
              LFWT        = LFWT9                        !PERO TAMBIEN DEBEN DECLARARSE EN CASE 1 DE ARRIBA PARA QUE SALGAN EN EL OVERVIEW
              BASLFWT     = BASLFWT9                     !DE COMPARACION SIMULADOS VRS OBSERVADOS
              STMWT       = STMWT9                       
              STOVWT= STMWT
              BIOMAS= (LFWT + STMWT + BASLFWT)*PLTPOP
              !BIOMAS9 = BIOMAS
+             LAI9 = LAI
+             LN9  = LN
     
           
 
@@ -1770,30 +1879,20 @@ C         ABIOMS      = BIOMAS
         CASE (12)    !Planting initial variables      
           YRDOY   = CONTROL % YRDOY
           
-          WRITE(*,*) "YRDOY: ", YRDOY, " SDWTPL ", SDWTPL, " PLTPOP ", PLTPOP, " PLA ", PLA
          
           WTINITIAL = SDWTPL/(PLTPOP*10.0)        ! kg/ha  --> g/plt
-          
-          WRITE(*,*) "WTINITIAL: ", WTINITIAL
 
           PLA        = EXP(-11.36267709 * (LOG(WTINITIAL))**2 + 96.88737658 * (LOG(WTINITIAL)) - 198.54329897) ! y = -11.36267709x2 + 96.88737658x - 198.54329897 R² = 0.2313 polinomial todas
-          WRITE(*,*) "PLA ", PLA
           PLA12      = PLA
           LAI        = PLTPOP*PLA*0.0001     !         
-          WRITE(*,*) "LAI ", LAI, " PLA12: ", PLA12
           LFWT       = EXP(-35.88863437 * (LOG(WTINITIAL))**2 + 305.89682709 * (LOG(WTINITIAL)) - 647.87752188)  ! y = -35.88863437x2 + 305.89682709x - 647.87752188 R² = 0.9516 polinomial ajuste
-          WRITE(*,*) "LFWT ", LFWT
           LFWT12     = LFWT 
-          WRITE(*,*) "LFWT12 ", LFWT12
           BASLFWT    = EXP(106.46751403 * (LOG(WTINITIAL))**2 - 904.07142367 * (LOG(WTINITIAL)) + 1921.62542892)  ! y = 106.46751403x2 - 904.07142367x + 1921.62542892 R² = 0.9348 polinomial ajuste
-          WRITE(*,*) "BASLFWT ", BASLFWT
           BASLFWT12  = BASLFWT 
-          WRITE(*,*) "BASLFWT12 ", BASLFWT12
           STMWT      = EXP(66.59416831 * (LOG(WTINITIAL))**2 - 564.70708020 * (LOG(WTINITIAL)) + 1198.91190261)  ! y = 66.59416831x2 - 564.70708020x + 1198.91190261 R² = 0.9816 polinomial ajuste
-          WRITE(*,*) "STMWT ", STMWT
           STMWT12    = STMWT
-          WRITE(*,*) "STMWT12 ", STMWT12
-          STOVWT     = WTINITIAL                
+          STOVWT     = WTINITIAL             ! 
+          
           
           BIOMAS= (LFWT + STMWT + BASLFWT)*PLTPOP
           YRPLT   = YRDOY
@@ -1806,31 +1905,35 @@ C         ABIOMS      = BIOMAS
           
           TMAXGRO = (SUMTMAXGRO - SUMTMAX)/(DAP1)  ! Este esta ok asi porque el dia de la siembra no acumula GDD pero en la etapa siguiente se le debe restar el dia presente de lo contrario la temperatura maxima promedio es mayor a lo correcto
           SRADGRO = (SUMSRADGRO - SUMSRAD)/(DAP1)  ! Este esta ok asi porque el dia de la siembra no acumula GDD pero en la etapa siguiente se le debe restar el dia presente de lo contrario la radiacion promedio es mayor a lo correcto
+          PARGRO =  (SUMPARGRO - SUMPAR)/(DAP1)    ! Este esta ok asi porque el dia de la siembra no acumula GDD pero en la etapa siguiente se le debe restar el dia presente de lo contrario PAR promedio es mayor a lo correcto
       
           ADJGDDF13 = (SUMDTTGRO - SUMDTT)
           ADJTMAX13 = (SUMTMAXGRO - SUMTMAX)
           ADJSRAD13 = (SUMSRADGRO - SUMSRAD)
 
         
-          RLAE13    = 0.01289488 * (LOG(GDDFR/(TMAXGRO/SRADGRO)))**2 - 0.02086888 * (LOG(GDDFR/(TMAXGRO/SRADGRO))) + 0.00524122     !y = 0.01289488x2 - 0.02086888x + 0.00524122 R² = 0.8379  Listo variable calibrada en CASE (1) polinomial promedios
-          PLA13     = PLA12*EXP(RLAE13*(DAP1))                  
-          
-          RLDW13    = 16.64364072 * (LOG(GDDFR/(TMAXGRO/SRADGRO)))**2 - 32.63404677 * (LOG(GDDFR/(TMAXGRO/SRADGRO))) + 13.62813905     !y = 16.64364072x2 - 32.63404677x + 13.62813905 R² = 0.6795 Listo variable calibrada en CASE (1) polinomial promedios
-          LFWT13    = LFWT12*EXP((RLDW13/1000)*(DAP1))      
-          
-          RBWTDW13  = 81.57054008 * (LOG(GDDFR/(TMAXGRO/SRADGRO)))**2 - 339.67610159 * (LOG(GDDFR/(TMAXGRO/SRADGRO))) + 350.05047327   !y = 81.57054008x2 - 339.67610159x + 350.05047327 R² = 0.5642 Listo variable calibrada en CASE (1) polinomial todos con la ecuación GDD/(TMAX/SRAD)
-          BASLFWT13 = BASLFWT12*EXP((RBWTDW13/1000)*(GDDFR/(TMAXGRO/SRADGRO)))
-          
-          RSTMWT13  = -24.00888219 * (LOG(GDDFR/(TMAXGRO/SRADGRO)))**2 + 80.30332258 * (LOG(GDDFR/(TMAXGRO/SRADGRO))) - 42.97510499   !y = -24.00888219x2 + 80.30332258x - 42.97510499 R² = 0.1005 Listo variable calibrada en CASE (1) polinomial promedios
-          STMWT13   = STMWT12*EXP((RSTMWT13/1000)*(DAP1))
-          
-          LAI    = PLTPOP*PLA13*0.0001
+         RLAE13    = 0.01289488 * (LOG(GDDFR/(TMAXGRO/SRADGRO)))**2 - 0.02086888 * (LOG(GDDFR/(TMAXGRO/SRADGRO))) + 0.00524122     !y = 0.01289488x2 - 0.02086888x + 0.00524122 R² = 0.8379  Listo variable calibrada en CASE (1) polinomial promedios
+         PLA13     = PLA12*EXP(RLAE13*(DAP1))                  
+         
+         RLDW13    = 16.64364072 * (LOG(GDDFR/(TMAXGRO/SRADGRO)))**2 - 32.63404677 * (LOG(GDDFR/(TMAXGRO/SRADGRO))) + 13.62813905     !y = 16.64364072x2 - 32.63404677x + 13.62813905 R² = 0.6795 Listo variable calibrada en CASE (1) polinomial promedios
+         LFWT13    = LFWT12*EXP((RLDW13/1000)*(DAP1))      
+         
+         RBWTDW13  = 81.57054008 * (LOG(GDDFR/(TMAXGRO/SRADGRO)))**2 - 339.67610159 * (LOG(GDDFR/(TMAXGRO/SRADGRO))) + 350.05047327   !y = 81.57054008x2 - 339.67610159x + 350.05047327 R² = 0.5642 Listo variable calibrada en CASE (1) polinomial todos con la ecuación GDD/(TMAX/SRAD)
+         BASLFWT13 = BASLFWT12*EXP((RBWTDW13/1000)*(GDDFR/(TMAXGRO/SRADGRO)))
+         
+         RSTMWT13  = -24.00888219 * (LOG(GDDFR/(TMAXGRO/SRADGRO)))**2 + 80.30332258 * (LOG(GDDFR/(TMAXGRO/SRADGRO))) - 42.97510499   !y = -24.00888219x2 + 80.30332258x - 42.97510499 R² = 0.1005 Listo variable calibrada en CASE (1) polinomial promedios
+         STMWT13   = STMWT12*EXP((RSTMWT13/1000)*(DAP1))
+         
+         LAI13    = PLTPOP*PLA13*0.0001
 
+          LAI         = LAI13                     
           LFWT        = LFWT13                    
           BASLFWT     = BASLFWT13                 
           STMWT       = STMWT13                   
           STOVWT= STMWT
           BIOMAS= (LFWT + STMWT + BASLFWT)*PLTPOP
+          BIOMAS13 = BIOMAS
+          LAI13 = LAI
                   
          
          
@@ -1860,10 +1963,10 @@ C               XPTN = XGNP*6.25
       ENDIF
 
       CALL Aloha_NUPTAK (CONTROL, ISWITCH, 
-     &    ISTAGE, NO3, NH4, PDWI, PGRORT,                 !Input
+     &    ISTAGE, NO3, NH4, PDWI, PGRORT, PLIGRT,         !Input
      &    PLTPOP, PTF, RANC, RCNP, RLV, RTWT, SOILPROP,   !Input
      &    STOVWT, SW, TCNP, XSTAGE,                       !Input
-     &    ROOTN, STOVN, TANC, UNH4, UNO3, WTNUP)          !Output
+     &    ROOTN, SENESCE, STOVN, TANC, UNH4, UNO3, WTNUP) !Output
 
 !=======================================================================
       END SELECT
@@ -1871,7 +1974,7 @@ C               XPTN = XGNP*6.25
       RETURN
       END SUBROUTINE Aloha_GROSUB
 
-! PLAG (cm^2) is daily green leaf area growth
+! PLAG (cm^2) is daily green leaf area growth    ! O sea debo modificar PLAG para hacer que aumentar el area foliar 
 ! leaf area index (m2 leaf/m2 ground)
 ! LFWT (g/plant) is green leaf weight which is assumed to be 53% of initial crown weight
 ! RTWT (g/plant) is root weight
@@ -1906,7 +2009,7 @@ C               XPTN = XGNP*6.25
 ! EYEWT (G/eye) is weight of the eye
 !FRUITS =  number of fruits=PLTPOP/m2*FRUITING%
 !YIELD = fruit dry weight yield (kg/ha)
-!TURFAC      !Soil water stress effect on expansion (0-1), 1 is no stress, 0 is full stress
-!PC          !Used to compute fraction of phyllochron interval occurring today      
+! TURFAC      !Soil water stress effect on expansion (0-1), 1 is no stress, 0 is full stress
+! PC          !Used to compute fraction of phyllochron interval occurring today      
 
 
