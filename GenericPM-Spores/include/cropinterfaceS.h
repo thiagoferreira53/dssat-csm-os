@@ -17,7 +17,7 @@ protected:
 
 public:
     static CropInterfaceS* getInstance();
-    static CropInterfaceS* newInstanceS();
+    static CropInterfaceS* newInstance();
 
     void start() {
         lastOrgan = 0;
@@ -59,7 +59,7 @@ public:
         ;
     }
 
-    void setOrganAreaS(int organ, double area) {
+    void setOrganArea(int organ, double area) {
         //std::cout<<"organ "<<organ<<" area "<<area<<std::endl;
         if (organ > data.size()) {
             std::vector<double> vetLine;
@@ -115,10 +115,10 @@ public:
         o = &organs[i];
         // set the senescence area to each organ and just call organ rate if it has area to be affected 
         if(o->getSenescenceArea() < o->getTotalArea()) {
-            if(SimulatorS::getInstance()->getCropInterface()->getDailySenescenceArea()>0) { // we need to set senescence area to organ
-                diff = std::min(o->getTotalArea() - o->getSenescenceArea(),SimulatorS::getInstance()->getCropInterface()->getDailySenescenceArea());
-                printf("OrganS: %d TotalArea: %f SenescenceArea: %f DailySenesc: %f diff: %f\n",o->getOrganNumber(),o->getTotalArea(),o->getSenescenceArea(),SimulatorS::getInstance()->getCropInterface()->getDailySenescenceArea(),diff);
-                SimulatorS::getInstance()->getCropInterface()->setDailySenescenceArea(SimulatorS::getInstance()->getCropInterface()->getDailySenescenceArea()-diff);
+            if(SimulatorSpore::getInstance()->getCropInterface()->getDailySenescenceArea()>0) { // we need to set senescence area to organ
+                diff = std::min(o->getTotalArea() - o->getSenescenceArea(),SimulatorSpore::getInstance()->getCropInterface()->getDailySenescenceArea());
+                printf("OrganS: %d TotalArea: %f SenescenceArea: %f DailySenesc: %f diff: %f\n",o->getOrganNumber(),o->getTotalArea(),o->getSenescenceArea(),SimulatorSpore::getInstance()->getCropInterface()->getDailySenescenceArea(),diff);
+                SimulatorSpore::getInstance()->getCropInterface()->setDailySenescenceArea(SimulatorSpore::getInstance()->getCropInterface()->getDailySenescenceArea()-diff);
                 o->setSenescenceArea(o->getSenescenceArea()+diff);
             }
             if(o->getSenescenceArea() < o->getTotalArea()) {

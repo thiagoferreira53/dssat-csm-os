@@ -5,7 +5,7 @@
 #include<iostream>
 
 WeatherS::WeatherS() {
-    //updateS();
+    //update();
 }
 
 WeatherS* WeatherS::instance = nullptr;
@@ -16,9 +16,9 @@ WeatherS* WeatherS::getInstance() {
     return instance;
 }
 
-bool WeatherS::updateS() {
+bool WeatherS::update() {
     try {
-        yearDoy = SimulatorS::getInstanceS()->getCurrentYearDoy();
+        yearDoy = SimulatorSpore::getInstance()->getCurrentYearDoy();
         year = yearDoy / 1000;
         doy = yearDoy - (year * 1000);
         
@@ -37,7 +37,7 @@ bool WeatherS::updateS() {
         rhMin = 0;
         //        getRealYrdoy(&yearDoy,(char *) "RHUM=",&rhMean);  //?????
         rhMean = 0;
-                //printf(" Weather::updateS(). yearDoy: %i - sRad: %f - tMax: %f - tMin: %f - rain: %f - rhMean: %f - hRH90: %i - tMean: %f\n", 
+                //printf(" Weather::update(). yearDoy: %i - sRad: %f - tMax: %f - tMin: %f - rain: %f - rhMean: %f - hRH90: %i - tMean: %f\n", 
                 //        yearDoy, sRad, tMax, tMin, rain, rhMean, hRH90, tMean);
     } catch (bool) {
         return false;

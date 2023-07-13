@@ -31,7 +31,7 @@ public:
         else
             return wetDur;
     }
-    bool updateS();
+    bool update();
 
     void setRain(float rain) {
         this->rain = rain;

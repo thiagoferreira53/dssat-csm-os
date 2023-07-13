@@ -9,13 +9,13 @@
 
 #include<vector>
 
-class SimulatorS : virtual public BasicInterfaceS {
+class SimulatorSpore : virtual public BasicInterfaceS {
 private:
     UtilitiesS util;
 
 protected:
-    SimulatorS();
-    static SimulatorS *instance;
+    SimulatorSpore();
+    static SimulatorSpore *instance;
     int currentYearDoy = 0;
 
     CropInterfaceS *cropinterface;
@@ -23,14 +23,14 @@ protected:
     std::vector<PlantS> plants;
 
 public:
-    static SimulatorS* getInstanceS();
-    static SimulatorS* newInstanceS();
+    static SimulatorSpore* getInstance();
+    static SimulatorSpore* newInstance();
     void inputPSTS();
     void inicializationS();
     void integrationS();
     void outputS();
     void rateS();
-    void updateCurrentYearDoyS(int yearDoy);
+    void updateCurrentYearDoy(int yearDoy);
     bool allPlantsSenescedS();
 
     std::vector<PlantS>& getPlants() {

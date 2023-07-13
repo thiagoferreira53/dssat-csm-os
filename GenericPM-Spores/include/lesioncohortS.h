@@ -48,7 +48,7 @@ public:
         return (BasicS::getWeather()->getDoy() - doc);
     }
     void integrationS();
-    int getVisibleLesionsS();
+    int getVisibleLesions();
 
     double getVisibleArea() {
         return visibleArea;

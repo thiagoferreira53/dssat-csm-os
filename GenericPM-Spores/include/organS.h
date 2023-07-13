@@ -212,7 +212,7 @@ public:
         this->visibleLesions = visibleLesions;
     }
 
-    int getVisibleLesionsS() const {
+    int getVisibleLesions() const {
         return visibleLesions;
     }
 

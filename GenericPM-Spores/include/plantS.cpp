@@ -11,7 +11,7 @@ int PlantS::qtdS = 0;
 int PlantS::firstOutputCallS = 0;
 
 PlantS::PlantS() {
-    std::vector<InitialConditionS> &vectIC = SimulatorS::getInstanceS()->getInitialConditions();
+    std::vector<InitialConditionS> &vectIC = SimulatorSpore::getInstance()->getInitialConditions();
     InitialConditionS *ic;
 
     for (unsigned int i = 0; i < vectIC.size(); i++) {
@@ -36,7 +36,7 @@ void PlantS::integrationS() {
             necroticDiseaseArea += o->getNecroticDiseaseArea();
             visibleDiseaseArea += o->getVisibleDiseaseArea();
             invisibleDiseaseArea += o->getInvisibleDiseaseArea();
-            visibleLesions += o->getVisibleLesionsS();
+            visibleLesions += o->getVisibleLesions();
             totalLesions += o->getTotalLesions();
         } else {
             //o->cloudIntegrationS();
@@ -53,10 +53,10 @@ void PlantS::integrationS() {
         cloud->integrationS();
     }
 
-    newOrgan = SimulatorS::getInstanceS()->getCropInterface()->hasNewOrgan();
+    newOrgan = SimulatorSpore::getInstance()->getCropInterface()->hasNewOrgan();
     if (newOrgan > 0) {
         //printf("Creating new organ: %i\n",newOrgan);
-        organs.emplace_back(cloudsP, newOrgan, SimulatorS::getInstanceS()->getCropInterface()->getOrganArea(newOrgan));
+        organs.emplace_back(cloudsP, newOrgan, SimulatorSpore::getInstance()->getCropInterface()->getOrganArea(newOrgan));
     }
 
     cloudPValue = cloud->getValueS();

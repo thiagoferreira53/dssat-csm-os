@@ -61,7 +61,7 @@ int couplingRate(int *YRDOY,
     double CloudField = 0;
     // Get an instance of Simulator
     Simulator *s = Simulator::getInstance();
-    SimulatorS *sS = SimulatorS::getInstanceS();
+    SimulatorSpore *sS = SimulatorSpore::getInstance();
     newOrgan = s->getCropInterface()->getOrgansQtd()+1;
     // Set the current YearDOY for next Disease step computation
     s->updateCurrentYearDoy(*YRDOY);

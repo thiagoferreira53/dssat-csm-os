@@ -75,7 +75,7 @@ void OrganS::integrationS() {
         latentDiseaseArea += lc->getLatentArea();
         infectionDiseaseArea += lc->getInfectionArea();
         necroticDiseaseArea += lc->getNecroticArea();
-        visibleLesions += lc->getVisibleLesionsS();
+        visibleLesions += lc->getVisibleLesions();
         visibleDiseaseArea += lc->getVisibleArea();
         invisibleDiseaseArea += lc->getInvisibleArea();
     }
@@ -161,11 +161,11 @@ void OrganS::rateS() {
     // Calculate the ratio due senescence based on previews day
     float actualDisease=0, ratioSenescence = this->senescenceArea / this->totalArea;
     // Update the senescence area for the current day
-    this->senescenceArea = SimulatorS::getInstanceS()->getCropInterface()->getSenescenceOrganArea(organNumber);
+    this->senescenceArea = SimulatorSpore::getInstance()->getCropInterface()->getSenescenceOrganArea(organNumber);
     // Recalculate the ratio due senescence and take the difference from previews ratio
     ratioSenescence = (this->senescenceArea / this->totalArea) - ratioSenescence;
     // Update the total organ area (current day)
-    this->totalArea = SimulatorS::getInstanceS()->getCropInterface()->getOrganArea(organNumber);
+    this->totalArea = SimulatorSpore::getInstance()->getCropInterface()->getOrganArea(organNumber);
     
     if (!suceptible && this->totalArea > 0) {
         suceptible = true;

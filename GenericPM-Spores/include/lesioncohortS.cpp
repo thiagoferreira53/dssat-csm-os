@@ -46,7 +46,7 @@ void LesionCohortS::integrationS() {
 
 }
 
-int LesionCohortS::getVisibleLesionsS() {
+int LesionCohortS::getVisibleLesions() {
     if (isInfectionPeriodS() || isNecroticPeriodS())
         return this->lesionsInThisCohort;
     else

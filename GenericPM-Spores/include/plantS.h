@@ -80,7 +80,7 @@ public:
         return invisibleDiseaseArea;
     }
 
-    double getVisibleLesionsS() {
+    double getVisibleLesions() {
         return visibleLesions;
     }
 

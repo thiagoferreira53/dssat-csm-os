@@ -55,7 +55,7 @@ void CloudS::removeSporesCloudByRainS(double percent)
 
 void CloudS::removeSporesCloudFByAgeS(void)
 {
-    int yearDoy = SimulatorS::getInstanceS()->getCurrentYearDoy();
+    int yearDoy = SimulatorSpore::getInstance()->getCurrentYearDoy();
 
     for (int i = values.size(); i > 0; i--)
     {
@@ -81,7 +81,7 @@ void CloudS::removeSporesCloudOByAgeS(void)
 
 /*void CloudS::removeSporesCloudFByAgeUvS(void)
 {
-    int yearDoy = SimulatorS::getInstanceS()->getCurrentYearDoy();
+    int yearDoy = SimulatorSpore::getInstance()->getCurrentYearDoy();
     float tMax = 0;
     float tMin = 0;
     tMax = FlexibleIO::getInstance()->getRealYrdoy("WTH", std::to_string(yearDoy), "TMAX");

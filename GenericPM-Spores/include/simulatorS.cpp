@@ -11,25 +11,25 @@
 #include<string>
 
 
-SimulatorS::SimulatorS() {
+SimulatorSpore::SimulatorSpore() {
     inicializationS();
 }
 
-SimulatorS* SimulatorS::instance = nullptr;
+SimulatorSpore* SimulatorSpore::instance = nullptr;
 
-SimulatorS* SimulatorS::getInstanceS() {
+SimulatorSpore* SimulatorSpore::getInstance() {
     if (instance == nullptr)
-        instance = new SimulatorS();
+        instance = new SimulatorSpore();
     return instance;
 }
 
-SimulatorS* SimulatorS::newInstanceS() {
+SimulatorSpore* SimulatorSpore::newInstance() {
     instance=nullptr;
-    return getInstanceS();
+    return getInstance();
 }
 
-void SimulatorS::inicializationS() {
-    cropinterface = CropInterfaceS::newInstanceS();
+void SimulatorSpore::inicializationS() {
+    cropinterface = CropInterfaceS::newInstance();
     cropinterface->start();
     inputPSTS();
 
@@ -38,7 +38,7 @@ void SimulatorS::inicializationS() {
         initialConditions.emplace_back(diseases[i]);
 }
 
-void SimulatorS::inputPSTS() {
+void SimulatorSpore::inputPSTS() {
   
   if (DiseaseS::getDisease().size() == 0) {
       DiseaseS *disease = new DiseaseS();
@@ -127,7 +127,7 @@ void SimulatorS::inputPSTS() {
   
 }
 
-void SimulatorS::integrationS() {
+void SimulatorSpore::integrationS() {
     InitialConditionS *ic;
     for (unsigned int i = 0; i < initialConditions.size(); i++) {
         ic = &initialConditions[i];
@@ -140,7 +140,7 @@ void SimulatorS::integrationS() {
     }
 }
 
-void SimulatorS::outputS() {
+void SimulatorSpore::outputS() {
     InitialConditionS *ic;
     for (unsigned int i = 0; i < initialConditions.size(); i++) {
         ic = &initialConditions[i];
@@ -155,7 +155,7 @@ void SimulatorS::outputS() {
 /**
  * Function Rate: Responsible call, recursively, the rates for each part of the plant
  */
-void SimulatorS::rateS() {
+void SimulatorSpore::rateS() {
     InitialConditionS *ic;
     PlantS *p;
 
@@ -176,18 +176,18 @@ void SimulatorS::rateS() {
     }
 }
 
-void SimulatorS::updateCurrentYearDoyS(int yearDoy) {
+void SimulatorSpore::updateCurrentYearDoy(int yearDoy) {
     while(util.addOneDayS(getCurrentYearDoy()) < yearDoy) { // Need to be synchronized. There is a gap.
 //        printf("Synchronizing: YearDoy: %i - CurrentYearDoy: %i \n",yearDoy, getCurrentYearDoy());
         setCurrentYearDoy(util.addOneDayS(getCurrentYearDoy()));
-        WeatherS::getInstance()->updateS();
+        WeatherS::getInstance()->update();
         rateS();
         integrationS();
     }
     setCurrentYearDoy(yearDoy);
 }
 
-bool SimulatorS::allPlantsSenescedS() {
+bool SimulatorSpore::allPlantsSenescedS() {
     if (plants.size() == 0)
         return false;
     for (unsigned int i = 0; i < plants.size(); i++) {

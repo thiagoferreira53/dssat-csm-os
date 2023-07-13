@@ -13,7 +13,7 @@ CropInterfaceS* CropInterfaceS::getInstance() {
     return instance;
 }
 
-CropInterfaceS* CropInterfaceS::newInstanceS() {
+CropInterfaceS* CropInterfaceS::newInstance() {
     instance = nullptr;
     return getInstance();
 }
