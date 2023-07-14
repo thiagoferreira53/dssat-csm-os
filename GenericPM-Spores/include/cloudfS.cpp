@@ -18,8 +18,8 @@ void CloudFS::integration() {
     if (getValue() > disease->getMaxSporeCloudsDensity()) {
         CloudS::removeSporesCloudS(getValue() - disease->getMaxSporeCloudsDensity());
     }
-    if (BasicS::getWeather()->getRain() >= 20) {
-        porcent = BasicS::getWeather()->getRain() / 80;
+    if (Basic::getWeather()->getRain() >= 20) {
+        porcent = Basic::getWeather()->getRain() / 80;
         porcent = porcent>1?1:porcent;
         //std::cout<< "porcent : "<<porcent << std::endl;
         CloudS::removeSporesCloudByRainS(porcent);
@@ -28,11 +28,11 @@ void CloudFS::integration() {
     }
 
     std::ostringstream convert;
-    convert << BasicS::getWeather()->getYearDoy() << "," << getValue();
+    convert << Basic::getWeather()->getYearDoy() << "," << getValue();
     for (unsigned int i = 0; i < values.size(); i++) {
         convert << "," << values[i];
     }
-    BasicS::output.push_back(convert.str());
+    Basic::output.push_back(convert.str());
 }
 
 void CloudFS::output() {
@@ -40,12 +40,12 @@ void CloudFS::output() {
 
     std::ostringstream convert;
     convert << "Cpp_CloudF_" << getID() << ".txt";
-    BasicS::getOutput(convert.str(),this->firstOutputCallS);
+    Basic::getOutput(convert.str(),this->firstOutputCallS);
     this->firstOutputCallS++;
 
     // Speedup the model
     //std::cout << "\nCloudF" << ID << ":";
-    //for(unsigned int i=0; i<BasicS::output.size(); i++)
-    //    std::cout << BasicS::output[i] << std::endl;
+    //for(unsigned int i=0; i<Basic::output.size(); i++)
+    //    std::cout << Basic::output[i] << std::endl;
 }
 

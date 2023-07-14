@@ -1,7 +1,7 @@
 #ifndef SIMULATORS_H
 #define SIMULATORS_H
 
-#include "basicinterfaceS.h"
+#include "../../GenericPM/include/basicinterface.h"
 #include "cropinterfaceS.h"
 #include "initialconditionS.h"
 #include "plantS.h"
@@ -9,7 +9,7 @@
 
 #include<vector>
 
-class SimulatorSpore : virtual public BasicInterfaceS {
+class SimulatorSpore : virtual public BasicInterface {
 private:
     Utilities util;
 

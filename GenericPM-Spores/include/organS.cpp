@@ -5,7 +5,7 @@
 #include "cloudfS.h"
 #include "lesioncohortS.h"
 #include "../../GenericPM/include/utilities.h"
-#include "basicS.h"
+#include "../../GenericPM/include/basic.h"
 
 #include <string>
 #include <sstream>
@@ -39,7 +39,7 @@ void OrganS::integration() {
     if (suceptible) {
         for (unsigned int i = 0; i < cloudsO.size(); i++) {
             cloudo = &cloudsO[i];
-            physiologicalLife += Utilities::trapezoidalFunction(BasicS::getWeather()->getTMean(), cloudo->getDisease()->getCardinalTempPhysiologicalLife());
+            physiologicalLife += Utilities::trapezoidalFunction(Basic::getWeather()->getTMean(), cloudo->getDisease()->getCardinalTempPhysiologicalLife());
 
             cloudOValue = cloudAmountS();
             cloudPValue = cloudo->getCloudP()->getValue();
@@ -106,7 +106,7 @@ void OrganS::integration() {
     //            dailyNecroticDiseaseArea,dailyTotalLesions,dailyVisibleLesions);
     std::ostringstream convert;
     convert << organNumber << "," 
-            << BasicS::getWeather()->getYearDoy() << "," << totalArea << "," << senescenceArea << "," 
+            << Basic::getWeather()->getYearDoy() << "," << totalArea << "," << senescenceArea << "," 
             << Utilities::formatDouble(diseaseArea, 4) << ","
             << Utilities::formatDouble(visibleDiseaseArea, 4) << "," 
             << Utilities::formatDouble(invisibleDiseaseArea, 4) << ","
@@ -115,9 +115,9 @@ void OrganS::integration() {
             << totalLesions << "," 
             << Utilities::formatDouble(cloudOValue) << "," << Utilities::formatDouble(cloudPValue) << ","
             << Utilities::formatDouble(cloudFvalue) << "," << healthAreaProportion << "," 
-            << getProportionFromTotalArea() << "," << BasicS::getWeather()->getWetDur() << ","
+            << getProportionFromTotalArea() << "," << Basic::getWeather()->getWetDur() << ","
             << newLesionsFromOrgan << "," << newLesionsFromPlant << "," << newLesionsFromField;
-    BasicS::output.push_back(convert.str());
+    Basic::output.push_back(convert.str());
 }
 void OrganS::cloudIntegrationS() {
     for (unsigned int i = 0; i < cloudsO.size(); i++) {
@@ -134,13 +134,13 @@ float OrganS::cloudAmountS() {
 void OrganS::output() {
     std::ostringstream convert;
     //convert << "Cpp_Organ_" << getOrganNumber() << ".txt";
-    BasicS::getOutput("Cpp_Organ.txt",this->firstOutputCallS);
+    Basic::getOutput("Cpp_Organ.txt",this->firstOutputCallS);
     this->firstOutputCallS++;
     // Speedup the model removing outputs
     //std::cout << "\nOrgan " << getID() << ":";
-    //for(unsigned int i=0; i<BasicS::output.size(); i++)
+    //for(unsigned int i=0; i<Basic::output.size(); i++)
     //{
-    //    std::cout << BasicS::output[i] << std::endl;
+    //    std::cout << Basic::output[i] << std::endl;
     //}
 
     CloudOS *cloudo;

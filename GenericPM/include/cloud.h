@@ -2,7 +2,7 @@
 #define CLOUD_H
 
 #include "basic.h"
-#include "basicinterface.h"
+#include "../../GenericPM/include/basicinterface.h"
 #include "disease.h"
 #include<vector>
 

@@ -2,7 +2,7 @@
 #define PLANT_H
 
 #include "basic.h"
-#include "basicinterface.h"
+#include "../../GenericPM/include/basicinterface.h"
 #include "cloudp.h"
 #include "organ.h"
 

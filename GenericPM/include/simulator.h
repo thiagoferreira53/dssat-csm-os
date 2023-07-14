@@ -1,7 +1,7 @@
 #ifndef SIMULATOR_H
 #define SIMULATOR_H
 
-#include "basicinterface.h"
+#include "../../GenericPM/include/basicinterface.h"
 #include "cropinterface.h"
 #include "initialcondition.h"
 #include "plant.h"

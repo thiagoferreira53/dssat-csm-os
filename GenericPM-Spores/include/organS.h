@@ -1,15 +1,15 @@
 #ifndef ORGANS_H
 #define ORGANS_H
 
-#include "basicS.h"
-#include "basicinterfaceS.h"
+#include "../../GenericPM/include/basic.h"
+#include "../../GenericPM/include/basicinterface.h"
 #include "lesioncohortS.h"
 #include "cloudoS.h"
 #include "cloudpS.h"
 
 #include <vector>
 
-class OrganS : public BasicS, virtual public BasicInterfaceS {
+class OrganS : public Basic, virtual public BasicInterface {
 protected:
     double totalArea = 0;
     double diseaseArea = 0;
@@ -36,7 +36,7 @@ protected:
     double organLastSize = 0;
     double healthAreaProportion = 0;
     double proportionFromTotalArea = 0;
-    int doc = BasicS::getWeather()->getDoy();
+    int doc = Basic::getWeather()->getDoy();
     double physiologicalLife = 0;
     std::vector<LesionCohortS> lesionCohorts;
     std::vector<CloudOS> cloudsO;
@@ -45,7 +45,7 @@ protected:
 public:
 
     OrganS(std::vector<CloudPS>& cloudsP, int organNumber, double totalArea) {
-        //BasicS::output.push_back("OrganS, YearDoy, TotalArea, Senesced, Diseased, VisibleArea, InvisibleArea, LesionDensity, Age, newLesionsS, TotalLesions, CloudOS, CloudPS, CloudFS, HealthAreaProportion");
+        //Basic::output.push_back("OrganS, YearDoy, TotalArea, Senesced, Diseased, VisibleArea, InvisibleArea, LesionDensity, Age, newLesionsS, TotalLesions, CloudOS, CloudPS, CloudFS, HealthAreaProportion");
         this->organNumber = organNumber;
         this->totalArea = totalArea;
         CloudPS *cloud;

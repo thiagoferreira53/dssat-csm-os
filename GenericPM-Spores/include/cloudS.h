@@ -1,12 +1,12 @@
 #ifndef CLOUDS_H
 #define CLOUDS_H
 
-#include "basicS.h"
-#include "basicinterfaceS.h"
+#include "../../GenericPM/include/basic.h"
+#include "../../GenericPM/include/basicinterface.h"
 #include "diseaseS.h"
 #include<vector>
 
-class CloudS : public BasicS, virtual public BasicInterfaceS {
+class CloudS : public Basic, virtual public BasicInterface {
 protected:
     std::vector<double> values;
     DiseaseS *disease;

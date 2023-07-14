@@ -2,7 +2,7 @@
 #define CLOUDF_H
 
 #include "cloud.h"
-#include "basicinterface.h"
+#include "../../GenericPM/include/basicinterface.h"
 #include "disease.h"
 #include "cloud.h"
 

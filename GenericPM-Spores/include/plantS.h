@@ -1,16 +1,16 @@
 #ifndef PLANTS_H
 #define PLANTS_H
 
-#include "basicS.h"
-#include "basicinterfaceS.h"
+#include "../../GenericPM/include/basic.h"
+#include "../../GenericPM/include/basicinterface.h"
 #include "cloudpS.h"
 #include "organS.h"
 
 #include <vector>
 
-class PlantS : public BasicS, virtual public BasicInterfaceS {
+class PlantS : public Basic, virtual public BasicInterface {
 protected:
-    int doc = BasicS::getWeather()->getDoy();
+    int doc = Basic::getWeather()->getDoy();
     std::vector<OrganS> organs;
     std::vector<CloudPS> cloudsP;
     static int qtdS;

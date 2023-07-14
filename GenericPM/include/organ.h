@@ -2,7 +2,7 @@
 #define ORGAN_H
 
 #include "basic.h"
-#include "basicinterface.h"
+#include "../../GenericPM/include/basicinterface.h"
 #include "lesioncohort.h"
 #include "cloudo.h"
 #include "cloudp.h"

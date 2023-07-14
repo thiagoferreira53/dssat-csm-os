@@ -20,16 +20,16 @@ void CloudPS::integration() {
     if (getValue() > disease->getMaxSporeCloudsDensity()) {
         CloudS::removeSporesCloudS(getValue() - disease->getMaxSporeCloudsDensity());
     }
-    if (BasicS::getWeather()->getRain() >= 20) {
+    if (Basic::getWeather()->getRain() >= 20) {
         CloudS::removeSporesCloudByRainS(0.5);
     }
 
     std::ostringstream convert;
-    convert << BasicS::getWeather()->getYearDoy() << "," << getValue();
+    convert << Basic::getWeather()->getYearDoy() << "," << getValue();
     for (unsigned int i = 0; i < values.size(); i++) {
         convert << "," << values[i];
     }
-    BasicS::output.push_back(convert.str());
+    Basic::output.push_back(convert.str());
 
 }
 
@@ -38,13 +38,13 @@ void CloudPS::output() {
 
     std::ostringstream convert;
     convert << "Cpp_CloudP_" << getID() << ".txt";
-    BasicS::getOutput(convert.str(),this->firstOutputCallS);
+    Basic::getOutput(convert.str(),this->firstOutputCallS);
     this->firstOutputCallS++;
 
     // Speedup the model removing outputs
     //std::cout << "\nCloudP" << getID() << ":";
-    //for(unsigned int i=0; i<BasicS::output.size(); i++)
-    //    std::cout << BasicS::output[i] << std::endl;
+    //for(unsigned int i=0; i<Basic::output.size(); i++)
+    //    std::cout << Basic::output[i] << std::endl;
 }
 
 void CloudPS::addSporesCreatedS(double sporesCreated) {

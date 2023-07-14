@@ -124,7 +124,7 @@ default; will be used in @ref number_float_t)
 default)
 
 @requirement The class satisfies the following concept requirements:
-- BasicS
+- Basic
  - [DefaultConstructible](http://en.cppreference.com/w/cpp/concept/DefaultConstructible):
    JSON values can be default constructed. The result will be a JSON null value.
  - [MoveConstructible](http://en.cppreference.com/w/cpp/concept/MoveConstructible):

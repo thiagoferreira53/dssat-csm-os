@@ -7,7 +7,7 @@ subroutine totass(      dayl,lat_sim,DEC,SNDN,SNUP,CLOUDS,ISINB,S0N,amax,eff,lai
 ! --- the day, irradiance is computed and used to calculate the instan- 
 ! --- taneous canopy assimilation, whereafter integration takes place.
 ! --- more information on this subroutine is given by Goudriaan, J. in:
-! --- "Light Distribution. In Canopy Photosynthesis: From Basics to Applications", 2016.
+! --- "Light Distribution. In Canopy Photosynthesis: From Basic to Applications", 2016.
 ! ----------------------------------------------------------------------
       Implicit None    
  !     include 'constants.fi' ! (SAMUCA's Crop Modelling Shell)

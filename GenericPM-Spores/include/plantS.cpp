@@ -18,7 +18,7 @@ PlantS::PlantS() {
         ic = &vectIC[i];
         cloudsP.emplace_back(ic->getCloud()->getDisease(), ic->getCloud());
     }
-    //BasicS::output.push_back("Day, PlantArea, DiseaseArea, Density, Severity, LatentDArea, InfectionDArea, NecroticDArea,SenescenceArea");
+    //Basic::output.push_back("Day, PlantArea, DiseaseArea, Density, Severity, LatentDArea, InfectionDArea, NecroticDArea,SenescenceArea");
 }
 
 void PlantS::integration() {
@@ -64,32 +64,32 @@ void PlantS::integration() {
 
     std::ostringstream convert;
     //Plant, YearDoy, TotalArea, Senesced, Diseased, VisibleArea, InvisibleArea, TotalLesions, CloudOS, CloudPS, CloudFS
-    convert << ID << "," << BasicS::getWeather()->getYearDoy() << "," << totalArea << "," << senescenceArea << "," << diseaseArea << "," 
+    convert << ID << "," << Basic::getWeather()->getYearDoy() << "," << totalArea << "," << senescenceArea << "," << diseaseArea << "," 
             << visibleDiseaseArea << "," << invisibleDiseaseArea << "," << totalLesions << "," 
             << latentDiseaseArea << "," << infectionDiseaseArea << "," << necroticDiseaseArea << ","
             << Utilities::formatDouble(cloudOValue) << "," << Utilities::formatDouble(cloudPValue) << "," 
             << Utilities::formatDouble(cloudFvalue);
-    BasicS::output.push_back(convert.str());
-    //std::cout << ID << "," << BasicS::getWeather()->getYearDoy() << "," << totalArea << "," << senescenceArea << "," << diseaseArea << "," 
+    Basic::output.push_back(convert.str());
+    //std::cout << ID << "," << Basic::getWeather()->getYearDoy() << "," << totalArea << "," << senescenceArea << "," << diseaseArea << "," 
     //        << visibleDiseaseArea << "," << invisibleDiseaseArea << "," << totalLesions << "," 
     //        << latentDiseaseArea << "," << infectionDiseaseArea << "," << necroticDiseaseArea << ","
     //        << Utilities::formatDouble(cloudOValue) << "," << Utilities::formatDouble(cloudPValue) << "," 
     //        << Utilities::formatDouble(cloudFvalue)<<std::endl;
-    BasicS::output.push_back(convert.str());
+    Basic::output.push_back(convert.str());
 
 }
 
 void PlantS::output() {
     std::ostringstream convert;
     //convert << "Cpp_Plant_" << getID() << ".txt";
-    BasicS::getOutput("Cpp_Plant.txt", this->firstOutputCallS);
+    Basic::getOutput("Cpp_Plant.txt", this->firstOutputCallS);
     this->firstOutputCallS++;
 
     // Speedup the model removing outputs
     //std::cout << "\nPlant " << getID() << ":\n";
-    //for(unsigned int i=0; i<BasicS::output.size(); i++)
+    //for(unsigned int i=0; i<Basic::output.size(); i++)
     //{
-    //    std::cout << BasicS::output[i] << std::endl;
+    //    std::cout << Basic::output[i] << std::endl;
     //}
 
     OrganS *o;

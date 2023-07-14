@@ -18,9 +18,9 @@ void CloudS::integration()
             values[i] = values[i] - qtdS;
         }*/
     }
-    //std::cout<<"Rain: "<< BasicS::getWeather()->getRain()<<std::endl;
-    //std::cout<<"New function: "<< Utilities::dispersalRainFunction(BasicS::getWeather()->getRain(),disease->getDispersionFreequency())<<std::endl;
-    values.push_back(Utilities::dispersalRainFunction(BasicS::getWeather()->getRain(), disease->getDispersionFreequency()) * sporesCreated);
+    //std::cout<<"Rain: "<< Basic::getWeather()->getRain()<<std::endl;
+    //std::cout<<"New function: "<< Utilities::dispersalRainFunction(Basic::getWeather()->getRain(),disease->getDispersionFreequency())<<std::endl;
+    values.push_back(Utilities::dispersalRainFunction(Basic::getWeather()->getRain(), disease->getDispersionFreequency()) * sporesCreated);
     //std::cout << disease->getDispersionFreequency() * sporesCreated << std::endl;
     sporesCreated = sporesToBeRemoved = 0;
 }

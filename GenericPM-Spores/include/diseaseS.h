@@ -1,14 +1,14 @@
 #ifndef DISEASES_H
 #define DISEASES_H
 
-#include "basicS.h"
+#include "../../GenericPM/include/basic.h"
 #include "../../GenericPM/include/utilities.h"
 
 #include <string>
 #include <vector>
 #include<algorithm>
 
-class DiseaseS : public BasicS {
+class DiseaseS : public Basic {
 protected:
     int id;
     std::string cropModel = "CRGRO";

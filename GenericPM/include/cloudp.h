@@ -2,7 +2,7 @@
 #define CLOUDP_H
 
 #include "cloud.h"
-#include "basicinterface.h"
+#include "../../GenericPM/include/basicinterface.h"
 #include "cloudf.h"
 
 class CloudP : public Cloud, virtual public BasicInterface {

@@ -2,7 +2,7 @@
 #define LESIONCOHORT_H
 
 #include "basic.h"
-#include "basicinterface.h"
+#include "../../GenericPM/include/basicinterface.h"
 #include "cloudo.h"
 
 #include<string>

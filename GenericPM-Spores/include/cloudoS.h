@@ -2,10 +2,10 @@
 #define CLOUDOS_H
 
 #include "cloudS.h"
-#include "basicinterfaceS.h"
+#include "../../GenericPM/include/basicinterface.h"
 #include "cloudpS.h"
 
-class CloudOS : public CloudS, virtual public BasicInterfaceS {
+class CloudOS : public CloudS, virtual public BasicInterface {
 private:
     CloudPS *cloudP;
 

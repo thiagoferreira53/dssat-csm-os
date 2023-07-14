@@ -1,13 +1,13 @@
 #ifndef LESIONCOHORTS_H
 #define LESIONCOHORTS_H
 
-#include "basicS.h"
-#include "basicinterfaceS.h"
+#include "../../GenericPM/include/basic.h"
+#include "../../GenericPM/include/basicinterface.h"
 #include "cloudoS.h"
 
 #include<string>
 
-class LesionCohortS : public BasicS, virtual public BasicInterfaceS {
+class LesionCohortS : public Basic, virtual public BasicInterface {
 private:
     Utilities util;
     
@@ -32,7 +32,7 @@ protected:
 public:
 
     LesionCohortS(int lesionsInThisCohort, CloudOS *cloudo) {
-        BasicS::output.push_back("Day of Simulation, Area, Amount of Cohorts, Physiological days,Proportion DiseaseS Area, Latent Area , Infection Area , Necrotic Area, New Spores, Temp.Favorability, dailyVisibleAreaGrow, dailyInvisibleAreaGrow");
+        Basic::output.push_back("Day of Simulation, Area, Amount of Cohorts, Physiological days,Proportion DiseaseS Area, Latent Area , Infection Area , Necrotic Area, New Spores, Temp.Favorability, dailyVisibleAreaGrow, dailyInvisibleAreaGrow");
         this->lesionsInThisCohort = lesionsInThisCohort;
         this->cloudo = cloudo;
         this->visibleArea = 0;
@@ -45,7 +45,7 @@ public:
         return ID;
     }
     int getAge() {
-        return (BasicS::getWeather()->getDoy() - doc);
+        return (Basic::getWeather()->getDoy() - doc);
     }
     void integration();
     int getVisibleLesions();

@@ -35,11 +35,11 @@ void LesionCohortS::integration() {
         physiologicalDaysAcumm += physiologicalDay;
 
         std::ostringstream convert;
-        convert << BasicS::getWeather()->getYearDoy() << "," << totalArea << "," << lesionsInThisCohort << "," << getPhysiologicalDaysAcumm() << ","
+        convert << Basic::getWeather()->getYearDoy() << "," << totalArea << "," << lesionsInThisCohort << "," << getPhysiologicalDaysAcumm() << ","
                 << getOrganDiseasedAreaProportion() << "," << latentArea << "," << infectionArea << "," << necroticArea << ","
-                << newSpores << "," << util.temperatureFavorability(BasicS::getWeather()->getTMean(),
+                << newSpores << "," << util.temperatureFavorability(Basic::getWeather()->getTMean(),
                 disease->getTemperatureFavorabilitySet()) << "," << dailyVisibleAreaGrow << "," << dailyInvisibleAreaGrow;
-        BasicS::output.push_back(convert.str());
+        Basic::output.push_back(convert.str());
 
         newSpores=0;
     }
@@ -56,14 +56,14 @@ int LesionCohortS::getVisibleLesions() {
 void LesionCohortS::output() {
     std::ostringstream convert;
     convert << "Cpp_LesionCohort_" << getID() << ".txt";
-    BasicS::getOutput(convert.str());
+    Basic::getOutput(convert.str());
 }
 
 void LesionCohortS::rate() {
     //double dailyVisibleGrowRate = 0, dailyInvisibleGrowRate = 0;
     DiseaseS *disease = cloudo->getDisease();
     physiologicalDay = util.temperatureFavorability(
-                            BasicS::getWeather()->getTMean(),
+                            Basic::getWeather()->getTMean(),
                             disease->getTemperatureFavorabilitySet());
     // Thinking on: cumsum(runif(25, min = 0.01, max = 0.1))
     dailyInvisibleAreaGrow  = util.growthFunction(disease->getInvisibleGrowthFunction(), 
@@ -84,7 +84,7 @@ void LesionCohortS::rate() {
     
     newSpores = 0;
     if (getOrganHealthAreaProportion() > 0.01 && isInfectionPeriodS() &&
-            BasicS::getWeather()->getWetDur() >= disease->getWetnessThreshold()) // && BasicS::getWeather()->getTMean() > 20
+            Basic::getWeather()->getWetDur() >= disease->getWetnessThreshold()) // && Basic::getWeather()->getTMean() > 20
     {
         newSpores = (lesionsInThisCohort * disease->getDailySporeProductionPerLesion() * 
                      util.trapezoidalFunction(getAge(), disease->getCohortAgeSet()) *

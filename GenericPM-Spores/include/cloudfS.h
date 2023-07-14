@@ -2,11 +2,11 @@
 #define CLOUDFS_H
 
 #include "cloudS.h"
-#include "basicinterfaceS.h"
+#include "../../GenericPM/include/basicinterface.h"
 #include "diseaseS.h"
 #include "cloudS.h"
 
-class CloudFS : public CloudS, virtual public BasicInterfaceS {
+class CloudFS : public CloudS, virtual public BasicInterface {
 protected:
     static int qtdS;
     int ID = ++qtdS;
