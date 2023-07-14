@@ -8,7 +8,6 @@
 #include <vector>
 #include <fstream>
 #include "../FlexibleIO/Data/FlexibleIO.hpp"
-#include "json.hpp"
 
 
 class CinterfaceSpore {
