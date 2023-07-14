@@ -37,7 +37,7 @@ void LesionCohortS::integration() {
         std::ostringstream convert;
         convert << BasicS::getWeather()->getYearDoy() << "," << totalArea << "," << lesionsInThisCohort << "," << getPhysiologicalDaysAcumm() << ","
                 << getOrganDiseasedAreaProportion() << "," << latentArea << "," << infectionArea << "," << necroticArea << ","
-                << newSpores << "," << util.temperatureFavorabilityS(BasicS::getWeather()->getTMean(),
+                << newSpores << "," << util.temperatureFavorability(BasicS::getWeather()->getTMean(),
                 disease->getTemperatureFavorabilitySet()) << "," << dailyVisibleAreaGrow << "," << dailyInvisibleAreaGrow;
         BasicS::output.push_back(convert.str());
 
@@ -62,7 +62,7 @@ void LesionCohortS::output() {
 void LesionCohortS::rate() {
     //double dailyVisibleGrowRate = 0, dailyInvisibleGrowRate = 0;
     DiseaseS *disease = cloudo->getDisease();
-    physiologicalDay = util.temperatureFavorabilityS(
+    physiologicalDay = util.temperatureFavorability(
                             BasicS::getWeather()->getTMean(),
                             disease->getTemperatureFavorabilitySet());
     // Thinking on: cumsum(runif(25, min = 0.01, max = 0.1))
@@ -87,7 +87,7 @@ void LesionCohortS::rate() {
             BasicS::getWeather()->getWetDur() >= disease->getWetnessThreshold()) // && BasicS::getWeather()->getTMean() > 20
     {
         newSpores = (lesionsInThisCohort * disease->getDailySporeProductionPerLesion() * 
-                     util.trapezoidalFunctionS(getAge(), disease->getCohortAgeSet()) *
+                     util.trapezoidalFunction(getAge(), disease->getCohortAgeSet()) *
                      disease->getSporulationCrowdingFactorS(getOrganDiseasedAreaProportion()));
     }
     if(organHealthAreaProportion < 0.7) {

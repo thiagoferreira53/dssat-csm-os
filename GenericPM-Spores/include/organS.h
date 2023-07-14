@@ -124,7 +124,7 @@ public:
         this->healthAreaProportion = healthAreaProportion;
     }
 
-    double getHealthAreaProportionS() const {
+    double getHealthAreaProportion() const {
         return healthAreaProportion;
     }
 

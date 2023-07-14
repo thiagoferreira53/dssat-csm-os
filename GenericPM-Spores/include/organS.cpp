@@ -4,7 +4,7 @@
 #include "cloudpS.h"
 #include "cloudfS.h"
 #include "lesioncohortS.h"
-#include "utilitiesS.h"
+#include "../../GenericPM/include/utilities.h"
 #include "basicS.h"
 
 #include <string>
@@ -39,7 +39,7 @@ void OrganS::integration() {
     if (suceptible) {
         for (unsigned int i = 0; i < cloudsO.size(); i++) {
             cloudo = &cloudsO[i];
-            physiologicalLife += UtilitiesS::trapezoidalFunctionS(BasicS::getWeather()->getTMean(), cloudo->getDisease()->getCardinalTempPhysiologicalLife());
+            physiologicalLife += Utilities::trapezoidalFunction(BasicS::getWeather()->getTMean(), cloudo->getDisease()->getCardinalTempPhysiologicalLife());
 
             cloudOValue = cloudAmountS();
             cloudPValue = cloudo->getCloudP()->getValue();
@@ -107,14 +107,14 @@ void OrganS::integration() {
     std::ostringstream convert;
     convert << organNumber << "," 
             << BasicS::getWeather()->getYearDoy() << "," << totalArea << "," << senescenceArea << "," 
-            << UtilitiesS::formatDoubleS(diseaseArea, 4) << ","
-            << UtilitiesS::formatDoubleS(visibleDiseaseArea, 4) << "," 
-            << UtilitiesS::formatDoubleS(invisibleDiseaseArea, 4) << ","
-            << UtilitiesS::formatDoubleS(totalLesions / totalArea, 4) << ","
-            << UtilitiesS::formatDoubleS(physiologicalLife, 4) << "," << dailyTotalLesions << "," 
+            << Utilities::formatDouble(diseaseArea, 4) << ","
+            << Utilities::formatDouble(visibleDiseaseArea, 4) << "," 
+            << Utilities::formatDouble(invisibleDiseaseArea, 4) << ","
+            << Utilities::formatDouble(totalLesions / totalArea, 4) << ","
+            << Utilities::formatDouble(physiologicalLife, 4) << "," << dailyTotalLesions << "," 
             << totalLesions << "," 
-            << UtilitiesS::formatDoubleS(cloudOValue) << "," << UtilitiesS::formatDoubleS(cloudPValue) << ","
-            << UtilitiesS::formatDoubleS(cloudFvalue) << "," << healthAreaProportion << "," 
+            << Utilities::formatDouble(cloudOValue) << "," << Utilities::formatDouble(cloudPValue) << ","
+            << Utilities::formatDouble(cloudFvalue) << "," << healthAreaProportion << "," 
             << getProportionFromTotalArea() << "," << BasicS::getWeather()->getWetDur() << ","
             << newLesionsFromOrgan << "," << newLesionsFromPlant << "," << newLesionsFromField;
     BasicS::output.push_back(convert.str());
@@ -190,7 +190,7 @@ void OrganS::rate() {
     // Updating the disease amount on organ
     setDiseaseArea(actualDisease);
     // Calculating the health area proportion
-    healthAreaProportion = UtilitiesS::getHealthAreaProportionS(getDiseaseArea(), getTotalArea(), getSenescenceArea());
+    healthAreaProportion = Utilities::getHealthAreaProportion(getDiseaseArea(), getTotalArea(), getSenescenceArea());
 
     for (unsigned int i = 0; i < lesionCohorts.size(); i++) {
         lc = &lesionCohorts[i];

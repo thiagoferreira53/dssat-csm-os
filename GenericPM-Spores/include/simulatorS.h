@@ -11,7 +11,7 @@
 
 class SimulatorSpore : virtual public BasicInterfaceS {
 private:
-    UtilitiesS util;
+    Utilities util;
 
 protected:
     SimulatorSpore();

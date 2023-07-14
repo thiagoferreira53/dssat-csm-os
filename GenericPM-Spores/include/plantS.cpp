@@ -67,14 +67,14 @@ void PlantS::integration() {
     convert << ID << "," << BasicS::getWeather()->getYearDoy() << "," << totalArea << "," << senescenceArea << "," << diseaseArea << "," 
             << visibleDiseaseArea << "," << invisibleDiseaseArea << "," << totalLesions << "," 
             << latentDiseaseArea << "," << infectionDiseaseArea << "," << necroticDiseaseArea << ","
-            << UtilitiesS::formatDoubleS(cloudOValue) << "," << UtilitiesS::formatDoubleS(cloudPValue) << "," 
-            << UtilitiesS::formatDoubleS(cloudFvalue);
+            << Utilities::formatDouble(cloudOValue) << "," << Utilities::formatDouble(cloudPValue) << "," 
+            << Utilities::formatDouble(cloudFvalue);
     BasicS::output.push_back(convert.str());
     //std::cout << ID << "," << BasicS::getWeather()->getYearDoy() << "," << totalArea << "," << senescenceArea << "," << diseaseArea << "," 
     //        << visibleDiseaseArea << "," << invisibleDiseaseArea << "," << totalLesions << "," 
     //        << latentDiseaseArea << "," << infectionDiseaseArea << "," << necroticDiseaseArea << ","
-    //        << UtilitiesS::formatDoubleS(cloudOValue) << "," << UtilitiesS::formatDoubleS(cloudPValue) << "," 
-    //        << UtilitiesS::formatDoubleS(cloudFvalue)<<std::endl;
+    //        << Utilities::formatDouble(cloudOValue) << "," << Utilities::formatDouble(cloudPValue) << "," 
+    //        << Utilities::formatDouble(cloudFvalue)<<std::endl;
     BasicS::output.push_back(convert.str());
 
 }

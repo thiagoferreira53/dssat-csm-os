@@ -2,7 +2,7 @@
 #define DISEASES_H
 
 #include "basicS.h"
-#include "utilitiesS.h"
+#include "../../GenericPM/include/utilities.h"
 
 #include <string>
 #include <vector>

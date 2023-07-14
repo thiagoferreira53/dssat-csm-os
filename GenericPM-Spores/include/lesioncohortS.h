@@ -9,7 +9,7 @@
 
 class LesionCohortS : public BasicS, virtual public BasicInterfaceS {
 private:
-    UtilitiesS util;
+    Utilities util;
     
 protected:
     double totalArea = 0;

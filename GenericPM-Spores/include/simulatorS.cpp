@@ -2,7 +2,7 @@
 #include "diseaseS.h"
 #include "cropinterfaceS.h"
 #include "initialconditionS.h"
-#include "weatherS.h"
+#include "../../GenericPM/include/weather.h"
 #include "../../FlexibleIO/Data/FlexibleIO.hpp"
 
 #include<sstream>
@@ -177,10 +177,10 @@ void SimulatorSpore::rate() {
 }
 
 void SimulatorSpore::updateCurrentYearDoy(int yearDoy) {
-    while(util.addOneDayS(getCurrentYearDoy()) < yearDoy) { // Need to be synchronized. There is a gap.
+    while(util.addOneDay(getCurrentYearDoy()) < yearDoy) { // Need to be synchronized. There is a gap.
 //        printf("Synchronizing: YearDoy: %i - CurrentYearDoy: %i \n",yearDoy, getCurrentYearDoy());
-        setCurrentYearDoy(util.addOneDayS(getCurrentYearDoy()));
-        WeatherS::getInstance()->update();
+        setCurrentYearDoy(util.addOneDay(getCurrentYearDoy()));
+        Weather::getInstance()->update();
         rate();
         integration();
     }

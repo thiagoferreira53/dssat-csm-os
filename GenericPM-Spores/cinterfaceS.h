@@ -3,7 +3,7 @@
 
 #include <iostream>
 #include "include/simulatorS.h"
-#include "include/utilitiesS.h"
+#include "../GenericPM/include/utilities.h"
 #include <cmath>
 #include <vector>
 #include <fstream>

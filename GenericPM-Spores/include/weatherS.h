@@ -1,10 +1,10 @@
 #ifndef WEATHERS_H
 #define WEATHERS_H
 
-class WeatherS {
+class Weather {
 protected:
-    WeatherS();
-    static WeatherS* instance;
+    Weather();
+    static Weather* instance;
     int yearDoy = 0;
     int year = 0;
     int doy = 0;
@@ -23,7 +23,7 @@ protected:
     int hRH90 = 0;
 
 public:
-    static WeatherS* getInstance();
+    static Weather* getInstance();
 
     float getWetDur() {
         if (wetDur == 0)

@@ -1,22 +1,22 @@
-#include "weatherS.h"
+#include "../../GenericPM/include/weather.h"
 #include "simulatorS.h"
 #include "../../FlexibleIO/Data/FlexibleIO.hpp"
 #include<new>
 #include<iostream>
 
-WeatherS::WeatherS() {
+Weather::Weather() {
     //update();
 }
 
-WeatherS* WeatherS::instance = nullptr;
+Weather* Weather::instance = nullptr;
 
-WeatherS* WeatherS::getInstance() {
+Weather* Weather::getInstance() {
     if (instance == nullptr)
-        instance = new WeatherS();
+        instance = new Weather();
     return instance;
 }
 
-bool WeatherS::update() {
+bool Weather::update() {
     try {
         yearDoy = SimulatorSpore::getInstance()->getCurrentYearDoy();
         year = yearDoy / 1000;

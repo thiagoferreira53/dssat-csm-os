@@ -1,7 +1,7 @@
 #ifndef BASICS_H
 #define BASICS_H
 
-#include "weatherS.h"
+#include "../../GenericPM/include/weather.h"
 
 #include<vector>
 #include<string>
@@ -10,7 +10,7 @@
 class BasicS {
 protected:
     std::vector<std::string> output;
-    WeatherS *weather;
+    Weather *weather;
     int firstCall = 1;
 
 public:
@@ -45,8 +45,8 @@ public:
         output.clear();
     }
 
-    WeatherS* getWeather() {
-        return weather = WeatherS::getInstance();
+    Weather* getWeather() {
+        return weather = Weather::getInstance();
     }
 
 };
