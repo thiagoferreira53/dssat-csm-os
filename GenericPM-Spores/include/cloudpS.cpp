@@ -8,8 +8,8 @@
 int CloudPS::qtdS = 0;
 int CloudPS::firstOutputCallS = 0;
 
-void CloudPS::integrationS() {
-    CloudS::integrationS();
+void CloudPS::integration() {
+    CloudS::integration();
 
     //std::cout << values.size()<<std::endl;
     if (values.size() > (unsigned) disease->getVectorSizeCloudP()) {
@@ -17,15 +17,15 @@ void CloudPS::integrationS() {
     }
     CloudS::removeSporesCloudPByAgeS();
 
-    if (getValueS() > disease->getMaxSporeCloudsDensity()) {
-        CloudS::removeSporesCloudS(getValueS() - disease->getMaxSporeCloudsDensity());
+    if (getValue() > disease->getMaxSporeCloudsDensity()) {
+        CloudS::removeSporesCloudS(getValue() - disease->getMaxSporeCloudsDensity());
     }
     if (BasicS::getWeather()->getRain() >= 20) {
         CloudS::removeSporesCloudByRainS(0.5);
     }
 
     std::ostringstream convert;
-    convert << BasicS::getWeather()->getYearDoy() << "," << getValueS();
+    convert << BasicS::getWeather()->getYearDoy() << "," << getValue();
     for (unsigned int i = 0; i < values.size(); i++) {
         convert << "," << values[i];
     }
@@ -33,8 +33,8 @@ void CloudPS::integrationS() {
 
 }
 
-void CloudPS::outputS() {
-    CloudS::outputS();
+void CloudPS::output() {
+    CloudS::output();
 
     std::ostringstream convert;
     convert << "Cpp_CloudP_" << getID() << ".txt";

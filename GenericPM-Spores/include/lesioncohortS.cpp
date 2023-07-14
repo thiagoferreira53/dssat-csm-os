@@ -6,7 +6,7 @@
 
 int LesionCohortS::qtdS = 0;
 
-void LesionCohortS::integrationS() {
+void LesionCohortS::integration() {
 
     DiseaseS *disease = cloudo->getDisease();
 
@@ -53,13 +53,13 @@ int LesionCohortS::getVisibleLesions() {
         return 0;
 }
 
-void LesionCohortS::outputS() {
+void LesionCohortS::output() {
     std::ostringstream convert;
     convert << "Cpp_LesionCohort_" << getID() << ".txt";
     BasicS::getOutput(convert.str());
 }
 
-void LesionCohortS::rateS() {
+void LesionCohortS::rate() {
     //double dailyVisibleGrowRate = 0, dailyInvisibleGrowRate = 0;
     DiseaseS *disease = cloudo->getDisease();
     physiologicalDay = util.temperatureFavorabilityS(

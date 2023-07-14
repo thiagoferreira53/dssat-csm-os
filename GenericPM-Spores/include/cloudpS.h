@@ -29,12 +29,12 @@ public:
         return cloudF;
     }
 
-    void rateS() {
-        CloudS::rateS();
-        cloudF->rateS();
+    void rate() {
+        CloudS::rate();
+        cloudF->rate();
     }
-    void integrationS();
-    void outputS();
+    void integration();
+    void output();
     void addSporesCreatedS(double sporesCreated);
 };
 

@@ -9,8 +9,8 @@
 int CloudOS::qtdS = 0;
 int CloudOS::firstOutputCallS = 0;
 
-void CloudOS::integrationS() {
-    CloudS::integrationS();
+void CloudOS::integration() {
+    CloudS::integration();
 
     if (values.size() > (unsigned) disease->getVectorSizeCloudO()) {
         values.erase(values.begin());
@@ -18,23 +18,23 @@ void CloudOS::integrationS() {
     CloudS::removeSporesCloudOByAgeS();
 
 
-    if (getValueS() > disease->getMaxSporeCloudsDensity()) {
-        CloudS::removeSporesCloudS(getValueS() - disease->getMaxSporeCloudsDensity()); 
+    if (getValue() > disease->getMaxSporeCloudsDensity()) {
+        CloudS::removeSporesCloudS(getValue() - disease->getMaxSporeCloudsDensity()); 
     }
     if (BasicS::getWeather()->getRain() >= 20) {
         CloudS::removeSporesCloudByRainS(0.5);
     }
 
     std::ostringstream convert;
-    convert << BasicS::getWeather()->getYearDoy() << "," << getValueS();
+    convert << BasicS::getWeather()->getYearDoy() << "," << getValue();
     for (unsigned int i = 0; i < values.size(); i++) {
         convert << "," << values[i];
     }
     BasicS::output.push_back(convert.str());
 }
 
-void CloudOS::outputS() {
-    CloudS::outputS();
+void CloudOS::output() {
+    CloudS::output();
 
     std::ostringstream convert;
     convert << "Cpp_CloudO_" << getID() << ".txt";

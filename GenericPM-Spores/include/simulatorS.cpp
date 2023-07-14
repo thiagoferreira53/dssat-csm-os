@@ -127,35 +127,35 @@ void SimulatorSpore::inputPSTS() {
   
 }
 
-void SimulatorSpore::integrationS() {
+void SimulatorSpore::integration() {
     InitialConditionS *ic;
     for (unsigned int i = 0; i < initialConditions.size(); i++) {
         ic = &initialConditions[i];
-        ic->integrationS();
+        ic->integration();
     }
     PlantS *p;
     for (unsigned int i = 0; i < plants.size(); i++) {
         p = &plants[i];
-        p->integrationS();
+        p->integration();
     }
 }
 
-void SimulatorSpore::outputS() {
+void SimulatorSpore::output() {
     InitialConditionS *ic;
     for (unsigned int i = 0; i < initialConditions.size(); i++) {
         ic = &initialConditions[i];
-        ic->outputS();
+        ic->output();
     }
     PlantS *p;
     for (unsigned int i = 0; i < plants.size(); i++) {
         p = &plants[i];
-        p->outputS();
+        p->output();
     }
 }
 /**
  * Function Rate: Responsible call, recursively, the rates for each part of the plant
  */
-void SimulatorSpore::rateS() {
+void SimulatorSpore::rate() {
     InitialConditionS *ic;
     PlantS *p;
 
@@ -167,12 +167,12 @@ void SimulatorSpore::rateS() {
     /** For each Initial Condition call the rate function */
     for (unsigned int i = 0; i < initialConditions.size(); i++) {
         ic = &initialConditions[i];
-        ic->rateS();
+        ic->rate();
     }
     /** For each Plant, call the rate function */
     for (unsigned int i = 0; i < plants.size(); i++) {
         p = &plants[i];
-        p->rateS();
+        p->rate();
     }
 }
 
@@ -181,8 +181,8 @@ void SimulatorSpore::updateCurrentYearDoy(int yearDoy) {
 //        printf("Synchronizing: YearDoy: %i - CurrentYearDoy: %i \n",yearDoy, getCurrentYearDoy());
         setCurrentYearDoy(util.addOneDayS(getCurrentYearDoy()));
         WeatherS::getInstance()->update();
-        rateS();
-        integrationS();
+        rate();
+        integration();
     }
     setCurrentYearDoy(yearDoy);
 }

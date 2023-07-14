@@ -22,19 +22,19 @@ public:
     int getID() {
         return ID;
     }
-    void integrationS();
+    void integration();
 
-    double getValueS() {
-        return CloudS::getValueS() + firstSporeCloud;
+    double getValue() {
+        return CloudS::getValue() + firstSporeCloud;
     }
     void setValue(double value) {
         CloudS::values.clear();
         CloudS::values.push_back(value);
     }
-    void outputS();
+    void output();
 
-    void rateS() {
-        CloudS::rateS();
+    void rate() {
+        CloudS::rate();
     }
 
     void addSporesCreatedS(double sporesCreated) {

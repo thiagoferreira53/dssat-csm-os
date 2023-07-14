@@ -7,12 +7,7 @@
 #include "../FlexibleIO/Data/FlexibleIO.hpp"
 #include "cinterfaceS.h"
 
-
 using namespace std;
-
-
-vector<double> areaslf;
-vector<double> outSpore;
 
 double AREALF = Utilities::runExpressionFunction(1,"50000");
 
@@ -58,7 +53,7 @@ int couplingRateSpore(int *YRDOY, float *SL1)
     // Feed the Disease Model with weather information
     Weather::getInstance()->update();
     // Disease Simulator Rate
-    sS->rateS();
+    sS->rate();
     
     return (1);
 }
@@ -73,7 +68,7 @@ double couplingIntegrationSpore(int *YRDOY,  int *YRPLT)
     SimulatorSpore *sS = SimulatorSpore::getInstance();
 
     // Call the DiseaseS Model Integration function
-    sS->integrationS();
+    sS->integration();
 
     if (sS->getPlants().size() > 0 && sS->getPlants()[0].getOrgans().size() > 0)
     {
@@ -94,11 +89,12 @@ double couplingIntegrationSpore(int *YRDOY,  int *YRPLT)
                 pclaCalc += fmax(0, sS->getPlants()[0].getOrgans().at(i).getTotalArea() - sS->getPlants()[0].getOrgans().at(i).getSenescenceArea());
             }
         }
-        CloudField = sS->getPlants()[0].getCloudsP()[0].getCloudF()->getValueS();
+        CloudField = sS->getPlants()[0].getCloudsP()[0].getCloudF()->getValue();
 
     }
     std::ofstream out;    
     out.open("Daily_CloudF_"+ std::to_string(*YRPLT) +".txt", std::ofstream::out | std::ofstream::app);
+    std::cout << *YRDOY<< " " << CloudField << std::endl;
 
     out << *YRDOY<< " " << CloudField << std::endl;
     out.close();
@@ -111,7 +107,7 @@ int couplingOutputSpore(int *doy)
     // Get an instance of SimulatorSpore
     SimulatorSpore *sS = SimulatorSpore::getInstance();
     // Request disease outputs to be written in files
-    sS->outputS();
+    sS->output();
 
     return (1);
 }

@@ -20,13 +20,13 @@ public:
     }
     virtual void addSporesCreatedS(double sporesCreated) = 0;
 
-    void rateS() {
+    void rate() {
     }
-    void integrationS();
+    void integration();
 
-    void outputS() {
+    void output() {
     }
-    double getValueS();
+    double getValue();
     void removeSporesCloudS(double toBeRemove);
     void removeSporesCloudByRainS(double percent);
     void removeSporesCloudFByAgeS(void);

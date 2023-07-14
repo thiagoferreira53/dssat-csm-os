@@ -7,18 +7,18 @@
 int InitialConditionS::qtdS = 0;
 
 /** Calculate the daily favorability based on temp * wetness favorability*/
-void InitialConditionS::rateS() {
+void InitialConditionS::rate() {
     if (!stop) {
         dailyFavorability = UtilitiesS::temperatureFavorabilityS(BasicS::getWeather()->getTMean(),
                                                                cloudf.getDisease()->getTemperatureFavorabilitySet()) 
                             *
                             UtilitiesS::wetnessFavorabilityS(BasicS::getWeather()->getWetDur(), cloudf.getDisease()->getWetnessFunction()); //
     }
-    cloudf.rateS();
+    cloudf.rate();
 }
 
 /** Accumulate the daily favorability. If the this value hits the pre-determinated value, stop the process */
-void InitialConditionS::integrationS() {
+void InitialConditionS::integration() {
     if (!stop) {
         acumulateFavorability += dailyFavorability;
         if (acumulateFavorability >= cloudf.getDisease()->getAcumulateFavorability()) {
@@ -31,11 +31,11 @@ void InitialConditionS::integrationS() {
         BasicS::output.push_back(convert.str());
 
     }
-    cloudf.integrationS();
+    cloudf.integration();
 
 }
 
-void InitialConditionS::outputS() {
+void InitialConditionS::output() {
     std::ostringstream convert;
     convert << "Cpp_InitialCondition_" << getID() << ".txt";
     BasicS::getOutput(convert.str());
@@ -46,5 +46,5 @@ void InitialConditionS::outputS() {
     //{
     //    std::cout << BasicS::output[i] << std::endl;
     //}
-    cloudf.outputS();
+    cloudf.output();
 }

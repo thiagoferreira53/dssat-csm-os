@@ -25,16 +25,16 @@ public:
         return ID;
     }
 
-    void rateS() {
-        CloudS::rateS();
-        cloudP->rateS();
+    void rate() {
+        CloudS::rate();
+        cloudP->rate();
     }
 
     CloudPS* getCloudP() {
         return cloudP;
     }
-    void integrationS();
-    void outputS();
+    void integration();
+    void output();
     void addSporesCreatedS(double sporesCreated);
 
 

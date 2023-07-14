@@ -6,7 +6,7 @@
 //#include "../Coupling-Interface/CPP/coupling_IO_cpp.h"
 //#include "../../FlexibleIO/Data/FlexibleIO.hpp"
 
-void CloudS::integrationS()
+void CloudS::integration()
 {
     int qtdS = 0;
     if (sporesToBeRemoved > 0)
@@ -25,7 +25,7 @@ void CloudS::integrationS()
     sporesCreated = sporesToBeRemoved = 0;
 }
 
-double CloudS::getValueS()
+double CloudS::getValue()
 {
     double sum = 0;
     for (unsigned int i = 0; i < values.size(); i++)
@@ -36,7 +36,7 @@ double CloudS::getValueS()
 
 void CloudS::removeSporesCloudS(double toBeRemoved)
 {
-    double total = getValueS();
+    double total = getValue();
     for (unsigned int i = 0; i < values.size() && total > 0; i++)
     {
         values[i] -= (toBeRemoved * (values[i] / total));

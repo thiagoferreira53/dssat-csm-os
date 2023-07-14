@@ -6,9 +6,9 @@ public:
 
     virtual ~BasicInterfaceS() {
     }
-    virtual void rateS() = 0;
-    virtual void integrationS() = 0;
-    virtual void outputS() = 0;
+    virtual void rate() = 0;
+    virtual void integration() = 0;
+    virtual void output() = 0;
 
 };
 

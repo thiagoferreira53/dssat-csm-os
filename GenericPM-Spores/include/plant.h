@@ -25,9 +25,9 @@ public:
     int getID() {
         return ID;
     }
-    void integrationS();
-    void outputS();
-    void rateS();
+    void integration();
+    void output();
+    void rate();
 
     double getTotalArea() {
         return totalArea;

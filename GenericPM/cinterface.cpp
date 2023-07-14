@@ -66,9 +66,9 @@ int couplingRate(int *YRDOY,
     // Set the current YearDOY for next Disease step computation
     s->updateCurrentYearDoy(*YRDOY);
     
-    CloudField = sS->getPlants()[0].getCloudsP()[0].getCloudF()->getValueS();
+    CloudField = sS->getPlants()[0].getCloudsP()[0].getCloudF()->getValue();
     
-    //std::cout<<"sS->getPlants()[0].getCloudsP()[0].getCloudF()->getValueS(); "<<sS->getPlants()[0].getCloudsP()[0].getCloudF()->getValueS()<<std::endl;
+    //std::cout<<"sS->getPlants()[0].getCloudsP()[0].getCloudF()->getValue(); "<<sS->getPlants()[0].getCloudsP()[0].getCloudF()->getValue()<<std::endl;
 
     //CinterfaceSpore spores;
     ////CloudField = spores.couplingIntegrationSpore(*YRDOY);

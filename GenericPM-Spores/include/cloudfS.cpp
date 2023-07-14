@@ -8,15 +8,15 @@
 int CloudFS::qtdS = 0;
 int CloudFS::firstOutputCallS = 0;
 
-void CloudFS::integrationS() {
-    CloudS::integrationS();
+void CloudFS::integration() {
+    CloudS::integration();
     float porcent=0;
     if (values.size() > (unsigned) disease->getVectorSizeCloudF()) {
         values.erase(values.begin());
     }
 
-    if (getValueS() > disease->getMaxSporeCloudsDensity()) {
-        CloudS::removeSporesCloudS(getValueS() - disease->getMaxSporeCloudsDensity());
+    if (getValue() > disease->getMaxSporeCloudsDensity()) {
+        CloudS::removeSporesCloudS(getValue() - disease->getMaxSporeCloudsDensity());
     }
     if (BasicS::getWeather()->getRain() >= 20) {
         porcent = BasicS::getWeather()->getRain() / 80;
@@ -28,15 +28,15 @@ void CloudFS::integrationS() {
     }
 
     std::ostringstream convert;
-    convert << BasicS::getWeather()->getYearDoy() << "," << getValueS();
+    convert << BasicS::getWeather()->getYearDoy() << "," << getValue();
     for (unsigned int i = 0; i < values.size(); i++) {
         convert << "," << values[i];
     }
     BasicS::output.push_back(convert.str());
 }
 
-void CloudFS::outputS() {
-    CloudS::outputS();
+void CloudFS::output() {
+    CloudS::output();
 
     std::ostringstream convert;
     convert << "Cpp_CloudF_" << getID() << ".txt";

@@ -47,14 +47,14 @@ public:
     int getAge() {
         return (BasicS::getWeather()->getDoy() - doc);
     }
-    void integrationS();
+    void integration();
     int getVisibleLesions();
 
     double getVisibleArea() {
         return visibleArea;
     }
-    void outputS();
-    void rateS();
+    void output();
+    void rate();
     bool isInfectionPeriodS();
     bool isLatentPeriodS();
     bool isNecroticPeriodS();

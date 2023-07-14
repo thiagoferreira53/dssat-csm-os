@@ -21,7 +21,7 @@ PlantS::PlantS() {
     //BasicS::output.push_back("Day, PlantArea, DiseaseArea, Density, Severity, LatentDArea, InfectionDArea, NecroticDArea,SenescenceArea");
 }
 
-void PlantS::integrationS() {
+void PlantS::integration() {
     totalArea = diseaseArea = latentDiseaseArea = infectionDiseaseArea = necroticDiseaseArea = visibleDiseaseArea = invisibleDiseaseArea = totalLesions = visibleLesions = senescenceArea = 0;
     int newOrgan = 0;
     double cloudOValue = 0, cloudPValue = 0, cloudFvalue = 0;
@@ -29,7 +29,7 @@ void PlantS::integrationS() {
     for (unsigned int i = 0; i < organs.size(); i++) {
         o = &organs[i];
         if(o->getSenescenceArea() < o->getTotalArea()) {
-            o->integrationS();
+            o->integration();
             diseaseArea += o->getDiseaseArea();
             latentDiseaseArea += o->getLatentDiseaseArea();
             infectionDiseaseArea += o->getInfectionDiseaseArea();
@@ -50,7 +50,7 @@ void PlantS::integrationS() {
     CloudPS *cloud;
     for (unsigned int i = 0; i < cloudsP.size(); i++) {
         cloud = &cloudsP[i];
-        cloud->integrationS();
+        cloud->integration();
     }
 
     newOrgan = SimulatorSpore::getInstance()->getCropInterface()->hasNewOrgan();
@@ -59,8 +59,8 @@ void PlantS::integrationS() {
         organs.emplace_back(cloudsP, newOrgan, SimulatorSpore::getInstance()->getCropInterface()->getOrganArea(newOrgan));
     }
 
-    cloudPValue = cloud->getValueS();
-    cloudFvalue = cloud->getCloudF()->getValueS();
+    cloudPValue = cloud->getValue();
+    cloudFvalue = cloud->getCloudF()->getValue();
 
     std::ostringstream convert;
     //Plant, YearDoy, TotalArea, Senesced, Diseased, VisibleArea, InvisibleArea, TotalLesions, CloudOS, CloudPS, CloudFS
@@ -79,7 +79,7 @@ void PlantS::integrationS() {
 
 }
 
-void PlantS::outputS() {
+void PlantS::output() {
     std::ostringstream convert;
     //convert << "Cpp_Plant_" << getID() << ".txt";
     BasicS::getOutput("Cpp_Plant.txt", this->firstOutputCallS);
@@ -95,23 +95,23 @@ void PlantS::outputS() {
     OrganS *o;
     for (unsigned int i = 0; i < organs.size(); i++) {
         o = &organs[i];
-        o->outputS();
+        o->output();
     }
 
     CloudPS *cp;
     for (unsigned int i = 0; i < cloudsP.size(); i++) {
         cp = &cloudsP[i];
-        cp->outputS();
+        cp->output();
     }
 }
 
-void PlantS::rateS() {
+void PlantS::rate() {
     OrganS *o;
     for (unsigned int i = 0; i < organs.size(); i++) {
         o = &organs[i];
         if(o->getSenescenceArea() < o->getTotalArea()) {
             o->setProportionFromTotalArea(o->getTotalArea()/totalArea);
-            o->rateS();
+            o->rate();
         } else {
             //printf("## OrganS: %d died - rate!!!\n",o->getOrganNumber());
         }

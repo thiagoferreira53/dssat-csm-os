@@ -15,7 +15,7 @@
 
 int OrganS::firstOutputCallS = 0;
 
-void OrganS::integrationS() {
+void OrganS::integration() {
     if (!isAlive()) return;
     
     CloudOS *cloudo;
@@ -42,8 +42,8 @@ void OrganS::integrationS() {
             physiologicalLife += UtilitiesS::trapezoidalFunctionS(BasicS::getWeather()->getTMean(), cloudo->getDisease()->getCardinalTempPhysiologicalLife());
 
             cloudOValue = cloudAmountS();
-            cloudPValue = cloudo->getCloudP()->getValueS();
-            cloudFvalue = cloudo->getCloudP()->getCloudF()->getValueS();
+            cloudPValue = cloudo->getCloudP()->getValue();
+            cloudFvalue = cloudo->getCloudP()->getCloudF()->getValue();
 
             newLesionsFromOrgan = cloudo->getDisease()->newLesionsS(cloudOValue,healthAreaProportion);
             newLesionsFromPlant = cloudo->getDisease()->newLesionsS(cloudPValue,healthAreaProportion)*getProportionFromTotalArea();
@@ -70,7 +70,7 @@ void OrganS::integrationS() {
 
     for (unsigned int i = 0; i < lesionCohorts.size(); i++) {
         lc = &lesionCohorts[i];
-        lc->integrationS();
+        lc->integration();
         diseaseArea += lc->getTotalArea();
         latentDiseaseArea += lc->getLatentArea();
         infectionDiseaseArea += lc->getInfectionArea();
@@ -83,8 +83,8 @@ void OrganS::integrationS() {
     cloudIntegrationS();
 
     cloudOValue = cloudAmountS();
-    cloudPValue = cloudo->getCloudP()->getValueS();
-    cloudFvalue = cloudo->getCloudP()->getCloudF()->getValueS();
+    cloudPValue = cloudo->getCloudP()->getValue();
+    cloudFvalue = cloudo->getCloudP()->getCloudF()->getValue();
 
     dailyDiseaseArea = fmax(0,diseaseArea - dailyDiseaseArea);
     dailyVisibleDiseaseArea = fmax(0,visibleDiseaseArea - dailyVisibleDiseaseArea);
@@ -121,17 +121,17 @@ void OrganS::integrationS() {
 }
 void OrganS::cloudIntegrationS() {
     for (unsigned int i = 0; i < cloudsO.size(); i++) {
-        (&cloudsO[i])->integrationS();
+        (&cloudsO[i])->integration();
     }
 }
 float OrganS::cloudAmountS() {
     float cloudOValue=0;
     for (unsigned int i = 0; i < cloudsO.size(); i++) {
-        cloudOValue += (&cloudsO[i])->getValueS();
+        cloudOValue += (&cloudsO[i])->getValue();
     }
     return cloudOValue;
 }
-void OrganS::outputS() {
+void OrganS::output() {
     std::ostringstream convert;
     //convert << "Cpp_Organ_" << getOrganNumber() << ".txt";
     BasicS::getOutput("Cpp_Organ.txt",this->firstOutputCallS);
@@ -146,18 +146,18 @@ void OrganS::outputS() {
     CloudOS *cloudo;
     for (unsigned int i = 0; i < cloudsO.size(); i++) {
         cloudo = &cloudsO[i];
-        cloudo->outputS();
+        cloudo->output();
     }
     
 //    LesionCohortS *lc;
 //    for (unsigned int i = 0; i < lesionCohorts.size(); i++) {
 //        lc = &lesionCohorts[i];
-//        lc->outputS();
+//        lc->output();
 //    }
 
 }
 
-void OrganS::rateS() {
+void OrganS::rate() {
     // Calculate the ratio due senescence based on previews day
     float actualDisease=0, ratioSenescence = this->senescenceArea / this->totalArea;
     // Update the senescence area for the current day
@@ -195,6 +195,6 @@ void OrganS::rateS() {
     for (unsigned int i = 0; i < lesionCohorts.size(); i++) {
         lc = &lesionCohorts[i];
         lc->setOrganHealthAreaProportion(healthAreaProportion);
-        lc->rateS();
+        lc->rate();
     }
 }

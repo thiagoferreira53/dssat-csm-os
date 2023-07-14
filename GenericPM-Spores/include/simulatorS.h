@@ -27,9 +27,9 @@ public:
     static SimulatorSpore* newInstance();
     void inputPSTS();
     void inicializationS();
-    void integrationS();
-    void outputS();
-    void rateS();
+    void integration();
+    void output();
+    void rate();
     void updateCurrentYearDoy(int yearDoy);
     bool allPlantsSenescedS();
 

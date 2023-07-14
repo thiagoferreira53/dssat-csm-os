@@ -33,9 +33,9 @@ public:
     int getDoc() {
         return doc;
     }
-    void rateS();
-    void integrationS();
-    void outputS();
+    void rate();
+    void integration();
+    void output();
 
 };
 
