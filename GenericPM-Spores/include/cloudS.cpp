@@ -1,5 +1,5 @@
 #include "cloudS.h"
-#include "diseaseS.h"
+#include "../../GenericPM/include/disease.h"
 #include <cmath>
 #include <iostream>
 #include "simulatorS.h"

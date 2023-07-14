@@ -3,7 +3,7 @@
 
 #include "cloudS.h"
 #include "../../GenericPM/include/basicinterface.h"
-#include "diseaseS.h"
+#include "../../GenericPM/include/disease.h"
 #include "cloudS.h"
 
 class CloudFS : public CloudS, virtual public BasicInterface {
@@ -15,7 +15,7 @@ protected:
 
 public:
 
-    CloudFS(DiseaseS *disease) {
+    CloudFS(Disease *disease) {
         this->disease = disease;
     }
 

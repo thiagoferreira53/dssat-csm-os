@@ -20,7 +20,7 @@ protected:
     double infectionDiseaseArea = 0;
     double necroticDiseaseArea = 0;
     int organNumber = 0;
-    int newLesionsS = 0;
+    int newLesions = 0;
     int newLesionsFromOrgan, newLesionsFromPlant, newLesionsFromField;
     int totalLesions = 0;
     int visibleLesions = 0;
@@ -45,7 +45,7 @@ protected:
 public:
 
     OrganS(std::vector<CloudPS>& cloudsP, int organNumber, double totalArea) {
-        //Basic::output.push_back("OrganS, YearDoy, TotalArea, Senesced, Diseased, VisibleArea, InvisibleArea, LesionDensity, Age, newLesionsS, TotalLesions, CloudOS, CloudPS, CloudFS, HealthAreaProportion");
+        //Basic::output.push_back("OrganS, YearDoy, TotalArea, Senesced, Diseased, VisibleArea, InvisibleArea, LesionDensity, Age, newLesions, TotalLesions, CloudOS, CloudPS, CloudFS, HealthAreaProportion");
         this->organNumber = organNumber;
         this->totalArea = totalArea;
         CloudPS *cloud;
@@ -224,12 +224,12 @@ public:
         return totalLesions;
     }
 
-    void setNewLesions(int newLesionsS) {
-        this->newLesionsS = newLesionsS;
+    void setNewLesions(int newLesions) {
+        this->newLesions = newLesions;
     }
 
     int getNewLesions() const {
-        return newLesionsS;
+        return newLesions;
     }
 
     void setOrganNumber(int organNumber) {

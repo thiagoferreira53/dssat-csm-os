@@ -67,7 +67,7 @@ double couplingIntegrationSpore(int *YRDOY,  int *YRPLT)
     // Get an instance of SimulatorSpore
     SimulatorSpore *sS = SimulatorSpore::getInstance();
 
-    // Call the DiseaseS Model Integration function
+    // Call the Disease Model Integration function
     sS->integration();
 
     if (sS->getPlants().size() > 0 && sS->getPlants()[0].getOrgans().size() > 0)

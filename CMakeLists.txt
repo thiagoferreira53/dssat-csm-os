@@ -135,7 +135,6 @@ set(
         "GenericPM-Spores/include/cloudoS.cpp"
         "GenericPM-Spores/include/cloudpS.cpp"
         "GenericPM-Spores/include/cropinterfaceS.cpp"
-        "GenericPM-Spores/include/diseaseS.cpp"
         "GenericPM-Spores/include/initialconditionS.cpp"
         "GenericPM-Spores/include/lesioncohortS.cpp"
         "GenericPM-Spores/include/organS.cpp"

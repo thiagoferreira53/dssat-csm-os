@@ -16,7 +16,7 @@ protected:
 
 public:
 
-    CloudPS(DiseaseS *disease, CloudFS *cloudF) {
+    CloudPS(Disease *disease, CloudFS *cloudF) {
         this->disease = disease;
         this->cloudF = cloudF;
     }

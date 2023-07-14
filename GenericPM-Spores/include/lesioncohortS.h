@@ -32,7 +32,7 @@ protected:
 public:
 
     LesionCohortS(int lesionsInThisCohort, CloudOS *cloudo) {
-        Basic::output.push_back("Day of Simulation, Area, Amount of Cohorts, Physiological days,Proportion DiseaseS Area, Latent Area , Infection Area , Necrotic Area, New Spores, Temp.Favorability, dailyVisibleAreaGrow, dailyInvisibleAreaGrow");
+        Basic::output.push_back("Day of Simulation, Area, Amount of Cohorts, Physiological days,Proportion Disease Area, Latent Area , Infection Area , Necrotic Area, New Spores, Temp.Favorability, dailyVisibleAreaGrow, dailyInvisibleAreaGrow");
         this->lesionsInThisCohort = lesionsInThisCohort;
         this->cloudo = cloudo;
         this->visibleArea = 0;

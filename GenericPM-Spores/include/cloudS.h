@@ -3,19 +3,19 @@
 
 #include "../../GenericPM/include/basic.h"
 #include "../../GenericPM/include/basicinterface.h"
-#include "diseaseS.h"
+#include "../../GenericPM/include/disease.h"
 #include<vector>
 
 class CloudS : public Basic, virtual public BasicInterface {
 protected:
     std::vector<double> values;
-    DiseaseS *disease;
+    Disease *disease;
     int sporesCreated = 0;
     int sporesToBeRemoved = 0;
     
 public:
 
-    DiseaseS* getDisease() {
+    Disease* getDisease() {
         return disease;
     }
     virtual void addSporesCreatedS(double sporesCreated) = 0;

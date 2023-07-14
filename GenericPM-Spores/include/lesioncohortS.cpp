@@ -8,7 +8,7 @@ int LesionCohortS::qtdS = 0;
 
 void LesionCohortS::integration() {
 
-    DiseaseS *disease = cloudo->getDisease();
+    Disease *disease = cloudo->getDisease();
 
     if (getOrganHealthAreaProportion() > 0.01) {      
         if(dailyVisibleAreaGrow>0) {
@@ -61,7 +61,7 @@ void LesionCohortS::output() {
 
 void LesionCohortS::rate() {
     //double dailyVisibleGrowRate = 0, dailyInvisibleGrowRate = 0;
-    DiseaseS *disease = cloudo->getDisease();
+    Disease *disease = cloudo->getDisease();
     physiologicalDay = util.temperatureFavorability(
                             Basic::getWeather()->getTMean(),
                             disease->getTemperatureFavorabilitySet());
@@ -88,7 +88,7 @@ void LesionCohortS::rate() {
     {
         newSpores = (lesionsInThisCohort * disease->getDailySporeProductionPerLesion() * 
                      util.trapezoidalFunction(getAge(), disease->getCohortAgeSet()) *
-                     disease->getSporulationCrowdingFactorS(getOrganDiseasedAreaProportion()));
+                     disease->getSporulationCrowdingFactor(getOrganDiseasedAreaProportion()));
     }
     if(organHealthAreaProportion < 0.7) {
         dailyVisibleAreaGrow = dailyInvisibleAreaGrow = 0; // newSpores = 0;
@@ -96,7 +96,7 @@ void LesionCohortS::rate() {
 }
 
 bool LesionCohortS::isLatentPeriodS() {
-    DiseaseS *disease = cloudo->getDisease();
+    Disease *disease = cloudo->getDisease();
     if (getPhysiologicalDaysAcumm() <= disease->getLatentPeriod()) {
         return true;
     }
@@ -104,7 +104,7 @@ bool LesionCohortS::isLatentPeriodS() {
 }
 
 bool LesionCohortS::isInfectionPeriodS() {
-    DiseaseS *disease = cloudo->getDisease();
+    Disease *disease = cloudo->getDisease();
     if (getPhysiologicalDaysAcumm() > disease->getLatentPeriod() && getPhysiologicalDaysAcumm() <= (disease->getLatentPeriod() + disease->getInfectionPeriod())) {
         return true;
     }
@@ -112,7 +112,7 @@ bool LesionCohortS::isInfectionPeriodS() {
 }
 
 bool LesionCohortS::isNecroticPeriodS() {
-    DiseaseS *disease = cloudo->getDisease();
+    Disease *disease = cloudo->getDisease();
     if (getPhysiologicalDaysAcumm() > (disease->getLatentPeriod() + disease->getInfectionPeriod())) {
         return true;
     }

@@ -8,7 +8,7 @@
 #include <vector>
 #include<algorithm>
 
-class DiseaseS : public Basic {
+class Disease : public Basic {
 protected:
     int id;
     std::string cropModel = "CRGRO";
@@ -37,20 +37,20 @@ protected:
     double acumulateFavorability = 35;
     double hostFactor = 1;
     double cardinalTempPhysiologicalLife[4] = {0, 28, 30, 40};
-    static std::vector<DiseaseS*> listDiseasesS;
+    static std::vector<Disease*> listDiseasesS;
     std::string rhFactor = "1*x";
 
 public:
 
-    DiseaseS() {
+    Disease() {
         listDiseasesS.push_back(this);
     }
 
-    static std::vector<DiseaseS*>& getDisease() {
+    static std::vector<Disease*>& getDisease() {
         return listDiseasesS;
     }
-    double getSporulationCrowdingFactorS(double proportionDiseaseArea);
-    int newLesionsS(double cloudDensity, double healthyAreaProportion);
+    double getSporulationCrowdingFactor(double proportionDiseaseArea);
+    int newLesions(double cloudDensity, double healthyAreaProportion);
 
     double getProportionFromOrganToPlantCloud() {
         return proportionFromOrganToPlantCloud;

@@ -34,7 +34,7 @@ void OrganS::integration() {
     diseaseArea = 0;
     visibleLesions = 0;
     visibleDiseaseArea = invisibleDiseaseArea = 0;
-    latentDiseaseArea = infectionDiseaseArea = necroticDiseaseArea = 0;    newLesionsS = 0;
+    latentDiseaseArea = infectionDiseaseArea = necroticDiseaseArea = 0;    newLesions = 0;
 
     if (suceptible) {
         for (unsigned int i = 0; i < cloudsO.size(); i++) {
@@ -45,18 +45,18 @@ void OrganS::integration() {
             cloudPValue = cloudo->getCloudP()->getValue();
             cloudFvalue = cloudo->getCloudP()->getCloudF()->getValue();
 
-            newLesionsFromOrgan = cloudo->getDisease()->newLesionsS(cloudOValue,healthAreaProportion);
-            newLesionsFromPlant = cloudo->getDisease()->newLesionsS(cloudPValue,healthAreaProportion)*getProportionFromTotalArea();
-            newLesionsFromField = cloudo->getDisease()->newLesionsS(cloudFvalue,healthAreaProportion)*getProportionFromTotalArea();
+            newLesionsFromOrgan = cloudo->getDisease()->newLesions(cloudOValue,healthAreaProportion);
+            newLesionsFromPlant = cloudo->getDisease()->newLesions(cloudPValue,healthAreaProportion)*getProportionFromTotalArea();
+            newLesionsFromField = cloudo->getDisease()->newLesions(cloudFvalue,healthAreaProportion)*getProportionFromTotalArea();
             //std::cout << "cloudF: " << cloudFvalue << std::endl;
             //std::cout << "cloudP: " << cloudPValue << std::endl;
             //std::cout << "cloudO: " << cloudOValue << std::endl;
             ////std::cout << "healthAreaProportion " << healthAreaProportion << " getProportionFromTotalArea " << getProportionFromTotalArea() <<
             //" newLesionsFromField " << newLesionsFromField << std::endl;
             if ((newLesionsFromOrgan+newLesionsFromPlant+newLesionsFromField) > 0 && physiologicalLife >= 5) {
-                newLesionsS = newLesionsFromOrgan+newLesionsFromPlant+newLesionsFromField;
-                lesionCohorts.emplace_back(newLesionsS, cloudo);
-                totalLesions += newLesionsS;
+                newLesions = newLesionsFromOrgan+newLesionsFromPlant+newLesionsFromField;
+                lesionCohorts.emplace_back(newLesions, cloudo);
+                totalLesions += newLesions;
 
                 // Add Spores that will be removed because were used to infect the tissue
                 cloudo->addSporesToBeRemoved(newLesionsFromOrgan);

@@ -17,7 +17,7 @@ protected:
     int ID = ++qtdS;
 
 public:
-    InitialConditionS(DiseaseS *disease) : cloudf{disease}
+    InitialConditionS(Disease *disease) : cloudf{disease}
     {
         Basic::output.push_back("Day of Simulation, Acumulated Favorability");
     }

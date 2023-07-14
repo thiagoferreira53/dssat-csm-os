@@ -1,5 +1,5 @@
 #include "simulatorS.h"
-#include "diseaseS.h"
+#include "../../GenericPM/include/disease.h"
 #include "cropinterfaceS.h"
 #include "initialconditionS.h"
 #include "../../GenericPM/include/weather.h"
@@ -33,15 +33,15 @@ void SimulatorSpore::inicializationS() {
     cropinterface->start();
     inputPSTS();
 
-    std::vector<DiseaseS*> &diseases = DiseaseS::getDisease();
+    std::vector<Disease*> &diseases = Disease::getDisease();
     for (unsigned int i = 0; i < diseases.size(); i++)
         initialConditions.emplace_back(diseases[i]);
 }
 
 void SimulatorSpore::inputPSTS() {
   
-  if (DiseaseS::getDisease().size() == 0) {
-      DiseaseS *disease = new DiseaseS();
+  if (Disease::getDisease().size() == 0) {
+      Disease *disease = new Disease();
       FlexibleIO *flexibleio = FlexibleIO::getInstance();
       
       std::string str;
