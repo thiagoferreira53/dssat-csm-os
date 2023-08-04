@@ -833,12 +833,16 @@ c          WRITE (HEADER(I),'(2F6.0,F6.2)') PHINT, LLIFA, STFR
       CASE ('PIALO')
          WRITE (HEADER(I),2010) P1,P2,P3,P4,P5,P6; I=I+1
          WRITE (HEADER(I),2011) G2,G3,PHINT; I=I+1
+!-----------------------------------------------------------------------
+!     New Aloha-PineApple version based on Jhonny Vasquez changes 
+      CASE ('PIAL2')
+         WRITE (HEADER(I),2010) P1,P2,P3,P4,P5,P6; I=I+1
+         WRITE (HEADER(I),2011) G2,G3,PHINT; I=I+1
  2010 FORMAT (1X,'    P1:',F6.1,'    P2:',F6.1,
      &           '    P3:',F6.1,'    P4:',F6.0,
      &           '    P5:',F6.1,'    P6:',F6.1)
  2011 FORMAT (1X,'    G2:',F6.1,'    G3:',F6.2,
      &           ' PHINT:',F6.1)
-
 !-----------------------------------------------------------------------
 !     Sugarcane - Canegro
       CASE ('SCCAN')
