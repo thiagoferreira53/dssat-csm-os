@@ -8,6 +8,7 @@
 !  06/--/1993 WTB Modifications
 !  06/28/1994 JTR & BDB Changed water content dependent factor 
 !  10/17/2017 CHP Adpated for CSM v4.7
+!  09/05/2020 JVJ Stages changes for inclusion in Overview    
 !-----------------------------------------------------------------------
 !  INPUT  : None
 !
@@ -24,16 +25,16 @@
 !=======================================================================
 
       SUBROUTINE Aloha2_NUPTAK(CONTROL, ISWITCH,
-     &    ISTAGE, NO3, NH4, PDWI, PGRORT,                 !Input
+     &    ISTAGE, NO3, NH4, PDWI, PGRORT, PLIGRT,         !Input
      &    PLTPOP, PTF, RANC, RCNP, RLV, RTWT, SOILPROP,   !Input
      &    STOVWT, SW, TCNP, XSTAGE,                       !Input
-     &    ROOTN, STOVN, TANC, UNH4, UNO3, WTNUP)          !Output
+     &    ROOTN, SENESCE, STOVN, TANC, UNH4, UNO3, WTNUP) !Output
       USE ModuleDefs
       IMPLICIT  NONE
       SAVE
 
       REAL, DIMENSION(NL) :: ANO3, ANH4, DLAYR, KG2PPM, LL, NH4, NO3, 
-     &     RLV, RNO3U, RNH4U, SAT, SHF, SNH4, SNO3, SW, UNH4, UNO3
+     &     RLV, RNO3U, RNH4U, SAT, SHF, SNH4, SNO3, SW, UNH4, UNO3, FON
       INTEGER DYNAMIC
 
       REAL        ANDEM              
@@ -50,7 +51,7 @@
       INTEGER     NLAYR       
       REAL        PDWI        
       REAL        PGRORT 
-!      REAL        PLIGRT    
+      REAL        PLIGRT    
       REAL        PLTPOP      
       REAL        PTF         
       REAL        RANC        
@@ -78,7 +79,7 @@
 
       TYPE (ControlType) CONTROL
       TYPE (SwitchType)  ISWITCH
-!      TYPE (ResidueType) SENESCE
+      TYPE (ResidueType) SENESCE
       TYPE (SoilType) SOILPROP
 
       DYNAMIC = CONTROL % DYNAMIC
@@ -324,7 +325,7 @@ C-----------------------------------------------------------------------
 !        IF (STOVWT .GT. 0.0) TANC   = STOVN / STOVWT
       ENDIF
 
-      IF (ISTAGE .LT. 7) THEN
+      IF (ISTAGE .LT. 10) THEN                          !IF (ISTAGE .LT. 7) THEN JVJ Value changed because 2 stages in vegetative phase and one stage in reproductive phase were included
         STOVN = STOVN + DSTOVN
         IF(STOVWT.GT.0.001) TANC  = STOVN / STOVWT
         ROOTN = ROOTN + DROOTN

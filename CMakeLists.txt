@@ -203,6 +203,7 @@ set(
         "Plant/ALOHA-Pineapple/Aloha_PINE.for"
         "Plant/ALOHA-Pineapple/Aloha_ROOTGR.for"
         "Plant/ALOHA2-Pineapple/Aloha2_GROSUB.for"
+        "Plant/ALOHA2-Pineapple/Aloha2_mod.f90"
         "Plant/ALOHA2-Pineapple/Aloha2_NFACTO.for"
         "Plant/ALOHA2-Pineapple/Aloha2_NUPTAK.for"
         "Plant/ALOHA2-Pineapple/Aloha2_OPGROW.f90"

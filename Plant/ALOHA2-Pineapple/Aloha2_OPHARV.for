@@ -4,6 +4,7 @@
 !-----------------------------------------------------------------------
 !  REVISION HISTORY
 !  06/24/2017 CHP Written, based on MZ_OPHARV
+!  09/05/2020 JVJ Modifying the PlantStres% NSTAGES names     
 !=======================================================================
 
       SUBROUTINE Aloha2_OPHARV(CONTROL, ISWITCH,
@@ -12,13 +13,14 @@
      &   ISTAGE, LAI, LN, MDATE, NSTRES, PLTPOP, PMDATE,  !Input
      &   PSTRES1, PSTRES2, STGDOY, STOVER, SWFAC,         !Input
      &   TURFAC, VWATM, WTINITIAL, WTNCAN, WTNGRN,        !Input
-     &   WTNUP, YIELD, YRDOY, YRPLT)                      !Input
+     &   WTNUP, YIELD, YRDOY, YRPLT, EDATE12, EDATE13,
+     &   EDATE1, EDATE2, EDATE3, EDATE5, EDATE6, EDATE7,
+     &   BIOMAS1, LAI1, BIOMAS13, LAI13, BIOMAS2, LAI2,
+     &   BIOMAS3, LAI3, BIOMAS4, LAI4, LN2, LN3, LN4, HIFact)                      !Input
 
 !-----------------------------------------------------------------------
-      USE Aloha_mod
+      USE Aloha2_mod
       IMPLICIT NONE
-      EXTERNAL GETLUN, FIND, ERROR, GETDESC, OPVIEW, READA, 
-     &  READA_Dates, SUMVALS, EvaluateDat, TIMDIF
       SAVE
 
       CHARACTER*1  IDETO, IDETS, IPLTI, RNMODE
@@ -27,11 +29,20 @@
       CHARACTER*6, PARAMETER :: ERRKEY = 'OPHARV'
       CHARACTER*12 FILEA
       CHARACTER*30 FILEIO
-	CHARACTER*80 PATHEX
+	    CHARACTER*80 PATHEX
 
-      INTEGER DMAT 
+
+      INTEGER DMAT
       INTEGER DNR7, DYNAMIC, ERRNUM, FOUND
-      INTEGER IMAT, IFORC, IHARV, DFR1, DFORC, DHARV, HDAP  
+      INTEGER IMAT, IFORC, IHARV, DFR1, DFORC, DHARV, HDAP
+      INTEGER DROOT, IROOT, RIDAP, EDATE12
+      INTEGER DFNL, IFNL, LEDAP, EDATE13
+      INTEGER DLC1, ILC1, L1DAP, EDATE1
+      INTEGER DLC2, ILC2, L2DAP, EDATE2
+      INTEGER DLC3, ILC3, L3DAP, EDATE3
+      INTEGER DROH, IROH, OHDAF, EDATE5
+      INTEGER DREA, IREA, EADAF, EDATE6
+      INTEGER DRLA, IRLA, LADAF, EDATE7
       INTEGER ISDATE, ISENS, LINC, LNUM, LUNIO, MDATE, ISTAGE, RUN
       INTEGER TIMDIF, TRTNUM, YRNR1, YRNR2, YRNR3
       INTEGER YRDOY, YREMRG, YRNR5, YRSIM, YRPLT
@@ -41,7 +52,11 @@
       
       REAL AGEFAC, BWAH
       REAL CRWNWT, EYEWT, FBIOM, FBTONS, FRTWT, FRUITS
-      REAL GPP, GPSM, HI
+      REAL GPP, GPSM, HI, RIBIO, BIOMAS1, RILAI, LAI1
+      REAL LEBIO, BIOMAS13, LELAI, LAI13
+      REAL L1BIO, BIOMAS2, L1LAI, LAI2, L1LN, LN2
+      REAL L2BIO, BIOMAS3, L2LAI, LAI3, L2LN, LN3
+      REAL L3BIO, BIOMAS4, L3LAI, LAI4, L3LN, LN4, HIFact
       REAL MAXLAI, NSTRES, PBIOMS, PEYEWT, PSDWT, PLTPOP 
       REAL Pstres1, Pstres2   
       REAL SDRATE
@@ -76,31 +91,55 @@
       DYNAMIC = CONTROL % DYNAMIC
 
 !-----------------------------------------------------------------------
-      ACOUNT = 15  !Number of FILEA headings.
+      ACOUNT = 36  !Number of FILEA headings.
 !     Headings in FILEA for Measured data
       DATA OLAB /
-     &    'FDAT',    !1  forcing date
-     &    'MDAT',    !2  maturity date (was 4) 
-     &    'HDAT',    !3  harvest date (was 2)
-     &    'FWAH',    !4  yield fresh weight, t/ha (was 5) 
-     &    'YDWAH',   !5  yield dry weight, t/ha (new) 
-     &    'BADMF',   !6  biomass at forcing, t/ha (was 10)
-     &    'BADMH',   !7  biomass at harvest, t/ha (was 11)
-     &    'VWATM',   !8  veg dry matter @ mat, t/ha (was 6)
-     &    'LAIX',    !9  max LAI (was 12) 
-     &    'L#SM',    !10 Leaf # (was 19)
-     &    'HIAM',    !11 HI (was 13)
-     &    'E#AM',    !12 eye number/m2 (was 7)
-     &    'E#UM',    !13 eye number/fruit (was 9)
-     &    'EWUM',    !14 eye unit weight (was 8)
-     &    'CNAM',    !15 tops N, kg/ha (was 16)
+     &    'RIDAP',   !1Pineapple root initiation (was not)
+     &    'LEDAP',   !2Pineapple first new leaf (was not)
+     &    'L1DAP',   !3Pineapple leaf cycle 1 (was not)
+     &    'L2DAP',   !4Pineapple leaf cycle 2 (was not)
+     &    'L3DAP',   !5Pineapple leaf cycle 3 (was not)
+     &    'FDAT',    !61  forcing date
+     &    'OHDAF',   !7Pineapple open heart (was not)
+     &    'EADAF',   !8Pineapple early anthesys (was not)
+     &    'LADAF',   !9Pineapple last anthesys (was not)
+     &    'MDAT',    !10 2  maturity date (was 4) 
+     &    'HDAT',    !11 3  harvest date (was 2)
+     &    'RIBIO',   !12Pineapple biomass at root initiation (was not)
+     &    'RILAI',   !13Pineapple leaf area index at root initiation (was not)
+     &    'LEBIO',   !14Pineapple biomass at first new leaf (was not)
+     &    'LELAI',   !15Pineapple leaf area index at first new leaf (was not)
+     &    'L1BIO',   !16Pineapple biomass at Leaf Cycle 1 (was not)
+     &    'L1LAI',   !17Pineapple leaf area index at Leaf Cycle 1 (was not)
+     &    'L1LN',   !18Pineapple leaf number al Leaf Cycle 1 (eas not)
+     &    'L2BIO',   !19Pineapple biomass at Leaf Cycle 2 (was not)
+     &    'L2LAI',   !20Pineapple leaf area index at Leaf Cycle 2 (was not)
+     &    'L2LN',   !21Pineapple leaf number al Leaf Cycle 2 (eas not)
+     &    'L3BIO',   !22Pineapple biomass at Leaf Cycle 3 (was not)
+     &    'L3LAI',   !23Pineapple leaf area index at Leaf Cycle 3 (was not)
+     &    'L3LN',   !24Pineapple leaf number al Leaf Cycle 3 (eas not)
+     &    'FWAH',    !25 4  yield fresh weight, t/ha (was 5) 
+     &    'YDWAH',   !26 5  yield dry weight, t/ha (new) 
+     &    'BADMF',   !27 6  biomass at forcing, t/ha (was 10)
+     &    'BADMH',   !28 7  biomass at harvest, t/ha (was 11)
+     &    'VWATM',   !29 8  veg dry matter @ mat, t/ha (was 6)
+     &    'LAIX',    !30 9  max LAI (was 12) 
+     &    'L#SM',    !31 10 Leaf # (was 19)
+     &    'HIAM',    !32 11 HI (was 13)
+     &    'E#AM',    !33 12 eye number/m2 (was 7)
+     &    'E#UM',    !34 13 eye number/fruit (was 9)
+     &    'EWUM',    !35 14 eye unit weight (was 8)
+     &    'CNAM',    !36 15 tops N, kg/ha (was 16)
 
+
+   
 !    &    'PDFT',    !not used (was 3)
 !    &    'THAM',    !not used (was 14)
 !    &    'FRNAM',   !not used (was 15)
 !    &    'FRN%M',   !not used (was 18)
 !    &    'VNAM',    !not used - same as CNAM (was 17)
-     &    25*'    '/ 
+
+     &    4*'    '/ 
 !                                                                                       Old    New 
 ! ORIGINAL ALOHA MODEL OUTPUT:                                           Simul   Meas   FileA  FileA
 ! 400 FORMAT (6X, 'FORCING DATE (DAP)             ',2X,I6,7X,I6,/,  !  1 DNR1,   DFLR   FDAT - OK
@@ -192,12 +231,12 @@
       PlantStres % ACTIVE = .FALSE.
       PlantStres % NSTAGES = 5
 
-      PlantStres % StageName(0) = 'Planting to Harvest    '
-      PlantStres % StageName(1) = 'Emergence - Zero Stem  '
-      PlantStres % StageName(2) = 'Zero Stem - Forcing    '
-      PlantStres % StageName(3) = 'Forcing - SCY          '
-      PlantStres % StageName(4) = 'SCY - Early Flwr       '
-      PlantStres % StageName(5) = 'Early Flwr - Fruit Harv'
+      PlantStres % StageName(0) = 'Planting   to Harvest  ' !PlantStres % StageName(0) = 'Planting to Harvest    '
+      PlantStres % StageName(1) = 'Emergence  - Foliar C3 ' !PlantStres % StageName(1) = 'Emergence - Foliar C1  ' 
+      PlantStres % StageName(2) = 'Forcing    - Open Heart' !PlantStres % StageName(2) = 'Foliar C1 - Forcing    '
+      PlantStres % StageName(3) = 'Open Heart - EarlyAnthe' !PlantStres % StageName(3) = 'Forcing - Open Heart   '
+      PlantStres % StageName(4) = 'EarlyAnthe - LastAnthes' !PlantStres % StageName(4) = 'Open Heart - EarlyAnthe' 
+      PlantStres % StageName(5) = 'LastAnthes - PhMaturity' !PlantStres % StageName(5) = 'EarlyAnthe - Fruit Harv' 
 
       Biomass_kg_ha = BIOMAS * 10. !Convert from g/m2 to kg/ha
 
@@ -245,9 +284,9 @@
 
       PlantStres % ACTIVE = .FALSE.
       SELECT CASE(ISTAGE)
-      CASE(1,2,3,4,5)
+      CASE(1,2,3,4,5)         !CASE(1,2,3,4,5)
         PlantStres % ACTIVE(ISTAGE) = .TRUE.
-      CASE(6)
+      CASE(6)                 !CASE(6)
         PlantStres % ACTIVE(5) = .TRUE.
       END SELECT
 
@@ -303,12 +342,9 @@ C-----------------------------------------------------------------------
             PEYEWT = EYEWT * 1000.0       ! Eye weight (mg/eye)
          ENDIF
          GPSM   = GPP*FRUITS              ! # eyes/m2
-         ! Total plant weight except fruit(g/m2)
-         STOVER = BIOMAS*10.0-YIELD
-         ! Fresh fruit yield (kg/ha)       
-         YIELDFresh  = YIELD / Species % FDMC 
-         ! Fresh fruit yield (lb/acre)
-         YIELDB = YIELDFresh / 0.8914         
+         STOVER = BIOMAS*10.0-YIELD       ! Total plant weight except fruit (g/m2)
+         YIELDFresh  = YIELD / SPECIES % FDMC  ! Fresh fruit yield (kg/ha)
+         YIELDB = YIELDFresh / 0.8914          ! Fresh fruit yield (lb/acre)
       ENDIF
 
       SDWT   = YIELD  / 10.0      !g/m2
@@ -316,20 +352,20 @@ C-----------------------------------------------------------------------
       SDWTAH = SDWT * HARVFRAC(1) !g/m2
 
       SDRATE = WTINITIAL
+     
 
 !     CHP 10/17/2017
 !     Oddly, PSDWT = SDWT/GPSM is exactly equal to EYEWT = FRTWT/GPP
 !       Actually, not so odd:
-!       PSDWT = SDWT/GPSM = FRTWT*FRUITS/GPSM = (FRTWT*FRUITS)/(GPP*FRUITS) 
-!       = FRTWT/GPP = EYEWT
+!       PSDWT = SDWT/GPSM = FRTWT*FRUITS/GPSM = (FRTWT*FRUITS)/(GPP*FRUITS) = FRTWT/GPP = EYEWT
       PSDWT = 0.0
       IF (GPSM .GT. 0.0 .AND. SDWT  .GE. 0.0) THEN
-         ! Unit weight of eye g/unit = (g/m2) / (#/m2)
-         PSDWT = SDWT/GPSM           
+         PSDWT = SDWT/GPSM            !Unit weight of eye g/unit = (g/m2) / (#/m2)
       ENDIF
 
       IF (BIOMAS .GT. 0.0 .AND. YIELD .GE. 0.0) THEN
-         HI = YIELD/(BIOMAS*10.0)     !Harvest index
+         HI = YIELD/(BIOMAS*10.0) * HIFact !     !Harvest index
+         !HI = YIELDFresh/(FBIOM*10/0.13)
        ELSE
          HI = 0.0
       ENDIF
@@ -343,6 +379,33 @@ C-----------------------------------------------------------------------
       BWAM = BIOMAS*10. - YIELD 
       BWAH = (BWAM + StovSenes) * HARVFRAC(2) 
 !-----------------------------------------------------------------------
+
+! Add
+      RIBIO = BIOMAS13*10
+      RILAI = LAI13
+      
+      
+      LEBIO = BIOMAS1*10
+      LELAI = LAI1
+
+      L1BIO = BIOMAS2*10
+      L1LAI = LAI2
+      L1LN  = LN2
+      
+      L2BIO = BIOMAS3*10
+      L2LAI = LAI3
+      L2LN  = LN3
+
+      L3BIO = BIOMAS4*10
+      L3LAI = LAI4
+      L3LN  = LN4
+
+     
+
+! End add
+
+
+
 
       IF ((INDEX('YE',IDETO) > 0 .OR. INDEX('IAEBCGDT',RNMODE) .GT. 0) 
      &  .OR. (INDEX('AY',IDETS) .GT. 0 .AND. CROP .NE. 'FA')) THEN
@@ -362,37 +425,225 @@ C-----------------------------------------------------------------------
 
 !     Change observed (FileA) dates to DAP
 !       Forcing date to DAP
-        CALL READA_Dates(X(1), YRSIM, IFORC)
+        CALL READA_Dates(X(6), YRSIM, IFORC)
         IF (IFORC .GT. 0 .AND. IPLTI .EQ. 'R' .AND. ISENS .EQ. 0) THEN
           DFORC = TIMDIF(YRPLT,IFORC)
         ELSE
           DFORC  = -99
         ENDIF
-        OLAP(1) = 'FDAP  '
-        CALL GetDesc(1,OLAP(1), DESCRIP(1))
+        OLAP(6) = 'FDAP  '
+        CALL GetDesc(1,OLAP(6), DESCRIP(6))
 
 !       Maturity date to DAP
-        CALL READA_Dates(X(2), YRSIM, IMAT)
+        CALL READA_Dates(X(10), YRSIM, IMAT)
         IF (IMAT .GT. 0 .AND. IPLTI .EQ. 'R' .AND. ISENS .EQ. 0) THEN
           DMAT = TIMDIF(YRPLT,IMAT)
         ELSE
           DMAT  = -99
         ENDIF
-        OLAP(2) = 'MDAP  '
-        CALL GetDesc(1,OLAP(2), DESCRIP(2))
+        OLAP(10) = 'MDAP  '
+        CALL GetDesc(1,OLAP(10), DESCRIP(10))
 
 !       Harvest date to DAP
-        CALL READA_Dates(X(3), YRSIM, IHARV)
+        CALL READA_Dates(X(11), YRSIM, IHARV)
         IF (IHARV .GT. 0 .AND. IPLTI .EQ. 'R' .AND. ISENS .EQ. 0) THEN
           DHARV = TIMDIF(YRPLT,IHARV)
         ELSE
           DHARV  = -99
         ENDIF
-        OLAP(3) = 'HDAP  '
+        OLAP(11) = 'HDAP  '
+        CALL GetDesc(1,OLAP(11), DESCRIP(11))
+
+
+
+       
+
+
+
+!       Root Initiation date to DAP PART1
+        CALL READA_Dates(X(1), RIDAP, IROOT)   !IROOT Rooting
+        IF (IROOT .GT. 0 .AND. IPLTI .EQ. 'R' .AND. ISENS .EQ. 0) THEN
+          DROOT = IROOT
+          
+        ELSE
+          DROOT  = -99
+        ENDIF
+        
+        CALL GetDesc(1,OLAP(1), DESCRIP(1))
+        OLAP(1) = 'RIDAP '
+
+     
+
+!       First new leaf date to DAP PART1
+
+       CALL READA_Dates(X(2), LEDAP, IFNL)  !IFNL first new leaf
+        IF (IFNL .GT. 0 .AND. IPLTI .EQ. 'R' .AND. ISENS .EQ. 0) THEN
+          DFNL = IFNL
+          
+        ELSE
+          DFNL  = -99
+        ENDIF
+        
+        CALL GetDesc(1,OLAP(2), DESCRIP(2))
+          OLAP(2) = 'LEDAP '
+
+
+!       Leaf cicle 1 date to DAP PART1
+
+       CALL READA_Dates(X(3), L1DAP, ILC1)  !IFNL first new leaf
+        IF (ILC1 .GT. 0 .AND. IPLTI .EQ. 'R' .AND. ISENS .EQ. 0) THEN
+          DLC1 = ILC1
+          
+        ELSE
+          DLC1  = -99
+        ENDIF
+        
         CALL GetDesc(1,OLAP(3), DESCRIP(3))
+          OLAP(3) = 'L1DAP '
+
+!       Leaf cicle 2 date to DAP PART1
+
+       CALL READA_Dates(X(4), L2DAP, ILC2)  !IFNL first new leaf
+        IF (ILC2 .GT. 0 .AND. IPLTI .EQ. 'R' .AND. ISENS .EQ. 0) THEN
+          DLC2 = ILC2
+          
+        ELSE
+          DLC2  = -99
+        ENDIF
+        
+        CALL GetDesc(1,OLAP(4), DESCRIP(4))
+          OLAP(4) = 'L2DAP '
+
+!       Leaf cicle 3 date to DAP PART1
+
+       CALL READA_Dates(X(5), L3DAP, ILC3)  !IFNL first new leaf
+        IF (ILC3 .GT. 0 .AND. IPLTI .EQ. 'R' .AND. ISENS .EQ. 0) THEN
+          DLC3 = ILC3
+          
+        ELSE
+          DLC3  = -99
+        ENDIF
+        
+        CALL GetDesc(1,OLAP(5), DESCRIP(5))
+        OLAP(5) = 'L3DAP '
+
+
+!       Reproductive Open Heart date to DAP PART1
+
+       CALL READA_Dates(X(7), OHDAF, IROH)  !IFNL first new leaf
+        IF (IROH .GT. 0 .AND. IPLTI .EQ. 'R' .AND. ISENS .EQ. 0) THEN
+          DROH = IROH
+          
+        ELSE
+          DROH  = -99
+        ENDIF
+        
+        CALL GetDesc(1,OLAP(7), DESCRIP(7))
+        OLAP(7) = 'OHDAF '
+
+
+!       Reproductive early anthesys date to DAP PART1
+
+       CALL READA_Dates(X(8), EADAF, IREA)  !IFNL first new leaf
+        IF (IREA .GT. 0 .AND. IPLTI .EQ. 'R' .AND. ISENS .EQ. 0) THEN
+          DREA = IREA
+          
+        ELSE
+          DREA  = -99
+        ENDIF
+        
+        CALL GetDesc(1,OLAP(8), DESCRIP(8))
+        OLAP(8) = 'EADAF '
+
+
+!       Reproductive last anthesys date to DAP PART1
+
+       CALL READA_Dates(X(9), LADAF, IRLA)  !IFNL first new leaf
+        IF (IRLA .GT. 0 .AND. IPLTI .EQ. 'R' .AND. ISENS .EQ. 0) THEN
+          DRLA = IRLA
+          
+        ELSE
+          DRLA  = -99
+        ENDIF
+        
+        CALL GetDesc(1,OLAP(9), DESCRIP(9))
+        OLAP(9) = 'LADAF '
+
+
+!       Root Initiation date to DAP PART2
+        IF (YRPLT .GT. 0) THEN
+          RIDAP = TIMDIF (YRPLT,EDATE12)
+          
+
+          IF (RIDAP .LE. 0) THEN
+            RIDAP = -99
+          ENDIF
+        ELSE
+          RIDAP = -99
+        ENDIF
+
+     
+
+!       First new leaf date to DAP PART2
+
+       IF (YRPLT .GT. 0) THEN
+          LEDAP = TIMDIF (YRPLT,EDATE13)
+          IF (LEDAP .LE. 0) THEN
+            LEDAP = -99
+          ENDIF
+        ELSE
+          LEDAP = -99
+        ENDIF
+
+!       Leaf cycle 1 date to DAP PART2
+
+       IF (EDATE1 .GT. 0 .AND. EDATE1 .LE. ISDATE) THEN
+          L1DAP = TIMDIF (YRPLT,EDATE1)
+          IF (L1DAP .LE. 0) THEN
+            L1DAP = -99
+          ENDIF
+        ELSE
+          L1DAP = -99
+        ENDIF
+
+
+!       Leaf cycle 2 date to DAP PART2
+
+       IF (EDATE2 .GT. 0 .AND. EDATE2 .LE. ISDATE) THEN
+          L2DAP = TIMDIF (YRPLT,EDATE2)
+          IF (L2DAP .LE. 0) THEN
+            L2DAP = -99
+          ENDIF
+        ELSE
+          L2DAP = -99
+        ENDIF
+
+!       Leaf cycle 3 date to DAP PART2
+
+       IF (EDATE3 .GT. 0 .AND. EDATE3 .LE. ISDATE) THEN
+          L3DAP = TIMDIF (YRPLT,EDATE3)
+          IF (L3DAP .LE. 0) THEN
+            L3DAP = -99
+          ENDIF
+        ELSE
+          L3DAP = -99
+        ENDIF
+
+
+
+
 
 !       Change simulated dates to DAP
 !       isdate is forcing date
+
+
+         
+       
+
+
+
+
+        
         IF (YRPLT .GT. 0) THEN
           DFR1 = TIMDIF (YRPLT,ISDATE)
           IF (DFR1 .LE. 0) THEN
@@ -419,6 +670,14 @@ C-----------------------------------------------------------------------
           HDAP = -99
         ENDIF
       
+
+
+      
+
+
+
+
+
         IF (YRPLT .GT. 0) THEN
           DNR7 = TIMDIF (YRPLT,PMDATE)
           IF (DNR7 .LE. 0)  THEN
@@ -428,31 +687,103 @@ C-----------------------------------------------------------------------
           DNR7 = -99
         ENDIF
       ENDIF
+      
+      
 
-      WRITE(Simulated(1),'(I8)') DFR1;  WRITE(Measured(1),'(I8)') DFORC   !FDAT 
-      WRITE(Simulated(2),'(I8)') DNR7;  WRITE(Measured(2),'(I8)') DMAT    !MDAT  
-      WRITE(Simulated(3),'(I8)') HDAP;  WRITE(Measured(3),'(I8)') DHARV   !HDAT   
-      WRITE(Simulated(4),'(F8.2)') YIELDFresh/1000.                                     
-                                        WRITE(Measured(4),'(A8)') X(4)    !FWAH 
-      WRITE(Simulated(5),'(F8.2)') YIELD/1000.                                     
-                                        WRITE(Measured(5),'(A8)') X(5)    !YDWAH 
-      WRITE(Simulated(6),'(F8.1)') FBTONS                                      
-                                        WRITE(Measured(6),'(A8)') X(6)    !BADMF     
-      WRITE(Simulated(7),'(F8.1)') PBIOMS                                        
-                                        WRITE(Measured(7),'(A8)') X(7)    !BADMH    
-      WRITE(Simulated(8),'(F8.2)')VWATM;WRITE(Measured(8),'(A8)') X(8)    !VWATM  
-      WRITE(Simulated(9),'(F8.2)') MAXLAI                                          
-                                        WRITE(Measured(9),'(A8)') X(9)    !LAIX     
-      WRITE(Simulated(10),'(F8.1)') LN; WRITE(Measured(10),'(A8)')X(10)   !L#SM 
-      WRITE(Simulated(11),'(F8.3)') HI; WRITE(Measured(11),'(A8)')X(11)   !HIAM
-      WRITE(Simulated(12),'(I8)') NINT(GPSM)                                      
-                                        WRITE(Measured(12),'(A8)')X(12)   !E#AM 
-      WRITE(Simulated(13),'(F8.1)') GPP;WRITE(Measured(13),'(A8)')X(13)   !E#UM     
-      WRITE(Simulated(14),'(F8.3)') EYEWT                                          
-                                        WRITE(Measured(14),'(A8)')X(14)   !EWUM    
-      WRITE(Simulated(15),'(F8.1)')CNAM;WRITE(Measured(15),'(A8)')X(15)   !CNAM
 
-! These aren't calculated - remove from Overview output
+      !       Reproductive Open Heart date to DAP PART2
+
+       IF (YRPLT .GT. 0) THEN
+          OHDAF = (TIMDIF (YRPLT,EDATE5)) - DFR1
+          IF (OHDAF .LE. 0) THEN
+            OHDAF = -99
+          ENDIF
+        ELSE
+          OHDAF = -99
+        ENDIF
+
+!       Reproductive Early Anthesys date to DAP PART2
+
+       IF (YRPLT .GT. 0) THEN
+          EADAF = (TIMDIF (YRPLT,EDATE6)) - DFR1
+          IF (EADAF .LE. 0) THEN
+            EADAF = -99
+          ENDIF
+        ELSE
+          EADAF = -99
+        ENDIF
+
+!       Reproductive Last Anthesys date to DAP PART2
+
+       IF (YRPLT .GT. 0) THEN
+          LADAF = (TIMDIF (YRPLT,EDATE7)) - DFR1
+          IF (LADAF .LE. 0) THEN
+            LADAF = -99
+          ENDIF
+        ELSE
+          LADAF = -99
+        ENDIF
+
+
+
+
+
+
+
+
+
+
+
+      WRITE(Simulated(1),'(I8)') RIDAP;         WRITE(Measured(1),'(A8)') X(1)    !RIDAP
+      WRITE(Simulated(2),'(I8)') LEDAP;         WRITE(Measured(2),'(A8)') X(2)    !LEDAP
+      WRITE(Simulated(3),'(I8)') L1DAP;         WRITE(Measured(3),'(A8)') X(3)    !DLC1    !L1DAP
+      WRITE(Simulated(4),'(I8)') L2DAP;         WRITE(Measured(4),'(A8)') X(4)    !DLC2    !L2DAP
+      WRITE(Simulated(5),'(I8)') L3DAP;         WRITE(Measured(5),'(A8)') X(5)    !DLC3    !L3DAP
+      WRITE(Simulated(6),'(I8)') DFR1;          WRITE(Measured(6),'(I8)') DFORC   !FDAT
+      WRITE(Simulated(7),'(I8)') OHDAF;         WRITE(Measured(7),'(A8)') X(7)    !DROH    !OHDAF
+      WRITE(Simulated(8),'(I8)') EADAF;         WRITE(Measured(8),'(A8)') X(8)    !DREA    !EADAF
+      WRITE(Simulated(9),'(I8)') LADAF;         WRITE(Measured(9),'(A8)') X(9)    !DRLA    !LADAF
+      WRITE(Simulated(10),'(I8)') DNR7;         WRITE(Measured(10),'(I8)') DMAT   !MDAT  
+      WRITE(Simulated(11),'(I8)') HDAP;         WRITE(Measured(11),'(I8)') DHARV  !HDAT   
+      WRITE(Simulated(12),'(F8.1)') RIBIO;      WRITE(Measured(12),'(A8)') X(12)  !RIBIO
+      WRITE(Simulated(13),'(F8.2)') RILAI;      WRITE(Measured(13),'(A8)') X(13)  !RILAI
+      WRITE(Simulated(14),'(F8.1)') LEBIO;      WRITE(Measured(14),'(A8)') X(14)  !LEBIO
+      WRITE(Simulated(15),'(F8.2)') LELAI;      WRITE(Measured(15),'(A8)') X(15)  !LELAI
+      WRITE(Simulated(16),'(F8.1)') L1BIO;      WRITE(Measured(16),'(A8)') X(16)  !L1BIO
+      WRITE(Simulated(17),'(F8.2)') L1LAI;      WRITE(Measured(17),'(A8)') X(17)  !L1LAI
+      WRITE(Simulated(18),'(F8.1)') L1LN;       WRITE(Measured(18),'(A8)') X(18)  !L1LN
+      WRITE(Simulated(19),'(F8.1)') L2BIO;      WRITE(Measured(19),'(A8)') X(19)  !L2BIO
+      WRITE(Simulated(20),'(F8.2)') L2LAI;      WRITE(Measured(20),'(A8)') X(20)  !L2LAI
+      WRITE(Simulated(21),'(F8.1)') L2LN;       WRITE(Measured(21),'(A8)') X(21)  !L2LN
+      WRITE(Simulated(22),'(F8.1)') L3BIO;      WRITE(Measured(22),'(A8)') X(22)  !L3BIO
+      WRITE(Simulated(23),'(F8.2)') L3LAI;      WRITE(Measured(23),'(A8)') X(23)  !L3LAI
+      WRITE(Simulated(24),'(F8.1)') L3LN;       WRITE(Measured(24),'(A8)') X(24)  !L3LN
+      WRITE(Simulated(25),'(F8.2)') YIELDFresh/1000.                                     
+                                                WRITE(Measured(25),'(A8)') X(25)  !FWAH 
+      WRITE(Simulated(26),'(F8.2)') YIELD/1000.                                     
+                                                WRITE(Measured(26),'(A8)') X(26)  !YDWAH 
+      WRITE(Simulated(27),'(F8.1)') FBTONS                                      
+                                                WRITE(Measured(27),'(A8)') X(27)  !BADMF     
+      WRITE(Simulated(28),'(F8.1)') PBIOMS                                        
+                                                WRITE(Measured(28),'(A8)') X(28)  !BADMH    
+      WRITE(Simulated(29),'(F8.2)')VWATM;       WRITE(Measured(29),'(A8)') X(29)  !VWATM  
+      WRITE(Simulated(30),'(F8.2)') MAXLAI                                          
+                                                WRITE(Measured(30),'(A8)') X(30)  !LAIX     
+      WRITE(Simulated(31),'(F8.1)') LN;         WRITE(Measured(31),'(A8)')X(31)   !L#SM 
+      WRITE(Simulated(32),'(F8.3)') HI;         WRITE(Measured(32),'(A8)')X(32)   !HIAM
+      WRITE(Simulated(33),'(I8)') NINT(GPSM)                                      
+                                                WRITE(Measured(33),'(A8)')X(33)   !E#AM 
+      WRITE(Simulated(34),'(F8.1)') GPP;        WRITE(Measured(34),'(A8)')X(34)   !E#UM     
+      WRITE(Simulated(35),'(F8.3)') EYEWT                                          
+                                                WRITE(Measured(35),'(A8)')X(35)   !EWUM    
+      WRITE(Simulated(36),'(F8.1)')CNAM;        WRITE(Measured(36),'(A8)')X(36)   !CNAM
+
+      
+      
+     
+
+      
+!     These aren't calculated - remove from Overview output
 !     WRITE(Simulated(3),'(I8)') -99 ;  WRITE(Measured(3),'(I8)') -99     !PDFT - not used
 !     WRITE(Simulated(14),'(I8)') -99 ; WRITE(Measured(14),'(I8)') -99    !THAM
 !     WRITE(Simulated(15),'(F8.1)') FRNAM
@@ -477,10 +808,10 @@ C-----------------------------------------------------------------------
       LABEL(6)  = 'HWAH'; VALUE(6)  = HWAH
 !     BWAH multiplied by 10.0 in OPSUM - divide by 10. here to preserve units. (?????)
       LABEL(7)  = 'BWAH'; VALUE(7)  = BWAH / 10. 
-      LABEL(8)  = 'HWUM'; VALUE(8)  = EYEWT  !unit eye weight g/unit
-      LABEL(9)  = 'H#AM'; VALUE(9)  = GPSM   !# eyes/m2 at maturity
-      LABEL(10) = 'H#UM'; VALUE(10) = GPP    !# eyes/fruit at maturity
-      LABEL(11) = 'NFXM'; VALUE(11) = 0.0    !WTNFX*10.
+      LABEL(8)  = 'HWUM'; VALUE(8)  = EYEWT       !unit eye weight g/unit
+      LABEL(9)  = 'H#AM'; VALUE(9)  = GPSM        !# eyes/m2 at maturity
+      LABEL(10) = 'H#UM'; VALUE(10) = GPP         !# eyes/fruit at maturity
+      LABEL(11) = 'NFXM'; VALUE(11) = 0.0         !WTNFX*10.
       LABEL(12) = 'NUCM'; VALUE(12) = WTNUP*10.
       LABEL(13) = 'CNAM'; VALUE(13) = WTNCAN*10.
       LABEL(14) = 'GNAM'; VALUE(14) = WTNGRN*10.
