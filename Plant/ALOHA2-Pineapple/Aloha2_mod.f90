@@ -42,16 +42,16 @@
       CHARACTER*10 STNAME(20)
 !     REAL TEMPM
 
-      DATA STNAME/    &               !OJO ESTO GOBIERNA EL ORDEN DE LAS ETAPAS EN EL OVERVIEW.OUT
-        'Foliar C1 ', &   ! 1   JVJ   Zero Stem is not a phenological stage, and it cannot be seen with the naked eye. The phyllotaxis of pineapple is 5/13
-        'Foliar C2 ', &   ! 2         (leaves are produced around the axis of the stem, when 5 turns are completed, leaf number 13 is aligned with the first leaf.
-        'Foliar C3 ', &   ! 3         In other words, a pineapple leaf cycle is fulfilled each time it is produce 13 leaves. 
-        'Forcing   ', &   ! 4         It is a date entered by the user.
-        'Open Heart', &   ! 5         Open Heart is an important event for producers. But you can have different criteria to define the precise moment. I am writing an article where this will be well defined.
-        'EarlyAnthe', &   ! 6         Idem
-        'LastAnthes', &   ! 7         Idem
-        'PhMaturity', &   ! 8         For MD-2 producers, physiological maturity is important because it defines the timing of degreening the fruit
-        'Fruit Harv', &   ! 9         The concept of previous physiological maturity of the Aloha Pineapple model is very different, so the values have been modified.
+      DATA STNAME/    &               
+        'Foliar C1 ', &   ! 1   
+        'Foliar C2 ', &   ! 2   
+        'Foliar C3 ', &   ! 3    
+        'Forcing   ', &   ! 4   
+        'Open Heart', &   ! 5   
+        'EarlyAnthe', &   ! 6   
+        'LastAnthes', &   ! 7   
+        'PhMaturity', &   ! 8   
+        'Fruit Harv', &   ! 9   
         '          ', &   !10
         'Planting  ', &   !11         
         'Root Init.', &   !12

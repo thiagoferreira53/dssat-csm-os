@@ -238,13 +238,8 @@
             ENDIF        
             
             XLAI   = LAI
-            IF (WTLF .GT. 0.0) THEN        ! En esta f�rmula los valores de SLA obtenidos son 10 veces mayores a los de la literatura de Bartholomew pag 123
-               SLA  = LAI * 10000 / WTLF   !   pero es que en este libro en el gr�fico las unidades son m2/kg. Esta f�rmula calcula SLA en cm2/g.
-           !                               ! SLA es el �rea espec�fica de la hoja dividida entre su peso seco.
-               
-        !    IF (LWAD .GT. 0.0) THEN         !  Estuve confundido con esto, pero luego descubr� que el asunto es que se debe reportar en                      
-        !       SLA  = LAI * 10000 / LWAD    !  cm2/g, si yo lo calculo como m2/kg entonces los valores deben ser 10 veces menores.
-                                            ! Esta f�rmula calcula SLA en m2/kg
+            IF (WTLF .GT. 0.0) THEN        
+               SLA  = LAI * 10000 / WTLF   
                
 
                
@@ -290,12 +285,12 @@
 !1989 167     8     1    0.0      9   0.22    595    384    315     68      0      0      0    208      0      0  0.000      0      0  0.000  0.000  0.000   0.00   71.3   0.05   0.00   0.00   0.00   0.00   0.00   0.00   0.00   0.00   0.00   0.00
 
 
-  400          FORMAT (1X,I4,  1X,I3.3,  2I6,  1X,F6.1,  1X,I6,  1X,F6.2,  &                 !TERMINA EN ISTAGE     
-                  1X,F6.1,  1X,F6.1,  1X,F6.1, &                                             !COMIENZA EN XLAI TERMINA EN SUMDTT
-                  1X,F6.1, 5X,F6.1, 7X,F6.1, 4X,F6.1, 4X,F6.1, 5X,F6.1, 4X,F6.1, 4X,F6.1, &  !COMIENZA EN DTT TERMINA  GDDFR 
-                  3X,I6,  9(1X,I6),  4X,F6.3, &                                              !COMIENZA EN CWAD (TOPWT) TERMINA EN HIAD (HI)
-                  2(X,I6), 3X,F6.1, 1X,F6.1, 1X,F6.1,       &                                !COMIENZA EN EYE#AD (EYWAD) TERMINA EN NSTD (NSTRES)
-                  1X,F6.2, 1X,F6.1, F7.2, 10(1X,F6.2))                                       !COMIENZA EN LN%D (PCNL) TERMINA AL FINAL DEL GRUPO DE 10 ULTIMAS
+  400          FORMAT (1X,I4,  1X,I3.3,  2I6,  1X,F6.1,  1X,I6,  1X,F6.2,  &                      
+                  1X,F6.1,  1X,F6.1,  1X,F6.1, &                                             
+                  1X,F6.1, 5X,F6.1, 7X,F6.1, 4X,F6.1, 4X,F6.1, 5X,F6.1, 4X,F6.1, 4X,F6.1, &  
+                  3X,I6,  9(1X,I6),  4X,F6.3, &                                              
+                  2(X,I6), 3X,F6.1, 1X,F6.1, 1X,F6.1,       &                                
+                  1X,F6.2, 1X,F6.1, F7.2, 10(1X,F6.2))                                       
                   
 
 !-------------------------------------------------------------------------

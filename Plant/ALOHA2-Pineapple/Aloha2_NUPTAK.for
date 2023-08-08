@@ -325,7 +325,7 @@ C-----------------------------------------------------------------------
 !        IF (STOVWT .GT. 0.0) TANC   = STOVN / STOVWT
       ENDIF
 
-      IF (ISTAGE .LT. 10) THEN                          !IF (ISTAGE .LT. 7) THEN JVJ Value changed because 2 stages in vegetative phase and one stage in reproductive phase were included
+      IF (ISTAGE .LT. 10) THEN                         
         STOVN = STOVN + DSTOVN
         IF(STOVWT.GT.0.001) TANC  = STOVN / STOVWT
         ROOTN = ROOTN + DROOTN

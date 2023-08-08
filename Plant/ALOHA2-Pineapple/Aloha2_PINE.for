@@ -215,7 +215,7 @@ C-----------------------------------------------------------------------
             CANWAA = BIOMAS
          ENDIF
 
-        IF (YRDOY .EQ. YRPLT .OR. ISTAGE .NE. 10) THEN              ! IF (YRDOY .EQ. YRPLT .OR. ISTAGE .NE. 7) THEN  JVJ Value changed because 2 stages in vegetative phase and one stage in reproductive phase were included
+        IF (YRDOY .EQ. YRPLT .OR. ISTAGE .NE. 10) THEN              
           CALL Aloha2_PHENOL (CONTROL, ISWITCH, 
      &    SW, WEATHER, SOILPROP, YRPLT, SUMDTTGRO, SUMTMAXGRO, SUMTMAX,   !Input
      &    DTT, EDATE, ISDATE, ISTAGE, MDATE, PMDATE, SUMSRADGRO, SUMSRAD, SUMPARGRO, SUMPAR, !Output
