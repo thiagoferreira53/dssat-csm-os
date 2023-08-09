@@ -8,15 +8,15 @@
 !=======================================================================
 
       SUBROUTINE Aloha2_OPHARV(CONTROL, ISWITCH,
-     &   AGEFAC, BIOMAS, CNAM, CRWNWT, EYEWT, FBIOM,      !Input
-     &   FRTWT, FRUITS, GPSM, GPP, HARVFRAC, ISDATE,      !Input
-     &   ISTAGE, LAI, LN, MDATE, NSTRES, PLTPOP, PMDATE,  !Input
-     &   PSTRES1, PSTRES2, STGDOY, STOVER, SWFAC,         !Input
-     &   TURFAC, VWATM, WTINITIAL, WTNCAN, WTNGRN,        !Input
+     &   AGEFAC, BIOMAS, CNAM, CRWNWT, EYEWT, FBIOM,    
+     &   FRTWT, FRUITS, GPSM, GPP, HARVFRAC, ISDATE,    
+     &   ISTAGE, LAI, LN, MDATE, NSTRES, PLTPOP, PMDATE,
+     &   PSTRES1, PSTRES2, STGDOY, STOVER, SWFAC,       
+     &   TURFAC, VWATM, WTINITIAL, WTNCAN, WTNGRN,      
      &   WTNUP, YIELD, YRDOY, YRPLT, EDATE12, EDATE13,
      &   EDATE1, EDATE2, EDATE3, EDATE5, EDATE6, EDATE7,
      &   BIOMAS1, LAI1, BIOMAS13, LAI13, BIOMAS2, LAI2,
-     &   BIOMAS3, LAI3, BIOMAS4, LAI4, LN2, LN3, LN4, HIFact)                      !Input
+     &   BIOMAS3, LAI3, BIOMAS4, LAI4, LN2, LN3, LN4, HIFact)
 
 !-----------------------------------------------------------------------
       USE Aloha2_mod
@@ -724,63 +724,70 @@ C-----------------------------------------------------------------------
           LADAF = -99
         ENDIF
 
-
-
-
-
-
-
-
-
-
-
-      WRITE(Simulated(1),'(I8)') RIDAP;         WRITE(Measured(1),'(A8)') X(1)    !RIDAP
-      WRITE(Simulated(2),'(I8)') LEDAP;         WRITE(Measured(2),'(A8)') X(2)    !LEDAP
-      WRITE(Simulated(3),'(I8)') L1DAP;         WRITE(Measured(3),'(A8)') X(3)    !DLC1    !L1DAP
-      WRITE(Simulated(4),'(I8)') L2DAP;         WRITE(Measured(4),'(A8)') X(4)    !DLC2    !L2DAP
-      WRITE(Simulated(5),'(I8)') L3DAP;         WRITE(Measured(5),'(A8)') X(5)    !DLC3    !L3DAP
-      WRITE(Simulated(6),'(I8)') DFR1;          WRITE(Measured(6),'(I8)') DFORC   !FDAT
-      WRITE(Simulated(7),'(I8)') OHDAF;         WRITE(Measured(7),'(A8)') X(7)    !DROH    !OHDAF
-      WRITE(Simulated(8),'(I8)') EADAF;         WRITE(Measured(8),'(A8)') X(8)    !DREA    !EADAF
-      WRITE(Simulated(9),'(I8)') LADAF;         WRITE(Measured(9),'(A8)') X(9)    !DRLA    !LADAF
-      WRITE(Simulated(10),'(I8)') DNR7;         WRITE(Measured(10),'(I8)') DMAT   !MDAT  
-      WRITE(Simulated(11),'(I8)') HDAP;         WRITE(Measured(11),'(I8)') DHARV  !HDAT   
-      WRITE(Simulated(12),'(F8.1)') RIBIO;      WRITE(Measured(12),'(A8)') X(12)  !RIBIO
-      WRITE(Simulated(13),'(F8.2)') RILAI;      WRITE(Measured(13),'(A8)') X(13)  !RILAI
-      WRITE(Simulated(14),'(F8.1)') LEBIO;      WRITE(Measured(14),'(A8)') X(14)  !LEBIO
-      WRITE(Simulated(15),'(F8.2)') LELAI;      WRITE(Measured(15),'(A8)') X(15)  !LELAI
-      WRITE(Simulated(16),'(F8.1)') L1BIO;      WRITE(Measured(16),'(A8)') X(16)  !L1BIO
-      WRITE(Simulated(17),'(F8.2)') L1LAI;      WRITE(Measured(17),'(A8)') X(17)  !L1LAI
-      WRITE(Simulated(18),'(F8.1)') L1LN;       WRITE(Measured(18),'(A8)') X(18)  !L1LN
-      WRITE(Simulated(19),'(F8.1)') L2BIO;      WRITE(Measured(19),'(A8)') X(19)  !L2BIO
-      WRITE(Simulated(20),'(F8.2)') L2LAI;      WRITE(Measured(20),'(A8)') X(20)  !L2LAI
-      WRITE(Simulated(21),'(F8.1)') L2LN;       WRITE(Measured(21),'(A8)') X(21)  !L2LN
-      WRITE(Simulated(22),'(F8.1)') L3BIO;      WRITE(Measured(22),'(A8)') X(22)  !L3BIO
-      WRITE(Simulated(23),'(F8.2)') L3LAI;      WRITE(Measured(23),'(A8)') X(23)  !L3LAI
-      WRITE(Simulated(24),'(F8.1)') L3LN;       WRITE(Measured(24),'(A8)') X(24)  !L3LN
+      WRITE(Simulated(1),'(I8)') RIDAP; WRITE(Measured(1),'(A8)') X(1)    !RIDAP
+      WRITE(Simulated(2),'(I8)') LEDAP; WRITE(Measured(2),'(A8)') X(2)    !LEDAP
+      WRITE(Simulated(3),'(I8)') L1DAP; WRITE(Measured(3),'(A8)') X(3)    !DLC1    !L1DAP
+      WRITE(Simulated(4),'(I8)') L2DAP; WRITE(Measured(4),'(A8)') X(4)    !DLC2    !L2DAP
+      WRITE(Simulated(5),'(I8)') L3DAP; WRITE(Measured(5),'(A8)') X(5)    !DLC3    !L3DAP
+      WRITE(Simulated(6),'(I8)') DFR1;  
+                          WRITE(Measured(6),'(I8)') DFORC                 !FDAT
+      WRITE(Simulated(7),'(I8)') OHDAF; WRITE(Measured(7),'(A8)') X(7)    !DROH    !OHDAF
+      WRITE(Simulated(8),'(I8)') EADAF; WRITE(Measured(8),'(A8)') X(8)    !DREA    !EADAF
+      WRITE(Simulated(9),'(I8)') LADAF; WRITE(Measured(9),'(A8)') X(9)    !DRLA    !LADAF
+      WRITE(Simulated(10),'(I8)') DNR7; 
+                          WRITE(Measured(10),'(I8)') DMAT                 !MDAT  
+      WRITE(Simulated(11),'(I8)') HDAP; 
+                          WRITE(Measured(11),'(I8)') DHARV                !HDAT   
+      WRITE(Simulated(12),'(F8.1)') RIBIO; 
+                          WRITE(Measured(12),'(A8)') X(12)                !RIBIO
+      WRITE(Simulated(13),'(F8.2)') RILAI; 
+                          WRITE(Measured(13),'(A8)') X(13)                !RILAI
+      WRITE(Simulated(14),'(F8.1)') LEBIO; 
+                          WRITE(Measured(14),'(A8)') X(14)                !LEBIO
+      WRITE(Simulated(15),'(F8.2)') LELAI; 
+                          WRITE(Measured(15),'(A8)') X(15)                !LELAI
+      WRITE(Simulated(16),'(F8.1)') L1BIO; 
+                          WRITE(Measured(16),'(A8)') X(16)                !L1BIO
+      WRITE(Simulated(17),'(F8.2)') L1LAI; 
+                          WRITE(Measured(17),'(A8)') X(17)                !L1LAI
+      WRITE(Simulated(18),'(F8.1)') L1LN;  
+                          WRITE(Measured(18),'(A8)') X(18)                !L1LN
+      WRITE(Simulated(19),'(F8.1)') L2BIO; 
+                          WRITE(Measured(19),'(A8)') X(19)                !L2BIO
+      WRITE(Simulated(20),'(F8.2)') L2LAI; 
+                          WRITE(Measured(20),'(A8)') X(20)                !L2LAI
+      WRITE(Simulated(21),'(F8.1)') L2LN;  
+                          WRITE(Measured(21),'(A8)') X(21)                !L2LN
+      WRITE(Simulated(22),'(F8.1)') L3BIO; 
+                          WRITE(Measured(22),'(A8)') X(22)                !L3BIO
+      WRITE(Simulated(23),'(F8.2)') L3LAI; 
+                          WRITE(Measured(23),'(A8)') X(23)                !L3LAI
+      WRITE(Simulated(24),'(F8.1)') L3LN;  
+                          WRITE(Measured(24),'(A8)') X(24)                !L3LN
       WRITE(Simulated(25),'(F8.2)') YIELDFresh/1000.                                     
-                                                WRITE(Measured(25),'(A8)') X(25)  !FWAH 
+                                  WRITE(Measured(25),'(A8)') X(25)        !FWAH 
       WRITE(Simulated(26),'(F8.2)') YIELD/1000.                                     
-                                                WRITE(Measured(26),'(A8)') X(26)  !YDWAH 
+                                  WRITE(Measured(26),'(A8)') X(26)        !YDWAH 
       WRITE(Simulated(27),'(F8.1)') FBTONS                                      
-                                                WRITE(Measured(27),'(A8)') X(27)  !BADMF     
+                                  WRITE(Measured(27),'(A8)') X(27)        !BADMF     
       WRITE(Simulated(28),'(F8.1)') PBIOMS                                        
-                                                WRITE(Measured(28),'(A8)') X(28)  !BADMH    
-      WRITE(Simulated(29),'(F8.2)')VWATM;       WRITE(Measured(29),'(A8)') X(29)  !VWATM  
+                                  WRITE(Measured(28),'(A8)') X(28)        !BADMH    
+      WRITE(Simulated(29),'(F8.2)')VWATM; 
+                                  WRITE(Measured(29),'(A8)') X(29)        !VWATM  
       WRITE(Simulated(30),'(F8.2)') MAXLAI                                          
-                                                WRITE(Measured(30),'(A8)') X(30)  !LAIX     
-      WRITE(Simulated(31),'(F8.1)') LN;         WRITE(Measured(31),'(A8)')X(31)   !L#SM 
-      WRITE(Simulated(32),'(F8.3)') HI;         WRITE(Measured(32),'(A8)')X(32)   !HIAM
+                                  WRITE(Measured(30),'(A8)') X(30)        !LAIX     
+      WRITE(Simulated(31),'(F8.1)') LN;
+                                  WRITE(Measured(31),'(A8)')X(31)         !L#SM 
+      WRITE(Simulated(32),'(F8.3)') HI;         
+                                  WRITE(Measured(32),'(A8)')X(32)         !HIAM
       WRITE(Simulated(33),'(I8)') NINT(GPSM)                                      
-                                                WRITE(Measured(33),'(A8)')X(33)   !E#AM 
-      WRITE(Simulated(34),'(F8.1)') GPP;        WRITE(Measured(34),'(A8)')X(34)   !E#UM     
+                                  WRITE(Measured(33),'(A8)')X(33)         !E#AM 
+      WRITE(Simulated(34),'(F8.1)') GPP;        
+                                  WRITE(Measured(34),'(A8)')X(34)         !E#UM     
       WRITE(Simulated(35),'(F8.3)') EYEWT                                          
-                                                WRITE(Measured(35),'(A8)')X(35)   !EWUM    
-      WRITE(Simulated(36),'(F8.1)')CNAM;        WRITE(Measured(36),'(A8)')X(36)   !CNAM
-
-      
-      
-     
+                                  WRITE(Measured(35),'(A8)')X(35)         !EWUM    
+      WRITE(Simulated(36),'(F8.1)')CNAM;        
+                                  WRITE(Measured(36),'(A8)')X(36)         !CNAM
 
       
 !     These aren't calculated - remove from Overview output

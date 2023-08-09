@@ -116,14 +116,22 @@
       CASE(1);        !Data record 
         L = L + 1
         SELECT CASE(L)
-        CASE (1); READ(TEXTLINE,'(2F7.0)',IOSTAT=ERR) SPECIES % CONV,  SPECIES % FDMC
-        CASE (2); READ(TEXTLINE,'(3F7.0)',IOSTAT=ERR) SPECIES % TBASV, SPECIES % TOPTV, SPECIES % TTOPV
-        CASE (3); READ(TEXTLINE,'(3F7.0)',IOSTAT=ERR) SPECIES % TBASR, SPECIES % TOPTR, SPECIES % TTOPR
-        CASE (4); READ(TEXTLINE,'(1F7.0)',IOSTAT=ERR) SPECIES % LIFAC
-        CASE (5); READ(TEXTLINE,'(4F7.0)',IOSTAT=ERR) SPECIES % RWEP, SPECIES % PORM, SPECIES % RWMX, SPECIES % RLWR
-        CASE (6); READ(TEXTLINE,'(2F7.0)',IOSTAT=ERR) SPECIES % CMFC
+        CASE (1); READ(TEXTLINE,'(2F7.0)',IOSTAT=ERR)       &
+        SPECIES % CONV,  SPECIES % FDMC
+        CASE (2); READ(TEXTLINE,'(3F7.0)',IOSTAT=ERR)       &
+        SPECIES % TBASV, SPECIES % TOPTV, SPECIES % TTOPV
+        CASE (3); READ(TEXTLINE,'(3F7.0)',IOSTAT=ERR)       & 
+        SPECIES % TBASR, SPECIES % TOPTR, SPECIES % TTOPR
+        CASE (4); READ(TEXTLINE,'(1F7.0)',IOSTAT=ERR)       &
+        SPECIES % LIFAC
+        CASE (5); READ(TEXTLINE,'(4F7.0)',IOSTAT=ERR)       &
+        SPECIES % RWEP, SPECIES % PORM, SPECIES % RWMX,     & 
+        SPECIES % RLWR
+        CASE (6); READ(TEXTLINE,'(2F7.0)',IOSTAT=ERR)       &
+        SPECIES % CMFC
         CASE (7:16); I = L - 6
-                  READ(TEXTLINE,'(2F7.0)',IOSTAT=ERR) SPECIES % CO2X(I), SPECIES % CO2Y(I)
+                  READ(TEXTLINE,'(2F7.0)',IOSTAT=ERR)       &
+                  SPECIES % CO2X(I), SPECIES % CO2Y(I)
         END SELECT !L = Data line selection
         IF (ERR .NE. 0) GOTO 100
 !     -----------------------------------------
@@ -174,17 +182,20 @@
 !     -----------------------------------------------------------------
 !     Read input file name (ie. DSSAT45.INP) and path
       CALL GETLUN('FILEIO', LUNIO)
-      OPEN (LUNIO, FILE = CONTROL % FILEIO, STATUS = 'OLD', IOSTAT=ERR)  
+      OPEN (LUNIO, FILE = CONTROL % FILEIO, STATUS = 'OLD',       &
+       IOSTAT=ERR)  
       IF (ERR .NE. 0) CALL ERROR(ERRKEY,ERR,FILEIO,0)
       REWIND (LUNIO)
-      READ(LUNIO,50,IOSTAT=ERR) SPECIES % SPEfile, SPECIES % SPEpath; LNUM = 7  !Species file, path
+      READ(LUNIO,50,IOSTAT=ERR) SPECIES % SPEfile,                &
+      SPECIES % SPEpath; LNUM = 7  !Species file, path
    50 FORMAT(//////,15X,A12,1X,A80)
       IF (ERR .NE. 0) CALL ERROR(ERRKEY,ERR,FILEIO,LNUM)
 
 !      READ(LUNIO,51,IOSTAT=ERR) FILEE, PATHER; LNUM = LNUM + 1  !Ecotype file name 
 !      IF (ERR .NE. 0) CALL ERROR(ERRKEY,ERR,FILEIO,LNUM)
 
-      READ(LUNIO,51,IOSTAT=ERR) CULTIVAR % CULfile, CULTIVAR % CULpath; LNUM = LNUM + 2 
+      READ(LUNIO,51,IOSTAT=ERR) CULTIVAR % CULfile,               &
+      CULTIVAR % CULpath; LNUM = LNUM + 2 
       IF (ERR .NE. 0) CALL ERROR(ERRKEY,ERR,FILEIO,LNUM)        !Cultivar file, path
    51 FORMAT(/,15X,A12,1X,A80)
 
@@ -195,7 +206,8 @@
       IF (FOUND .EQ. 0) THEN
         CALL ERROR(SECTION, 42, FILEIO, LNUM)
       ELSE
-        READ (LUNIO,70) PLANTING % PLTPOP, PLANTING % SDEPTH, PLANTING % SDWTPL !, PLANTING % NFORCING, & 
+        READ (LUNIO,70) PLANTING % PLTPOP, PLANTING % SDEPTH,     &
+        PLANTING % SDWTPL !, PLANTING % NFORCING, & 
 !                        PLANTING % PLANTSIZE, PLANTING % NDOF, PLANTING % PMTYPE
    70   FORMAT (24X,F6.0,24X,2F6.0,24X,I6,F6.0,2I6)
       ENDIF
@@ -220,7 +232,7 @@
       PLANTING % NFORCING = 0
       IF (FOUND .NE. 0) THEN
         DO WHILE (.TRUE.)
-          READ (LUNIO,'(3X,I7,1X,A5)', IOSTAT=ERR) ChemYRDOY, ChemType
+          READ (LUNIO,'(3X,I7,1X,A5)', IOSTAT=ERR) ChemYRDOY,ChemType
           IF (ERR .NE. 0) EXIT
           IF (ChemType == 'CH101' .OR. ChemTYPE == 'CH102') THEN
             PLANTING % NFORCING = 2 
@@ -240,11 +252,14 @@
        IF (FOUND .EQ. 0) THEN
            CALL ERROR(SECTION, 42, FILEIO, LNUM)
        ELSE
-         READ (LUNIO,1800,IOSTAT=ERR) & 
-            CULTIVAR % VARNO, CULTIVAR % VRNAME, CULTIVAR % ECONO,     &
-            CULTIVAR % TC, CULTIVAR % P1, CULTIVAR % P2, CULTIVAR % P3, CULTIVAR % P4, CULTIVAR % P5, & 
-            CULTIVAR % P6, CULTIVAR % P7, CULTIVAR % P8, CULTIVAR % G1, CULTIVAR % G2, CULTIVAR % G3, CULTIVAR % PHINT  
- 1800    FORMAT (A6,1X,A16,1X,A6,1X,15F6.0)               !FORMAT (A6,1X,A16,1X,A6,1X,15F6.0)    
+         READ (LUNIO,1800,IOSTAT=ERR)                              & 
+            CULTIVAR % VARNO, CULTIVAR % VRNAME, CULTIVAR % ECONO, &
+            CULTIVAR % TC, CULTIVAR % P1, CULTIVAR % P2,           &
+            CULTIVAR % P3, CULTIVAR % P4, CULTIVAR % P5,           & 
+            CULTIVAR % P6, CULTIVAR % P7, CULTIVAR % P8,           &  
+            CULTIVAR % G1, CULTIVAR % G2, CULTIVAR % G3,           & 
+            CULTIVAR % PHINT  
+ 1800    FORMAT (A6,1X,A16,1X,A6,1X,15F6.0)
 !B0066 SC-F153          IB0001   60.0  629.  381. 2640.  400.  60.0  200.  14.0  40.0
          IF (ERR .NE. 0) CALL ERROR(ERRKEY,ERR,FILEIO,LNUM)
        ENDIF

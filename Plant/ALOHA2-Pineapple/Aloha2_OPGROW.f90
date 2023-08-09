@@ -272,12 +272,13 @@
             ENDIF
 
             IF (FMOPT /= 'C') THEN   ! VSH
-              WRITE (NOUTDG,400) YEAR, DOY, DAS, DAP, VSTAGE, ISTAGE, &
-                XLAI, TBASE, SUMDTT, &
-                DTT, TMAXGRO, SUMTMAXGRO, SUMTMAX, SUMDTTGRO, SRADGRO, SUMSRADGRO, SUMSRAD, GDDFR, &
-                NINT(TOPWT),  NINT(VWAD), NINT(LWAD), NINT(SWAD), NINT(FLWAD), NINT(FWAD), NINT(CRAD), NINT(BWAD), NINT(SUGD), NINT(RWAD), HI,     &
-                NINT(EYWAD), NINT(GPSM), (1.0-SWFAC), (1.0-TURFAC), (1.0-NSTRES),   &
-                PCNL, SLA, (RTDEP/100.), (RLV(I),I=1,10)                                          !PCNL, SLA, (RTDEP/100.), (RLV(I),I=1,10)
+              WRITE (NOUTDG,400) YEAR, DOY, DAS, DAP, VSTAGE, ISTAGE, XLAI,         & 
+              TBASE, SUMDTT, DTT, TMAXGRO, SUMTMAXGRO, SUMTMAX, SUMDTTGRO,          &
+              SRADGRO, SUMSRADGRO, SUMSRAD, GDDFR, NINT(TOPWT),  NINT(VWAD),        &
+              NINT(LWAD), NINT(SWAD), NINT(FLWAD), NINT(FWAD), NINT(CRAD),          & 
+              NINT(BWAD), NINT(SUGD), NINT(RWAD), HI,NINT(EYWAD), NINT(GPSM),       & 
+              (1.0-SWFAC), (1.0-TURFAC), (1.0-NSTRES),PCNL, SLA, (RTDEP/100.),      & 
+              (RLV(I),I=1,10)
 
 !YEAR DOY   DAS   DAP VSTAGE ISTAGE   XLAI  TOPWT   VWAD   LWAD   SWAD  FLWAD   FWAD   CRAD   BWAD   SUGD   RWAD    HI   EYWAD  GPSM   SWFAC TURFAC NSTRES   PCNL    SLA  RTDEP   RLV(I),I=1,10
 !YEAR DOY   DAS   DAP   L#SD   GSTD   LAID   CWAD   VWAD   LWAD   SWAD  FLWAD   FWAD   CRAD   BWAD   SUGD   RWAD   HIAD  EYWAD  EY#AD   WSPD   WSGD   NSTD   LN%D   SLAD   RDPD   RL1D   RL2D   RL3D   RL4D   RL5D   RL6D   RL7D   RL8D   RL9D   RL10
@@ -348,8 +349,9 @@
 
             IF (FMOPT /= 'C') THEN       ! VSH
               WRITE (NOUTPN,300) YEAR, DOY, DAS, DAP,                   &
-                     (WTNUP*10.0), (WTNCAN*10.0), (WTNVEG*10.0), (WTNLF*10.0), (WTNST*10.0), (WTNRT*10),     &
-                     PCNVEG, PCNL, PCNST, PCNRT
+                     (WTNUP*10.0), (WTNCAN*10.0), (WTNVEG*10.0),        &
+                     (WTNLF*10.0), (WTNST*10.0), (WTNRT*10), PCNVEG,    &
+                     PCNL, PCNST, PCNRT
             !DATE    DAP  NUPC  CNAD  GNAD  VNAD  LNAD  SNAD  GN%D  VN%D  LN%D  SN%D  SHND  RN%D
   300         FORMAT (1X,I4, 1X,I3.3, 2I6, 6(1X,F6.1), 4(1X,F6.2))
 

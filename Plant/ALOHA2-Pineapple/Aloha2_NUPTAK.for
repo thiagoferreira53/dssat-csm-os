@@ -34,7 +34,8 @@
       SAVE
 
       REAL, DIMENSION(NL) :: ANO3, ANH4, DLAYR, KG2PPM, LL, NH4, NO3, 
-     &     RLV, RNO3U, RNH4U, SAT, SHF, SNH4, SNO3, SW, UNH4, UNO3, FON
+     &     RLV, RNO3U, RNH4U, SAT, SHF, SNH4, SNO3, SW, UNH4, UNO3, 
+     &     FON
       INTEGER DYNAMIC
 
       REAL        ANDEM              
