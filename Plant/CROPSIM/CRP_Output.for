@@ -401,6 +401,23 @@
      I      2F6.2,
      J      2F6.2)
             ! End Plantgro writes
+
+!     VSH CSV output corresponding to PlantGro.OUT
+            IF (FMOPT == 'C') THEN 
+              CALL CsvOut(EXCODE, RUN,TN,RN,SN, ON, REP, CN, YEAR,DOY,
+     &  DAS, DAP, TMEAN, TKILL, GSTAGEC, LNUM, PARIOUT, PARIUE, 
+     &  AMIN1(999.9,CARBOBEG*PLTPOP*10.0), 
+     &  LAIC, SAID, CAIC, TWAD,SDWADC,RWAD,CWAD,
+     &  LLWADOUT,STWADOUT,HWAD,
+     &  HIAD, CHWADOUT,RSWAD, 
+     &  SENTOPRETAINEDA,SENTOPLITTERAC,SENROOTC,RSCD,
+     &  HNUMAD,HWUDC, TNUMAD,SLAOUT,
+     &  RTDEP, PTF, H2OA, WAVR, WUPR, WFT, WFP,
+     &  WFG, NFT, NFP, NFG, NUPR, TFP, TFG, VF, DF,
+     &  vCsvlineCsCer, vpCsvlineCsCer, vlngthCsCer)
+
+              CALL LinklstCsCer(vCsvlineCsCer)
+            END IF
             
             ! PlantGroReductionFactors
             IF (YEARDOY.GT.PLYEARDOY) THEN

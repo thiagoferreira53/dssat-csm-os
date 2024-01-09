@@ -16,6 +16,7 @@ C=======================================================================
 
       USE ModuleDefs
       USE ModuleData
+      USE CsvOutput   ! VSH
       USE CRP_First_Trans_m
 
       IMPLICIT NONE
@@ -87,6 +88,7 @@ C=======================================================================
       IDETO   = ISWITCH % IDETO
       IDETS   = ISWITCH % IDETS
       MESOM   = ISWITCH % MESOM
+      FMOPT   = ISWITCH % FMOPT   ! VSH
 
       BD     = SOILPROP % BD     
       DLAYR  = SOILPROP % DLAYR  
