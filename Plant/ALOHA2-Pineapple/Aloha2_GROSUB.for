@@ -149,9 +149,10 @@
       TMAX = WEATHER % TMAX
 
 !=======================================================================
-      SELECT CASE (DYNAMIC)
+!      SELECT CASE (DYNAMIC)
 !=======================================================================
-      CASE (RUNINIT)
+      IF(DYNAMIC.EQ.RUNINIT) THEN
+!      CASE (RUNINIT)
 !=======================================================================
       ISWNIT     = ISWITCH % ISWNIT
       PLA        = 0.0
@@ -250,7 +251,8 @@
      &    ROOTN, SENESCE, STOVN, TANC, UNH4, UNO3, WTNUP) !Output
 
 !=======================================================================
-      CASE (SEASINIT)
+      ELSEIF (DYNAMIC.EQ.SEASINIT) THEN
+!      CASE (SEASINIT)
 !=======================================================================
       SDWTPL    = PLANTING % SDWTPL
       PLTPOP    = PLANTING % PLTPOP
@@ -299,7 +301,8 @@
      &    ROOTN, SENESCE, STOVN, TANC, UNH4, UNO3, WTNUP) !Output
 
 !=======================================================================
-      CASE (RATE)
+!      CASE (RATE)
+      ELSEIF (DYNAMIC.EQ.RATE) THEN
 !=======================================================================
       TEMPM = (WEATHER % TMAX + WEATHER % TMIN) / 2.
 
@@ -441,9 +444,10 @@
 !       9 Physiology to Harvest
 !      10 Harvest
 !-----------------------------------------------------------------               
-      SELECT CASE (ISTAGE)                                            
+!      SELECT CASE (ISTAGE) 
+       IF (ISTAGE .EQ. 1) THEN                                           
 !-----------------------------------------------------------------
-      CASE (1) 
+!      CASE (1) 
         !
         !      !Root Initiation to Leaf Emergence
         !
@@ -504,7 +508,8 @@
         ENDIF
         LFWT = LFWT-SLAN/600.0  
 !-----------------------------------------------------------------
-      CASE (2)
+!      CASE (2)
+      ELSEIF (ISTAGE .EQ. 2) THEN                                           
 
         !
         !      !First New Leaf to Leaf cycle 1
@@ -563,7 +568,9 @@
         ENDIF
         LFWT = LFWT-SLAN/600.0  
 !-----------------------------------------------------------------
-      CASE (3)
+!      CASE (3)
+      ELSEIF (ISTAGE .EQ. 3) THEN                                           
+
         !
         !      ! Leaf cycle 1  to Leaf cycle 2
         !
@@ -622,8 +629,9 @@
         LFWT = LFWT-SLAN/600.0
 
 !-----------------------------------------------------------------
+      ELSEIF (ISTAGE .EQ. 4) THEN                                           
 
-      CASE (4)                         
+!      CASE (4)                         
         !
         !      ! Leaf cycle 2  to Leaf cycle 3
         !
@@ -681,8 +689,8 @@
         LFWT = LFWT-SLAN/600.0
 
 !-----------------------------------------------------------------
-        
-      CASE (5,6)      ! CASE (5,6)                                      ! CASE (3)
+      ELSEIF (ISTAGE .EQ. 5 .OR. ISTAGE .EQ. 6) THEN                                                   
+!      CASE (5,6)
         !
         ! Forcing to sepals closed on youngest flowers
         !
@@ -735,8 +743,8 @@
         SUMP  = SUMP  + CARBO !Total biomass cumulated during the stage
         IDURP = IDURP + 1     !Duration of the stage        
 !-----------------------------------------------------------------
- 
-      CASE (7)        !CASE (7)        !CASE (4)
+      ELSEIF (ISTAGE .EQ. 7) THEN                                                   
+!      CASE (7)
         !
         ! SCY to first open flower
         !
@@ -792,7 +800,8 @@
         STMWT   = STMWT7   + GROSTM
         PLA     = PLA7     + PLAG
 !-----------------------------------------------------------------
-      CASE (8)         ! CASE (8)                ! CASE (5)
+      ELSEIF (ISTAGE .EQ. 8) THEN                                                   
+!      CASE (8)         
         !
         ! Fruit growth
         !
@@ -972,7 +981,9 @@
            STMWT = AMIN1 (STMWT,SWMAX)
         ENDIF
 !-----------------------------------------------------------------
-      CASE (9)      !CASE (9)              !     CASE (6)
+      ELSEIF (ISTAGE .EQ. 9) THEN                                                   
+
+!      CASE (9)      
 !        
 !       Physiological maturity
 !
@@ -1058,7 +1069,8 @@
         GO TO 1900
 
 
-      END SELECT
+!      END SELECT
+      ENDIF
 !-----------------------------------------------------------------
 
       IF (CARBO .EQ. 0.0) THEN
@@ -1171,7 +1183,8 @@ C-----------------------------------------------------------------------
 !=======================================================================
 !     Integration
 !-----------------------------------------------------------------------
-      CASE (INTEGR)
+      ELSEIF (DYNAMIC.EQ.INTEGR) THEN
+!      CASE (INTEGR)
 !=======================================================================
 !     This code used to be in PhaseI subroutine. Put here to make timing match 
 !     with old code.
@@ -1180,8 +1193,10 @@ C-----------------------------------------------------------------------
         ISTAGE_OLD = ISTAGE
 
 !       New stage initialization
-        SELECT CASE (ISTAGE)
-        CASE (1)      ! CASE (1)  !First New Leaf
+!        SELECT CASE (ISTAGE)
+!        CASE (1)      ! CASE (1)  !First New Leaf
+        IF(ISTAGE .EQ. 1) THEN                                                   
+
           PLAG    = 0.0
 
          
@@ -1254,7 +1269,9 @@ C-----------------------------------------------------------------------
          BIOMAS1 = BIOMAS
          LAI1 = LAI 
     
-        CASE (2)       !CASE (2)    ! Leaf Cycle 1
+!        CASE (2)       !CASE (2)    ! Leaf Cycle 1
+        ELSEIF(ISTAGE .EQ. 2) THEN                                                   
+
           !GROSTM = 0.0  ! Daily stem growth (g/plant/day)
           YRDOY   = CONTROL % YRDOY
           NDOF = TIMDIF(YRPLT, YRDOY)
@@ -1306,7 +1323,8 @@ C-----------------------------------------------------------------------
             
 
       
-        CASE (3)      !CASE (3) !Leaf cycle 2
+!        CASE (3)      !CASE (3) !Leaf cycle 2
+        ELSEIF(ISTAGE .EQ. 3) THEN                                                   
 
           YRDOY   = CONTROL % YRDOY
           NDOF = TIMDIF(YRPLT, YRDOY)
@@ -1359,8 +1377,9 @@ C-----------------------------------------------------------------------
          LN3  = LN 
 
 
-!-------------------------------------------------------- NEW   
-        CASE (4)          !CASE (4) !Leaf cycle 3
+!        CASE (4)          !CASE (4) !Leaf cycle 3
+        ELSEIF(ISTAGE .EQ. 4) THEN                                                   
+
 !          IF (NFORCING .GE. 2) THEN
              ! Forcing by number of days after planting
              PLANTSIZE = TOTPLTWT
@@ -1417,7 +1436,8 @@ C-----------------------------------------------------------------------
             
 !-------------------------------------------------------- NEW   
 
-        CASE (5)      !CASE (5)                            ! 
+        ELSEIF(ISTAGE .EQ. 5) THEN                                                   
+!        CASE (5)      !CASE (5)                            ! 
 !          IF (NFORCING .GE. 2) THEN
              ! Forcing by number of days after planting
              PLANTSIZE = TOTPLTWT
@@ -1447,8 +1467,8 @@ C-----------------------------------------------------------------------
           FRTWT  = 0.0
           CRWNWT = 0.0
    
-!---------------------------------------------------------NEW END   
-        CASE (6)        !CASE (6)                               !     CASE (4)
+        ELSEIF(ISTAGE .EQ. 6) THEN                                                   
+!        CASE (6)
           
           YRDOY   = CONTROL % YRDOY
           NDOF = TIMDIF(YRPLT, YRDOY)
@@ -1543,7 +1563,8 @@ C         ABIOMS      = BIOMAS
           VANC   = TANC                 
           VMNC   = TMNC                 
 
-        CASE (7)       ! CASE (7)                  !   CASE (5)
+!        CASE (7)       ! CASE (7)                  !   CASE (5)
+        ELSEIF(ISTAGE .EQ. 7) THEN                                                   
 
           YRDOY   = CONTROL % YRDOY
           NDOF = TIMDIF(YRPLT, YRDOY)
@@ -1628,7 +1649,9 @@ C         ABIOMS      = BIOMAS
           SWMAX  = 0.0
           SWMIN  = 0.0
 
-        CASE (8)    !CASE (8)                    !   CASE (5)   
+!        CASE (8)    !CASE (8)                    !   CASE (5)   
+        ELSEIF(ISTAGE .EQ. 8) THEN                                                   
+
           YRDOY   = CONTROL % YRDOY
           NDOF = TIMDIF(YRPLT, YRDOY)
           DAP16 = NDOF
@@ -1718,7 +1741,9 @@ C         ABIOMS      = BIOMAS
           SWMAX  = 0.0
           SWMIN  = 0.0
           
-        CASE (9)       !CASE (9)                            ! CASE (6)
+!        CASE (9)       !CASE (9)                            ! CASE (6)
+        ELSEIF(ISTAGE .EQ. 9) THEN                                                   
+
           
           YRDOY   = CONTROL % YRDOY
           NDOF = TIMDIF(YRPLT, YRDOY)
@@ -1810,7 +1835,8 @@ C         ABIOMS      = BIOMAS
 !         HBIOM  = BIOMAS                 ! Record biomass at fruit harvest date
 
 
-        CASE (10)       !CASE (9)                            ! CASE (6)
+!        CASE (10)      
+        ELSEIF(ISTAGE .EQ. 10) THEN                                                   
           
           YRDOY   = CONTROL % YRDOY
           NDOF = TIMDIF(YRPLT, YRDOY)
@@ -1904,12 +1930,16 @@ C         ABIOMS      = BIOMAS
 !         ENDIF
 !         HBIOM  = BIOMAS                 ! Record biomass at fruit harvest date
 
-        CASE (11) 
+!        CASE (11) 
+        ELSEIF(ISTAGE .EQ. 11) THEN                                                   
+
           YRDOY   = CONTROL % YRDOY
        
         !DAP0 = CONTROL % DAS
 
-        CASE (12)    !Planting initial variables      
+!        CASE (12)    !Planting initial variables    
+        ELSEIF(ISTAGE .EQ. 12) THEN                                                   
+  
           YRDOY   = CONTROL % YRDOY
          
           WTINITIAL = SDWTPL/(PLTPOP*10.0)        ! kg/ha  --> g/plt
@@ -1952,7 +1982,9 @@ C         ABIOMS      = BIOMAS
           BIOMAS= (LFWT + STMWT + BASLFWT)*PLTPOP
           YRPLT   = YRDOY
       
-        CASE (13)   !Planting to Root initiation                        
+!        CASE (13)   !Planting to Root initiation   
+        ELSEIF(ISTAGE .EQ. 13) THEN                                                   
+                     
           YRDOY   = CONTROL % YRDOY   ! 
           NDOF = TIMDIF(YRPLT, YRDOY) ! 
           DAP1 = NDOF                 ! 
@@ -2016,7 +2048,8 @@ C               XPTN = XGNP*6.25
 !          NSTRES =  1.0
 !          AGEFAC =  1.0
 
-        END SELECT
+!        END SELECT
+        ENDIF
       ENDIF
 
       CALL Aloha2_NUPTAK (CONTROL, ISWITCH, 
@@ -2026,7 +2059,7 @@ C               XPTN = XGNP*6.25
      &    ROOTN, SENESCE, STOVN, TANC, UNH4, UNO3, WTNUP) !Output
 
 !=======================================================================
-      END SELECT
+      ENDIF
 !=======================================================================
       RETURN
       END SUBROUTINE Aloha2_GROSUB
