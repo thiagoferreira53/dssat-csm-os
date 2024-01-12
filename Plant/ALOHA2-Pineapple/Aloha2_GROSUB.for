@@ -429,17 +429,19 @@
 
 !-----------------------------------------------------------------
 !  ISTAGE Definition
-!     7 - Preplanting                                                          11 Start simulation to planting
-!     8 - Planting to root initiation                                          12 Planting to Root Initiation
-!     9 - Root initiation to first new leaf emergence                          13 Root Initiation to First New Leaf
-!     1 - First new leaf emergence to net zero root growth                       1 First new leaf emergence to foliar cycle 1
-!     2 - Net zero stem growth to forcing                                    2,3,4 Foliar cycle 1 to foliar cycle 2,3 and forcing 
-!     3 - Forcing to sepals closed on youngest flowers                           5 Forcing to Open Heart
-!     4 - SCY to first open flower                                               6 Open Heart to EarlyAnthesis
-!     5 - Fruit growth                                                           7 Early Anthesis to Last Anthesis
-!     6 - Physiological maturity                                                 8 Last Anthesis to Physiological maturity
-!-----------------------------------------------------------------               9 Physiology to Harvest
-      SELECT CASE (ISTAGE)                                            !         10 Harvest
+!      11 Start simulation to planting
+!      12 Planting to Root Initiation
+!      13 Root Initiation to First New Leaf
+!       1 First new leaf emergence to foliar cycle 1
+!   2,3,4 Foliar cycle 1 to foliar cycle 2,3 and forcing 
+!       5 Forcing to Open Heart
+!       6 Open Heart to Early Anthesis
+!       7 Early Anthesis to Last Anthesis
+!       8 Last Anthesis to Physiological maturity
+!       9 Physiology to Harvest
+!      10 Harvest
+!-----------------------------------------------------------------               
+      SELECT CASE (ISTAGE)                                            
 !-----------------------------------------------------------------
       CASE (1) 
         !

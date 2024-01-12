@@ -262,31 +262,31 @@
       PlantStres % P_grow = PSTRES2
       PlantStres % P_phot = PSTRES1
 
-!                                                         
-!STG - DEFINITION                                         
-!  7 - Preplanting                                        
-!  8 - Planting to root initiation                        
-!  9 - Root initiation to first new leaf emergence
-!  1 - First new leaf emergence to net zero root growth
-!  2 - Net zero stem growth to forcing
-!  3 - Forcing to sepals closed on youngest flowers
-!  4 - SCY to first open flower
-!  5 - Fruit growth
-!  6 - Physiological maturity
+!  ISTAGE Definition
+!      11 Start simulation to planting
+!      12 Planting to Root Initiation
+!      13 Root Initiation to First New Leaf
+!       1 First new leaf emergence to foliar cycle 1
+!   2,3,4 Foliar cycle 1 to foliar cycle 2,3 and forcing 
+!       5 Forcing to Open Heart
+!       6 Open Heart to Early Anthesis
+!       7 Early Anthesis to Last Anthesis
+!       8 Last Anthesis to Physiological maturity
+!       9 Physiology to Harvest
+!      10 Harvest
 
-!     PlantStres % StageName     Aloha Stages active
-! 0  'Planting to Harvest    '    8,9,1,2,3,4,5,6
-! 1  'Emergence - Zero Stem  '    1
-! 2  'Zero Stem - Forcing    '    2
-! 3  'Forcing - SCY          '    3
-! 4  'SCY - Early Flwr       '    4
-! 5  'Early Flwr - Fruit Harv'    5,6
-
+!     01/08/2024 TF - Added CASEs to include new stages
       PlantStres % ACTIVE = .FALSE.
       SELECT CASE(ISTAGE)
-      CASE(1,2,3,4,5)         !CASE(1,2,3,4,5)
+      CASE(1,2,3,4)         !CASE(1,2,3,4,5)
         PlantStres % ACTIVE(ISTAGE) = .TRUE.
+      CASE(5)                 !CASE(6)
+        PlantStres % ACTIVE(2) = .TRUE.
       CASE(6)                 !CASE(6)
+        PlantStres % ACTIVE(3) = .TRUE.
+      CASE(7)                 !CASE(6)
+        PlantStres % ACTIVE(4) = .TRUE.
+      CASE(8)                 !CASE(6)
         PlantStres % ACTIVE(5) = .TRUE.
       END SELECT
 
