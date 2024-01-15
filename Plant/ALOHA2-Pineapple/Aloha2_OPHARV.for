@@ -279,7 +279,7 @@
       PlantStres % ACTIVE = .FALSE.
       SELECT CASE(ISTAGE)
       CASE(1,2,3,4)         !CASE(1,2,3,4,5)
-        PlantStres % ACTIVE(ISTAGE) = .TRUE.
+        PlantStres % ACTIVE(1) = .TRUE.
       CASE(5)                 !CASE(6)
         PlantStres % ACTIVE(2) = .TRUE.
       CASE(6)                 !CASE(6)
