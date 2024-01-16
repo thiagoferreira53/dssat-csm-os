@@ -223,13 +223,6 @@
       DTT    = 0.0
       CANNAA = 0.05
       CANWAA = 0.0
-      SUMDTTGRO = 0.0
-      SUMTMAXGRO = 0.0
-      SUMTMAX = 0.0
-      SUMSRADGRO = 0.0
-      SUMSRAD = 0.0
-      SUMPARGRO = 0.0
-      SUMPAR = 0.0
 
       PLAG    = 0.0   ! PLAG (cm^2) is daily green leaf area growth
       GROSTM  = 0.0   ! GROSTM (g/plant/day) is daily stem growth
@@ -1267,7 +1260,6 @@ C-----------------------------------------------------------------------
          STOVWT= STMWT
          BIOMAS= (LFWT + STMWT + BASLFWT)*PLTPOP
          BIOMAS1 = BIOMAS
-         LAI1 = LAI 
     
 !        CASE (2)       !CASE (2)    ! Leaf Cycle 1
         ELSEIF(ISTAGE .EQ. 2) THEN                                                   
@@ -1318,7 +1310,6 @@ C-----------------------------------------------------------------------
              STOVWT= STMWT
              BIOMAS= (LFWT + STMWT + BASLFWT)*PLTPOP         
              BIOMAS2 = BIOMAS
-             LAI2 = LAI
              LN2  = LN 
             
 
@@ -1373,7 +1364,6 @@ C-----------------------------------------------------------------------
          STOVWT= STMWT
          BIOMAS= (LFWT + STMWT + BASLFWT)*PLTPOP  
          BIOMAS3 = BIOMAS
-         LAI3 = LAI
          LN3  = LN 
 
 
@@ -1431,7 +1421,6 @@ C-----------------------------------------------------------------------
           STOVWT= STMWT
           BIOMAS= (LFWT + STMWT + BASLFWT)*PLTPOP  
           BIOMAS4 = BIOMAS
-          LAI4 = LAI
           LN4  = LN
             
 !-------------------------------------------------------- NEW   
@@ -1536,7 +1525,6 @@ C-----------------------------------------------------------------------
           STOVWT= STMWT
           BIOMAS= (LFWT + STMWT + BASLFWT)*PLTPOP  
           !BIOMAS6 = BIOMAS
-          LAI6 = LAI
           LN6  = LN
 
 !         MaxLAI = LAI at the end of the stage
@@ -1630,7 +1618,6 @@ C         ABIOMS      = BIOMAS
           STOVWT= STMWT
           BIOMAS= (LFWT + STMWT + BASLFWT)*PLTPOP  
           !BIOMAS7 = BIOMAS
-          LAI7 = LAI
           LN7  = LN
 
 !         Move from Istage 4 because no actual fruits until stage 5
@@ -1814,7 +1801,6 @@ C         ABIOMS      = BIOMAS
           STOVWT= STMWT
           BIOMAS= (LFWT + STMWT + BASLFWT)*PLTPOP  
           !BIOMAS9 = BIOMAS
-          LAI9 = LAI
           LN9  = LN
 
           YIELD = FRTWT*10.0*FRUITS        
@@ -1906,7 +1892,6 @@ C         ABIOMS      = BIOMAS
           STOVWT= STMWT
           BIOMAS= (LFWT + STMWT + BASLFWT)*PLTPOP
           !BIOMAS9 = BIOMAS
-          LAI9 = LAI
           LN9  = LN
     
           HIFact      =  1.17659971 * 
@@ -2030,7 +2015,6 @@ C         ABIOMS      = BIOMAS
           STOVWT= STMWT
           BIOMAS= (LFWT + STMWT + BASLFWT)*PLTPOP
           BIOMAS13 = BIOMAS
-          LAI13 = LAI
 
 !          NSTRES     = 1.0
 
