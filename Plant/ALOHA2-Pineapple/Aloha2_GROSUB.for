@@ -1188,26 +1188,7 @@ C-----------------------------------------------------------------------
 !       New stage initialization
 !        SELECT CASE (ISTAGE)
 !        CASE (1)      ! CASE (1)  !First New Leaf
-        IF(ISTAGE .EQ. 1) THEN                                                   
-
-          PLAG    = 0.0
-
-         
-          GRORTI  = 0.01
-          RTWT    = 0.20                !Root weight         
-          FLRWT   = 0.0
-          FLRWT   = 0.0
-          GROSTM  = 0.0                 
-          SENLA   = 0.0                 
-          SLAN    = 0.0                 
-          GRORT   = 0.0                 
-          GROBSL  = 0.0                 
-          GROLF   = 0.0                 
-          CUMPH   = 0.514               
-          LN      = 1                   
-          CUMDEP  = 0.0
-          
-         
+        IF(ISTAGE .EQ. 1) THEN                                                             
          
          YRDOY   = CONTROL % YRDOY   ! Root initiation date
          NDOF = TIMDIF(YRPLT, YRDOY) ! 
