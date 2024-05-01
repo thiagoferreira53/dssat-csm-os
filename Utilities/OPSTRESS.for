@@ -22,6 +22,7 @@
       USE SumModule
       USE ModuleData
       IMPLICIT  NONE
+      EXTERNAL GETLUN, SUMVALS
       SAVE
 
 !-----------------------------------------------------------------------
@@ -267,8 +268,8 @@
      &/,25X,'Span   Max   Min  Mean   Rad  [day]    CO2   Rain  Trans ',
      &'    ET   <    <    >    >    >    >   Photo         Photo      ',
      &'   Photo',
-     &/,25X,'days    �C    �C    �C MJ/m2     hr    ppm     mm     mm ',
-     &'    mm  0�C  2�C 30�C 32�C 34�C  0mm  synth Growth  synth ',
+     &/,25X,'days    °C    °C    °C MJ/m2     hr    ppm     mm     mm ',
+     &'    mm  0°C  2°C 30°C 32°C 34°C  0mm  synth Growth  synth ',
      &'Growth  synth Growth',/,160('-'))
       ENDIF
 

@@ -83,10 +83,10 @@
 !=======================================================================
 !     from phenology
       SELECT CASE (ISTAGE)
-        CASE (1)
+        CASE (1,2,3,4)
           IF (ISWWAT .NE. 'Y') RETURN
           RTDEP  = RTDEP + 0.01*DTT     ! Depth of root (f) DTT
-        CASE (13)                        !CASE (9) JVJ Value changed because 2 stages in vegetative phase and one stage in reproductive phase were included
+        CASE (13)                        
           RTDEP  = RTDEP + 0.01*DTT     ! Depth of root (f) DTT
       END SELECT
 

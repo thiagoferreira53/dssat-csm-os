@@ -7,7 +7,7 @@
 !=======================================================================
       SUBROUTINE Aloha_OpGrow (CONTROL, ISWITCH,          &
         BASLFWT, BIOMAS, CRWNWT, EYEWT, FLRWT, FRTWT,     &
-        FRUITS, GPP, GPSM, ISTAGE, LAI, LFWT, LN, MDATE,  &
+        FRUITS, GPP, GPSM, ISTAGE, LAI, LFWT, LN, MDATE, DAP1, DAP3, DAP5, DAP7, DAP9, DAP13, DAP15, DAP17, DAP19, DAP21,  &
         NSTRES, PLTPOP, RLV, ROOTN,  RTDEP, RTWT, SKWT,   &
         STMWT, STOVN, STOVWT, SWFAC, TURFAC, WTNCAN, SRADGRO, PARGRO, SUMSRADGRO, SUMSRAD, SUMPARGRO, SUMPAR,    &
         WTNGRN, WTNUP, YRPLT, TMAXGRO, SUMTMAXGRO, SUMTMAX,        &
@@ -31,7 +31,7 @@
       REAL SUMTMAX, TMAX, SUMDTTGRO, SUMSRAD, SRAD, SUMSRADGRO, GDDFR, SUMPAR, SUMPARGRO, SRADGRO, PARGRO  
 
       INTEGER I, LEAFNO
-      INTEGER DAP,YRPLT,YRDOY
+      INTEGER DAP,YRPLT,YRDOY 
       INTEGER DAS
       INTEGER COUNT, FROP, MDATE, YEAR, DOY
 
@@ -41,6 +41,14 @@
 
       REAL    LWAD, SWAD, CRAD, BWAD, SUGD, RWAD, FWAD, EYWAD, EYEWT, FLWAD
       REAL    FRUITS, FRTWT, FLRWT, GPP, GPSM
+      REAL    TOPWT13, TOPWT12,TOPWT10, TOPWT9, TOPWT8, TOPWT7, TOPWT6, TOPWT5, TOPWT4, TOPWT3, TOPWT2, TOPWT1
+      REAL    WTLF13, WTLF12, WTLF10, WTLF9, WTLF8, WTLF7, WTLF6, WTLF5, WTLF4, WTLF3, WTLF2, WTLF1
+      REAL    FRACT1, FRACT2, FRACT3
+      REAL    LWAD13, LWAD12, LWAD10, LWAD9, LWAD8, LWAD7, LWAD6, LWAD5, LWAD4, LWAD3, LWAD2, LWAD1
+      REAL    SWAD13, SWAD12, SWAD10, SWAD9, SWAD8, SWAD7, SWAD6, SWAD5, SWAD4, SWAD3, SWAD2, SWAD1
+      REAL    VWAD13, VWAD12, VWAD10, VWAD9, VWAD8, VWAD7, VWAD6, VWAD5, VWAD4, VWAD3, VWAD2, VWAD1
+      REAL    BWAD13, BWAD12, BWAD10, BWAD9, BWAD8, BWAD7, BWAD6, BWAD5, BWAD4, BWAD3, BWAD2, BWAD1
+      REAL    DAP1, DAP3, DAP5, DAP7, DAP9, DAP13, DAP15, DAP17, DAP19, DAP21          
 
       TYPE (ControlType) CONTROL
       TYPE (SwitchType)  ISWITCH
@@ -88,10 +96,10 @@
           CALL HEADER(SEASINIT, NOUTDG, RUN)
 
           WRITE (NOUTDG,'(A,/,A,/,A,/,A)') & 
- '!                       Leaf   Grow                                                                                                                  <--------------------------- Dry  Weight --------------------------->   Harv    <--- Eye ---> <-- Stress (0-1) -->  Leaf    Spec  Root     <--------------- Root Length Density ------------------------------>', &
- '!                        Num  Stage    LAI                                                                                                           Tops    Veg   Leaf   Stem Flower  Fruit  Crown  Basal   Suck   Root     Index    Wgt.    No.      Water      Nitr   Nitr    Leaf  Depth    <---------------   cm3/cm3  of soil  ------------------------------>', &
- '!                                                                                                                                                    <------------------------------ kg/Ha ------------------------------>           kg/ha          Phot   Grow           %      Area    m      <------------------------------------------------------------------>', &
- '@YEAR DOY   DAS   DAP   L#SD   GSTD   LAID  TBASE SUMDTT    DTT  TMAXGRO   SUMTMAXGRO   SUMTMAX   SUMDTTGRO   SRADGRO   SUMSRADGRO  SUMSRAD   GDDFR   CWAD   VWAD   LWAD   SWAD  FLWAD   FWAD   CRAD   BWAD   SUGD   RWAD     HIAD    EYWAD  EY#AD   WSPD   WSGD   NSTD   LN%D    SLAD   RDPD   RL1D   RL2D   RL3D   RL4D   RL5D   RL6D   RL7D   RL8D   RL9D   RL10'
+ '!                       Leaf   Grow                                  <--------------------------- Dry  Weight --------------------------->   Harv    <--- Eye ---> <-- Stress (0-1) -->  Leaf   Spec  Root     <--------------- Root Length Density ------------------------------>', &
+ '!                        Num  Stage    LAI                           Tops    Veg   Leaf   Stem Flower  Fruit  Crown  Basal   Suck   Root     Index    Wgt.    No.      Water      Nitr   Nitr   Leaf  Depth    <---------------   cm3/cm3  of soil  ------------------------------>', &
+ '!                                                                    <------------------------------ kg/Ha ------------------------------>           kg/ha          Phot   Grow           %     Area    m      <------------------------------------------------------------------>', &
+ '@YEAR DOY   DAS   DAP   L#SD   GSTD   LAID  TBASE SUMDTT    DTT      CWAD   VWAD   LWAD   SWAD  FLWAD   FWAD   CRAD   BWAD   SUGD   RWAD     HIAD    EYWAD  EY#AD   WSPD   WSGD   NSTD   LN%D   SLAD   RDPD   RL1D   RL2D   RL3D   RL4D   RL5D   RL6D   RL7D   RL8D   RL9D   RL10'
 
         ENDIF
 
@@ -195,13 +203,13 @@
 
 !           GM2KG converts gm/plant to kg/ha
             GM2KG  = PLTPOP * 10.0
-                                   
+            
             TOPWT  = BIOMAS * 10.    !topwt in kg/ha, biomas in g/m2
 
             WTLF = LFWT * PLTPOP      !leaf, g/m2
             LWAD = LFWT * GM2KG       !leaf, kg/ha
             SWAD = STMWT* GM2KG       !stem, kg/ha
-            VWAD = LWAD + SWAD        !veg,  kg/ha
+            VWAD = LWAD + SWAD + BWAD       !veg,  kg/ha
                       
             
             BWAD = BASLFWT * GM2KG    !basal, kg/ha
@@ -238,13 +246,8 @@
             ENDIF        
             
             XLAI   = LAI
-            IF (WTLF .GT. 0.0) THEN        ! En esta f�rmula los valores de SLA obtenidos son 10 veces mayores a los de la literatura de Bartholomew pag 123
-               SLA  = LAI * 10000 / WTLF   !   pero es que en este libro en el gr�fico las unidades son m2/kg. Esta f�rmula calcula SLA en cm2/g.
-           !                               ! SLA es el �rea espec�fica de la hoja dividida entre su peso seco.
-               
-        !    IF (LWAD .GT. 0.0) THEN         !  Estuve confundido con esto, pero luego descubr� que el asunto es que se debe reportar en                      
-        !       SLA  = LAI * 10000 / LWAD    !  cm2/g, si yo lo calculo como m2/kg entonces los valores deben ser 10 veces menores.
-                                            ! Esta f�rmula calcula SLA en m2/kg
+            IF (WTLF .GT. 0.0) THEN        
+               SLA  = LAI * 10000 / WTLF   
                
 
                
@@ -278,8 +281,8 @@
 
             IF (FMOPT /= 'C') THEN   ! VSH
               WRITE (NOUTDG,400) YEAR, DOY, DAS, DAP, VSTAGE, ISTAGE, &
-                XLAI, TBASE, SUMDTT, &
-                DTT, TMAXGRO, SUMTMAXGRO, SUMTMAX, SUMDTTGRO, SRADGRO, SUMSRADGRO, SUMSRAD, GDDFR, &
+                XLAI, TBASE, SUMDTT, DTT, &
+                !TMAXGRO, SUMTMAXGRO, SUMTMAX, SUMDTTGRO, SRADGRO, SUMSRADGRO, SUMSRAD, GDDFR, &
                 NINT(TOPWT),  NINT(VWAD), NINT(LWAD), NINT(SWAD), NINT(FLWAD), NINT(FWAD), NINT(CRAD), NINT(BWAD), NINT(SUGD), NINT(RWAD), HI,     &
                 NINT(EYWAD), NINT(GPSM), (1.0-SWFAC), (1.0-TURFAC), (1.0-NSTRES),   &
                 PCNL, SLA, (RTDEP/100.), (RLV(I),I=1,10)                                          !PCNL, SLA, (RTDEP/100.), (RLV(I),I=1,10)
@@ -290,12 +293,12 @@
 !1989 167     8     1    0.0      9   0.22    595    384    315     68      0      0      0    208      0      0  0.000      0      0  0.000  0.000  0.000   0.00   71.3   0.05   0.00   0.00   0.00   0.00   0.00   0.00   0.00   0.00   0.00   0.00
 
 
-  400          FORMAT (1X,I4,  1X,I3.3,  2I6,  1X,F6.1,  1X,I6,  1X,F6.2,  &                 !TERMINA EN ISTAGE     
-                  1X,F6.1,  1X,F6.1,  1X,F6.1, &                                             !COMIENZA EN XLAI TERMINA EN SUMDTT
-                  1X,F6.1, 5X,F6.1, 7X,F6.1, 4X,F6.1, 4X,F6.1, 5X,F6.1, 4X,F6.1, 4X,F6.1, &  !COMIENZA EN DTT TERMINA  GDDFR 
-                  3X,I6,  9(1X,I6),  4X,F6.3, &                                              !COMIENZA EN CWAD (TOPWT) TERMINA EN HIAD (HI)
-                  2(X,I6), 3X,F6.1, 1X,F6.1, 1X,F6.1,       &                                !COMIENZA EN EYE#AD (EYWAD) TERMINA EN NSTD (NSTRES)
-                  1X,F6.2, 1X,F6.1, F7.2, 10(1X,F6.2))                                       !COMIENZA EN LN%D (PCNL) TERMINA AL FINAL DEL GRUPO DE 10 ULTIMAS
+  400          FORMAT (1X,I4,  1X,I3.3,  2I6,  1X,F6.1,  1X,I6,  1X,F6.2,  &                      
+                  1X,F6.1,  1X,F6.1,  1X,F6.1, &                                             
+                  !1X,F6.1, 5X,F6.1, 7X,F6.1, 4X,F6.1, 4X,F6.1, 5X,F6.1, 4X,F6.1, 4X,F6.1, &  
+                  3X,I6,  9(1X,I6),  4X,F6.3, &                                              
+                  2(X,I6), 3X,F6.1, 1X,F6.1, 1X,F6.1,       &                                
+                  1X,F6.2, 1X,F6.1, F7.2, 10(1X,F6.2))                                       
                   
 
 !-------------------------------------------------------------------------

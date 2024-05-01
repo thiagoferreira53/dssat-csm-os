@@ -163,21 +163,21 @@ C-----------------------------------------------------------------------
          STNAME( 2) = 'Foliar C2 '         !(leaves are produced around the axis of the stem, when 5 turns are completed, leaf number 13 is aligned with the first leaf.
          STNAME( 3) = 'Foliar C3 '         !In other words, a pineapple leaf cycle is fulfilled each time it is produce 13 leaves. 
          STNAME( 4) = 'Forcing   '         !It is a date entered by the user.
-         STNAME( 5) = 'Open Heart'         !Open Heart is an important event for producers. But you can have different criteria to define the precise moment. I am writing an article where this will be well defined.
+         STNAME( 5) = 'Open Heart'         !Calving is an important event for producers. But you can have different criteria to define the precise moment. I am writing an article where this will be well defined.
          STNAME( 6) = 'EarlyAnthe'         !Idem
          STNAME( 7) = 'LastAnthes'         !Idem
          STNAME( 8) = 'PhMaturity'         !For MD-2 producers, physiological maturity is important because it defines the timing of degreening the fruit
          STNAME( 9) = 'Fruit Harv'         !The concept of previous physiological maturity of the Aloha Pineapple model is very different, so the values have been modified.
-         STNAME(10) = 'Planting  '
-         STNAME(11) = 'WhRoottips'
-         STNAME(12) = 'Leaf Emerg'
-         STNAME(13) = '          '
+         STNAME(10) = 'PRUEBA1   '
+         STNAME(11) = 'Planting  '
+         STNAME(12) = 'Root Init '
+         STNAME(13) = 'Leaf Emerg'
          STNAME(14) = 'Start Sim '
          STNAME(15) = 'End Sim   '
-         STNAME(16) = '          '
-         STNAME(17) = '          '
-         STNAME(18) = '          '
-         STNAME(19) = '          '
+         STNAME(16) = 'PRUEBA2   '
+         STNAME(17) = 'PRUEBA3   '
+         STNAME(18) = 'PRUEBA4   '
+         STNAME(19) = 'PRUEBA5   '
          STNAME(20) = 'Harvest   '
 
 !       ELSE IF (CROP .EQ. 'SC') THEN
