@@ -52,16 +52,16 @@
         'LastAnthes', &   ! 7   
         'PhMaturity', &   ! 8   
         'Fruit Harv', &   ! 9   
-        '          ', &   ! 10   
+        'PRUEBA1   ', &   ! 10   
         'Planting  ', &   ! 11     
         'Root Init.', &   ! 12         
         'Leaf Emerg', &   ! 13  
         'Start Sim ', &   ! 14     
-        '          ', &   ! 15     
-        '          ', &   ! 16          
-        '          ', &   ! 17    
-        '          ', &   ! 18   
-        '          ', &   ! 19   
+        'PRUEBA2   ', &   ! 15     
+        'PRUEBA3   ', &   ! 16          
+        'PRUEBA4   ', &   ! 17    
+        'PRUEBA5   ', &   ! 18   
+        'PRUEBA6   ', &   ! 19   
         'Harvest   '/     ! 20
 
 

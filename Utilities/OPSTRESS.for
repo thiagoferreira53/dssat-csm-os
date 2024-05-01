@@ -459,23 +459,23 @@
      &//,' Precipitation during growing season',T42,F7.1,' mm[rain]',
      & /,'   Dry Matter Productivity',T42,F7.2,' kg[DM]/m3[rain]',
      &                       T75,'=',F7.1,' kg[DM]/ha per mm[rain]',
-     & /,'   Yield Productivity',T42,F7.2,' kg[grain yield]/m3[rain]',
+     & /,'   Yield Productivity',T42,F7.2,' kg[fruit yield]/m3[rain]',
      &                       T75,'=',F7.1,' kg[yield]/ha per mm[rain]',
      &//,' Evapotranspiration during growing season',T42,F7.1,' mm[ET]',
      & /,'   Dry Matter Productivity',T42,F7.2,' kg[DM]/m3[ET]',
      &                       T75,'=',F7.1,' kg[DM]/ha per mm[ET]',
-     & /,'   Yield Productivity',T42,F7.2,' kg[grain yield]/m3[ET]',
+     & /,'   Yield Productivity',T42,F7.2,' kg[fruit yield]/m3[ET]',
      &                       T75,'=',F7.1,' kg[yield]/ha per mm[ET]',
      &//,' Transpiration during growing season',T42,F7.1,' mm[EP]',
      & /,'   Dry Matter Productivity',T42,F7.2,' kg[DM]/m3[EP]',
      &                       T75,'=',F7.1,' kg[DM]/ha per mm[EP]',
-     & /,'   Yield Productivity',T42,F7.2,' kg[grain yield]/m3[EP]',
+     & /,'   Yield Productivity',T42,F7.2,' kg[fruit yield]/m3[EP]',
      &                       T75,'=',F7.1,' kg[yield]/ha per mm[EP]')
  1210 FORMAT(
      & /,' Irrigation during growing season',T42,F7.1,' mm[irrig]',
      & /,'   Dry Matter Productivity',T42,F7.2,' kg[DM]/m3[irrig]',
      &                       T75,'=',F7.1,' kg[DM]/ha per mm[irrig]',
-     & /,'   Yield Productivity',T42,F7.2,' kg[grain yield]/m3[irrig]',
+     & /,'   Yield Productivity',T42,F7.2,' kg[fruit yield]/m3[irrig]',
      &                       T75,'=',F7.1,' kg[yield]/ha per mm[irrig]')
  1220 FORMAT(
      & /,' N applied during growing season',T42,F7.0,' kg[N applied]/ha'

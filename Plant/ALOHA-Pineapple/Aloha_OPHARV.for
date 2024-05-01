@@ -8,15 +8,15 @@
 !=======================================================================
 
       SUBROUTINE Aloha_OPHARV(CONTROL, ISWITCH,
-     &   AGEFAC, BIOMAS, CNAM, CRWNWT, EYEWT, FBIOM,      !Input
-     &   FRTWT, FRUITS, GPSM, GPP, HARVFRAC, ISDATE,      !Input
-     &   ISTAGE, LAI, LN, MDATE, NSTRES, PLTPOP, PMDATE,  !Input
-     &   PSTRES1, PSTRES2, STGDOY, STOVER, SWFAC,         !Input
-     &   TURFAC, VWATM, WTINITIAL, WTNCAN, WTNGRN,        !Input
+     &   AGEFAC, BIOMAS, CNAM, CRWNWT, EYEWT, FBIOM,      
+     &   FRTWT, FRUITS, GPSM, GPP, HARVFRAC, ISDATE,      
+     &   ISTAGE, LAI, LN, MDATE, NSTRES, PLTPOP, PMDATE,  
+     &   PSTRES1, PSTRES2, STGDOY, STOVER, SWFAC,         
+     &   TURFAC, VWATM, WTINITIAL, WTNCAN, WTNGRN,        
      &   WTNUP, YIELD, YRDOY, YRPLT, EDATE12, EDATE13,
      &   EDATE1, EDATE2, EDATE3, EDATE5, EDATE6, EDATE7,
      &   BIOMAS1, LAI1, BIOMAS13, LAI13, BIOMAS2, LAI2,
-     &   BIOMAS3, LAI3, BIOMAS4, LAI4, LN2, LN3, LN4, HIFact) !Input
+     &   BIOMAS3, LAI3, BIOMAS4, LAI4, LN2, LN3, LN4, HIFact, MAXLAI) 
 
 !-----------------------------------------------------------------------
       USE Aloha_mod
@@ -231,12 +231,12 @@
       PlantStres % ACTIVE = .FALSE.
       PlantStres % NSTAGES = 5
 
-      PlantStres % StageName(0) = 'Planting to Harvest  '   !PlantStres % StageName(0) = 'Planting to Harvest    '
-      PlantStres % StageName(1) = 'PLT - LC1 '         !PlantStres % StageName(1) = 'Emergence - Foliar C1  '
-      PlantStres % StageName(2) = 'LC1 - LC2 '              !PlantStres % StageName(2) = 'Emergence - Foliar C1  '
-      PlantStres % StageName(3) = 'LC2 - Forcing'           !PlantStres % StageName(3) = 'Emergence - Foliar C1  ' 
-      PlantStres % StageName(4) = 'Forcing - LastAnthes'    !PlantStres % StageName(4) = 'Foliar C1 - Forcing    '
-      PlantStres % StageName(5) = 'LastAnthes - PhMaturity' !PlantStres % StageName(5) = 'Forcing - Open Heart   '
+      PlantStres % StageName(0) = 'Planting to Harvest  '   
+      PlantStres % StageName(1) = 'PLT - LC1 '         
+      PlantStres % StageName(2) = 'LC1 - LC2 '              
+      PlantStres % StageName(3) = 'LC2 - Forcing'            
+      PlantStres % StageName(4) = 'Forcing - LastAnthes'    
+      PlantStres % StageName(5) = 'LastAnthes - PhMaturity' 
       
 
       Biomass_kg_ha = BIOMAS * 10. !Convert from g/m2 to kg/ha
@@ -279,15 +279,15 @@
 !     01/08/2024 TF - Added CASEs to include new stages
       PlantStres % ACTIVE = .FALSE.
       SELECT CASE(ISTAGE)
-      CASE(12,13,1)         !CASE(1,2,3,4)
+      CASE(12,13,1)         
         PlantStres % ACTIVE(1) = .TRUE.
-      CASE(2)                 !CASE(6)
+      CASE(2)                 
         PlantStres % ACTIVE(2) = .TRUE.
-      CASE(3,4)                 !CASE(6)
+      CASE(3,4)                 
         PlantStres % ACTIVE(3) = .TRUE.
-      CASE(5,6,7)                 !CASE(6)
+      CASE(5,6,7)                 
         PlantStres % ACTIVE(4) = .TRUE.
-      CASE(8)                 !CASE(6)
+      CASE(8)                 
         PlantStres % ACTIVE(5) = .TRUE.
       
       END SELECT
@@ -367,8 +367,7 @@ C-----------------------------------------------------------------------
       ENDIF
 
       IF (BIOMAS .GT. 0.0 .AND. YIELD .GE. 0.0) THEN
-         HI = YIELD/(BIOMAS*10.0) * HIFact !     !Harvest index
-         !HI = YIELDFresh/(FBIOM*10/0.13)
+          HI = (YIELD + CRWNWT)/(FBIOM*10)
        ELSE
          HI = 0.0
       ENDIF
@@ -383,7 +382,6 @@ C-----------------------------------------------------------------------
       BWAH = (BWAM + StovSenes) * HARVFRAC(2) 
 !-----------------------------------------------------------------------
 
-! Add
       RIBIO = BIOMAS13*10
       RILAI = LAI13
       
@@ -402,14 +400,8 @@ C-----------------------------------------------------------------------
       L3BIO = BIOMAS4*10
       L3LAI = LAI4
       L3LN  = LN4
-
-     
-
-! End add
-
-
-
-
+!-----------------------------------------------------------------------
+  
       IF ((INDEX('YE',IDETO) > 0 .OR. INDEX('IAEBCGDT',RNMODE) .GT. 0) 
      &  .OR. (INDEX('AY',IDETS) .GT. 0 .AND. CROP .NE. 'FA')) THEN
          IF (INDEX('FQ',RNMODE) > 0) THEN
@@ -457,12 +449,6 @@ C-----------------------------------------------------------------------
         OLAP(11) = 'HDAP  '
         CALL GetDesc(1,OLAP(11), DESCRIP(11))
 
-
-
-       
-
-
-
 !       Root Initiation date to DAP PART1
         CALL READA_Dates(X(1), RIDAP, IROOT)   !IROOT Rooting
         IF (IROOT .GT. 0 .AND. IPLTI .EQ. 'R' .AND. ISENS .EQ. 0) THEN
@@ -474,8 +460,6 @@ C-----------------------------------------------------------------------
         
         CALL GetDesc(1,OLAP(1), DESCRIP(1))
         OLAP(1) = 'RIDAP '
-
-     
 
 !       First new leaf date to DAP PART1
 
@@ -572,8 +556,6 @@ C-----------------------------------------------------------------------
         CALL GetDesc(1,OLAP(9), DESCRIP(9))
         OLAP(9) = 'LADAF '
 
-
-
 !       Root Initiation date to DAP PART2
         IF (YRPLT .GT. 0) THEN
           RIDAP = TIMDIF (YRPLT,EDATE12)
@@ -585,8 +567,6 @@ C-----------------------------------------------------------------------
         ELSE
           RIDAP = -99
         ENDIF
-
-     
 
 !       First new leaf date to DAP PART2
 
@@ -610,7 +590,6 @@ C-----------------------------------------------------------------------
           L1DAP = -99
         ENDIF
 
-
 !       Leaf cycle 2 date to DAP PART2
 
        IF (EDATE2 .GT. 0 .AND. EDATE2 .LE. ISDATE) THEN
@@ -633,21 +612,9 @@ C-----------------------------------------------------------------------
           L3DAP = -99
         ENDIF
 
-
-
-
-
 !       Change simulated dates to DAP
 !       isdate is forcing date
-
-
-         
-       
-
-
-
-
-        
+      
         IF (YRPLT .GT. 0) THEN
           DFR1 = TIMDIF (YRPLT,ISDATE)
           IF (DFR1 .LE. 0) THEN
@@ -674,14 +641,6 @@ C-----------------------------------------------------------------------
           HDAP = -99
         ENDIF
       
-
-
-      
-
-
-
-
-
         IF (YRPLT .GT. 0) THEN
           DNR7 = TIMDIF (YRPLT,PMDATE)
           IF (DNR7 .LE. 0)  THEN
@@ -692,9 +651,6 @@ C-----------------------------------------------------------------------
         ENDIF
       ENDIF
       
-      
-
-
       !       Reproductive Open Heart date to DAP PART2
 
        IF (YRPLT .GT. 0) THEN
@@ -727,16 +683,6 @@ C-----------------------------------------------------------------------
         ELSE
           LADAF = -99
         ENDIF
-
-
-
-
-
-
-
-
-
-
 
       WRITE(Simulated(1),'(I8)') RIDAP;         WRITE(Measured(1),'(A8)') X(1)    !RIDAP
       WRITE(Simulated(2),'(I8)') LEDAP;         WRITE(Measured(2),'(A8)') X(2)    !LEDAP
@@ -781,12 +727,7 @@ C-----------------------------------------------------------------------
       WRITE(Simulated(35),'(F8.3)') EYEWT                                          
                                                 WRITE(Measured(35),'(A8)')X(35)   !EWUM    
       WRITE(Simulated(36),'(F8.1)')CNAM;        WRITE(Measured(36),'(A8)')X(36)   !CNAM
-
-      
-      
-     
-
-      
+  
 !     These aren't calculated - remove from Overview output
 !     WRITE(Simulated(3),'(I8)') -99 ;  WRITE(Measured(3),'(I8)') -99     !PDFT - not used
 !     WRITE(Simulated(14),'(I8)') -99 ; WRITE(Measured(14),'(I8)') -99    !THAM
