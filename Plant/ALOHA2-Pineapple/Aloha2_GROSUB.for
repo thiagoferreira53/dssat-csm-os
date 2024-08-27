@@ -1177,6 +1177,8 @@ C-----------------------------------------------------------------------
 !     Integration
 !-----------------------------------------------------------------------
       ELSEIF (DYNAMIC.EQ.INTEGR) THEN
+       WRITE(*,*) YRDOY, ISTAGE, BASLFWT, BASLFWT1, BASLFWT2, BASLFWT3, BASLFWT4, BASLFWT6, BASLFWT7, BASLFWT8, 
+     &   BASLFWT9, BASLFWT12, BASLFWT13
 !      CASE (INTEGR)
 !=======================================================================
 !     This code used to be in PhaseI subroutine. Put here to make timing match 
@@ -1241,6 +1243,8 @@ C-----------------------------------------------------------------------
          STOVWT= STMWT
          BIOMAS= (LFWT + STMWT + BASLFWT)*PLTPOP
          BIOMAS1 = BIOMAS
+         
+         WRITE(*,*) "BASLFWT", BASLFWT
     
 !        CASE (2)       !CASE (2)    ! Leaf Cycle 1
         ELSEIF(ISTAGE .EQ. 2) THEN                                                   
@@ -1457,14 +1461,14 @@ C-----------------------------------------------------------------------
 
           PLA     = AMAX1(PLA3, PLA2)
           LFWT    = AMAX1(LFWT3, LFWT2)
-          BASLFWT = AMAX1(BASLFWT3, BASLFWT2)
+          !BASLFWT = AMAX1(BASLFWT3, BASLFWT2)
           STMWT   = AMAX1(STMWT3, STMWT2) 
           GRORT   = AMAX1(GRORT3, GRORT2)
              
              
           PLA     = AMAX1(PLA4, PLA)
           LFWT    = AMAX1(LFWT4, LFWT)
-          BASLFWT = AMAX1(BASLFWT4, BASLFWT)
+          !BASLFWT = AMAX1(BASLFWT4, BASLFWT)
           STMWT   = AMAX1(STMWT4, STMWT) 
           GRORT   = AMAX1(GRORT4, GRORT)
 
@@ -1552,13 +1556,13 @@ C         ABIOMS      = BIOMAS
           
           PLA     = AMAX1(PLA3, PLA2)
           LFWT    = AMAX1(LFWT3, LFWT2)
-          BASLFWT = AMAX1(BASLFWT3, BASLFWT2)
+          !BASLFWT = AMAX1(BASLFWT3, BASLFWT2)
           STMWT   = AMAX1(STMWT3, STMWT2) 
           GRORT   = AMAX1(GRORT3, GRORT2)
              
           PLA     = AMAX1(PLA4, PLA)
           LFWT    = AMAX1(LFWT4, LFWT)
-          BASLFWT = AMAX1(BASLFWT4, BASLFWT)
+          !BASLFWT = AMAX1(BASLFWT4, BASLFWT)
           STMWT   = AMAX1(STMWT4, STMWT) 
           GRORT   = AMAX1(GRORT4, GRORT)
 
@@ -1638,14 +1642,14 @@ C         ABIOMS      = BIOMAS
 
           PLA     = AMAX1(PLA3, PLA2)
           LFWT    = AMAX1(LFWT3, LFWT2)
-          BASLFWT = AMAX1(BASLFWT3, BASLFWT2)
+          !BASLFWT = AMAX1(BASLFWT3, BASLFWT2)
           STMWT   = AMAX1(STMWT3, STMWT2) 
           GRORT   = AMAX1(GRORT3, GRORT2)
              
              
           PLA     = AMAX1(PLA4, PLA)
           LFWT    = AMAX1(LFWT4, LFWT)
-          BASLFWT = AMAX1(BASLFWT4, BASLFWT)
+          !BASLFWT = AMAX1(BASLFWT4, BASLFWT)
           STMWT   = AMAX1(STMWT4, STMWT) 
           GRORT   = AMAX1(GRORT4, GRORT)
 
@@ -1666,6 +1670,8 @@ C         ABIOMS      = BIOMAS
      &     (LOG(GDDFR/(TMAXGRO/SRADGRO))) + 18.51168663  !y = 35.96439417x2 - 102.60723363x + 18.51168663 R² = 0.2554 
           BASLFWT8 = BASLFWT*EXP((RBWTDW8/1000)*
      &     (GDDFR/(TMAXGRO/SRADGRO)))                                                             
+          WRITE(*,*) "BASLFWT8", BASLFWT8
+         
          
           RSTMWT8  = 271.33231167 * 
      &     (LOG(GDDFR/(TMAXGRO/SRADGRO)))**2 - 1299.76926489 * 
@@ -1730,14 +1736,14 @@ C         ABIOMS      = BIOMAS
              
           PLA     = AMAX1(PLA3, PLA2)
           LFWT    = AMAX1(LFWT3, LFWT2)
-          BASLFWT = AMAX1(BASLFWT3, BASLFWT2)
+          !BASLFWT = AMAX1(BASLFWT3, BASLFWT2)
           STMWT   = AMAX1(STMWT3, STMWT2) 
           GRORT   = AMAX1(GRORT3, GRORT2)
              
              
           PLA     = AMAX1(PLA4, PLA)
           LFWT    = AMAX1(LFWT4, LFWT)
-          BASLFWT = AMAX1(BASLFWT4, BASLFWT)
+          !BASLFWT = AMAX1(BASLFWT4, BASLFWT)
           STMWT   = AMAX1(STMWT4, STMWT) 
           GRORT   = AMAX1(GRORT4, GRORT)
 
@@ -1824,17 +1830,6 @@ C         ABIOMS      = BIOMAS
      &     ((PARGROS7/DAP21)*DAP15) + ((PARGROS8/DAP21)*DAP17) + 
      &     ((PARGROS9/DAP21)*DAP19))
          
-          PLA     = AMAX1(PLA3, PLA2)
-          LFWT    = AMAX1(LFWT3, LFWT2)
-          BASLFWT = AMAX1(BASLFWT3, BASLFWT2)
-          STMWT   = AMAX1(STMWT3, STMWT2) 
-          GRORT   = AMAX1(GRORT3, GRORT2)
-             
-          PLA     = AMAX1(PLA4, PLA)
-          LFWT    = AMAX1(LFWT4, LFWT)
-          BASLFWT = AMAX1(BASLFWT4, BASLFWT)
-          STMWT   = AMAX1(STMWT4, STMWT) 
-          GRORT   = AMAX1(GRORT4, GRORT)
           
           RLAE9    = -0.20654723 * 
      &     (LOG(GDDFR/(TMAXGRO/SRADGRO)))**2 + 1.10055680 * 
@@ -2014,8 +2009,8 @@ C               XPTN = XGNP*6.25
 !          AGEFAC =  1.0
 
 !        END SELECT
-        ENDIF
       ENDIF
+        ENDIF
 
       CALL Aloha2_NUPTAK (CONTROL, ISWITCH, 
      &    ISTAGE, NO3, NH4, PDWI, PGRORT, PLIGRT,         !Input

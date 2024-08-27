@@ -167,7 +167,6 @@ C     Beginning of daily simulation loop
 C-----------------------------------------------------------------------
 !      CASE (RATE)
       ELSEIF (DYNAMIC .EQ. RATE) THEN
-      WRITE(*,*) YRDOY, "RATE ISTAGE", ISTAGE
 !=======================================================================
 C        Define dates for water balance calculations
 C
@@ -246,8 +245,7 @@ C-----------------------------------------------------------------------
 !      CASE (INTEGR)
       ELSEIF (DYNAMIC .EQ. INTEGR) THEN
 !=======================================================================
-      WRITE(*,*) YRDOY, "INTEGR ISTAGE", ISTAGE
-
+        WRITE(*,*) YRDOY, "INTGR"
         CALL Aloha2_ROOTGR (CONTROL,
      &     CUMDTT, DTT, GRORT, ISTAGE, ISWITCH, NO3, NH4,     !Input
      &     SOILPROP, SW, SWFAC,                               !Input
