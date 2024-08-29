@@ -1177,23 +1177,20 @@ C-----------------------------------------------------------------------
 !     Integration
 !-----------------------------------------------------------------------
       ELSEIF (DYNAMIC.EQ.INTEGR) THEN
-       WRITE(*,*) YRDOY, ISTAGE, BASLFWT, BASLFWT1, BASLFWT2, BASLFWT3, BASLFWT4, BASLFWT6, BASLFWT7, BASLFWT8, 
-     &   BASLFWT9, BASLFWT12, BASLFWT13
-!      CASE (INTEGR)
+
 !=======================================================================
 !     This code used to be in PhaseI subroutine. Put here to make timing match 
 !     with old code.
 !     Some of the code was removed to other subroutines.
-      IF (ISTAGE /= ISTAGE_old) THEN
-        ISTAGE_OLD = ISTAGE
-
-!       New stage initialization
-!        SELECT CASE (ISTAGE)
-!        CASE (1)      ! CASE (1)  !First New Leaf
+      !IF (ISTAGE /= ISTAGE_old) THEN
+      !  ISTAGE_OLD = ISTAGE
+        
+        YRDOY   = CONTROL % YRDOY
+        NDOF = TIMDIF(YRPLT, YRDOY) ! 
+       WRITE(*,*) YRDOY, ISTAGE, BASLFWT, BASLFWT1, BASLFWT2, BASLFWT3, BASLFWT4, BASLFWT6, BASLFWT7, BASLFWT8, 
+     &   BASLFWT9, BASLFWT12, BASLFWT13
         IF(ISTAGE .EQ. 1) THEN                                                             
          
-         YRDOY   = CONTROL % YRDOY   ! Root initiation date
-         NDOF = TIMDIF(YRPLT, YRDOY) ! 
          DAP2 = NDOF
          DAP3     = NDOF - DAP1      !
           
@@ -1243,15 +1240,9 @@ C-----------------------------------------------------------------------
          STOVWT= STMWT
          BIOMAS= (LFWT + STMWT + BASLFWT)*PLTPOP
          BIOMAS1 = BIOMAS
-         
-         WRITE(*,*) "BASLFWT", BASLFWT
     
-!        CASE (2)       !CASE (2)    ! Leaf Cycle 1
         ELSEIF(ISTAGE .EQ. 2) THEN                                                   
 
-          !GROSTM = 0.0  ! Daily stem growth (g/plant/day)
-          YRDOY   = CONTROL % YRDOY
-          NDOF = TIMDIF(YRPLT, YRDOY)
           DAP4 = NDOF
           DAP5    = NDOF-DAP2
           GDDFR   = (SUMDTTGRO - SUMDTT)/(DAP5)  
@@ -1263,18 +1254,18 @@ C-----------------------------------------------------------------------
      &     (LOG(GDDFR/(TMAXGRO/SRADGRO)))**2 + 0.00730812 * 
      &     (LOG(GDDFR/(TMAXGRO/SRADGRO))) - 0.00551540     !y = -0.00042225x2 + 0.00730812x - 0.00551540 R² = 0.8942  
           PLA2     = PLA1*EXP(RLAE2*(DAP5))                                                                                                                                                                                                                                      
-             
+             WRITE(*,*) YRDOY, "ABC 2"
           RLDW2    = 0.56659753 * 
      &     (LOG(GDDFR/(TMAXGRO/SRADGRO)))**2 + 4.55511443 * 
      &     (LOG(GDDFR/(TMAXGRO/SRADGRO))) - 2.97791272     !y = 0.56659753x2 + 4.55511443x - 2.97791272 R² = 0.8372 
           LFWT2    = LFWT1*EXP((RLDW2/1000)*(DAP5))                                                                                   
-         
+         WRITE(*,*) YRDOY, "ABC 3"
           RBWTDW2  = 265.95155057 * 
      &     (LOG(GDDFR/(TMAXGRO/SRADGRO)))**2 - 1019.47038606 * 
      &     (LOG(GDDFR/(TMAXGRO/SRADGRO))) + 1044.29203812   !y = 265.95155057x2 - 1019.47038606x + 1044.29203812 R² = 0.9186 (used without ZIP1) 
           BASLFWT2 = BASLFWT1*EXP((RBWTDW2/1000)*
      &     (GDDFR/(TMAXGRO/SRADGRO)))                                                             
-         
+         WRITE(*,*) YRDOY, "ABC 4"
           RSTMWT2  = 252.16180637 * 
      &     (LOG(GDDFR/(TMAXGRO/SRADGRO)))**2 - 1189.05973879 * 
      &     (LOG(GDDFR/(TMAXGRO/SRADGRO))) + 1451.11634867   !y = 252.16180637x2 - 1189.05973879x + 1451.11634867 R² = 0.8903 
@@ -1284,9 +1275,12 @@ C-----------------------------------------------------------------------
           RGRORT2 = 3.41064008 * (LOG(GDDFR/(TMAXGRO/SRADGRO)))**2 +
      &     20.16657317 * (LOG(GDDFR/(TMAXGRO/SRADGRO))) - 8.25952711   !y = 3.41064008x2 + 20.16657317x - 8.25952711 R² = 0.8636  
           GRORT2  = GRORT1*EXP((RGRORT2/1000)*(DAP5))                                                                                             
-
+          WRITE(*,*) YRDOY, "ABC 5"
+          
+          
              LAI2    = PLTPOP*PLA2*0.0001
-              
+                           WRITE(*,*) YRDOY, "ABC 5.1"
+
 
              LAI         = LAI2                         !
              LFWT        = LFWT2                        !
@@ -1296,14 +1290,11 @@ C-----------------------------------------------------------------------
              BIOMAS= (LFWT + STMWT + BASLFWT)*PLTPOP         
              BIOMAS2 = BIOMAS
              LN2  = LN 
-            
+             WRITE(*,*) YRDOY, "ABC 6"
 
-      
-!        CASE (3)      !CASE (3) !Leaf cycle 2
+
         ELSEIF(ISTAGE .EQ. 3) THEN                                                   
-
-          YRDOY   = CONTROL % YRDOY
-          NDOF = TIMDIF(YRPLT, YRDOY)
+         WRITE(*,*) YRDOY, ISTAGE
           DAP6 = NDOF
           DAP7 = NDOF-DAP4
 
@@ -1352,7 +1343,6 @@ C-----------------------------------------------------------------------
          LN3  = LN 
 
 
-!        CASE (4)          !CASE (4) !Leaf cycle 3
         ELSEIF(ISTAGE .EQ. 4) THEN                                                   
 
 !          IF (NFORCING .GE. 2) THEN
@@ -1362,8 +1352,6 @@ C-----------------------------------------------------------------------
 !             PLANTSIZE = PLANTING % PLANTSIZE
 !          ENDIF
           
-          YRDOY   = CONTROL % YRDOY
-          NDOF = TIMDIF(YRPLT, YRDOY)
           DAP8 = NDOF
           DAP9 = NDOF-DAP6
 
@@ -1419,8 +1407,7 @@ C-----------------------------------------------------------------------
 !             PLANTSIZE = PLANTING % PLANTSIZE
 !          ENDIF
           
-          YRDOY   = CONTROL % YRDOY
-          NDOF = TIMDIF(YRPLT, YRDOY)
+
           DAP10 = NDOF
           DAP11 = NDOF-DAP8
 
@@ -1444,8 +1431,7 @@ C-----------------------------------------------------------------------
         ELSEIF(ISTAGE .EQ. 6) THEN                                                   
 !        CASE (6)
           
-          YRDOY   = CONTROL % YRDOY
-          NDOF = TIMDIF(YRPLT, YRDOY)
+
           DAP12 = NDOF
           DAP13 = NDOF-DAP10
 
@@ -1539,8 +1525,7 @@ C         ABIOMS      = BIOMAS
 !        CASE (7)       ! CASE (7)                  !   CASE (5)
         ELSEIF(ISTAGE .EQ. 7) THEN                                                   
 
-          YRDOY   = CONTROL % YRDOY
-          NDOF = TIMDIF(YRPLT, YRDOY)
+
           DAP14 = NDOF
           DAP15 = NDOF-DAP12
 
@@ -1624,8 +1609,7 @@ C         ABIOMS      = BIOMAS
 !        CASE (8)    !CASE (8)                    !   CASE (5)   
         ELSEIF(ISTAGE .EQ. 8) THEN                                                   
 
-          YRDOY   = CONTROL % YRDOY
-          NDOF = TIMDIF(YRPLT, YRDOY)
+
           DAP16 = NDOF
           DAP17 = NDOF-DAP14
 
@@ -1719,8 +1703,7 @@ C         ABIOMS      = BIOMAS
         ELSEIF(ISTAGE .EQ. 9) THEN                                                   
 
           
-          YRDOY   = CONTROL % YRDOY
-          NDOF = TIMDIF(YRPLT, YRDOY)
+
           DAP18 = NDOF
           DAP19 = NDOF-DAP16
 
@@ -1811,8 +1794,6 @@ C         ABIOMS      = BIOMAS
 !        CASE (10)      
         ELSEIF(ISTAGE .EQ. 10) THEN                                                   
           
-          YRDOY   = CONTROL % YRDOY
-          NDOF = TIMDIF(YRPLT, YRDOY)
           DAP20 = NDOF
           !DAP21 = NDOF-DAP18
           DAP21 = (DAP13 + DAP15 + DAP17 + DAP19) 
@@ -1894,14 +1875,14 @@ C         ABIOMS      = BIOMAS
 !        CASE (11) 
         ELSEIF(ISTAGE .EQ. 11) THEN                                                   
 
-          YRDOY   = CONTROL % YRDOY
+          !YRDOY   = CONTROL % YRDOY
        
         !DAP0 = CONTROL % DAS
 
 !        CASE (12)    !Planting initial variables    
         ELSEIF(ISTAGE .EQ. 12) THEN                                                   
   
-          YRDOY   = CONTROL % YRDOY
+          !YRDOY   = CONTROL % YRDOY
          
           WTINITIAL = SDWTPL/(PLTPOP*10.0)        ! kg/ha  --> g/plt
 
@@ -1946,8 +1927,6 @@ C         ABIOMS      = BIOMAS
 !        CASE (13)   !Planting to Root initiation   
         ELSEIF(ISTAGE .EQ. 13) THEN                                                   
                      
-          YRDOY   = CONTROL % YRDOY   ! 
-          NDOF = TIMDIF(YRPLT, YRDOY) ! 
           DAP1 = NDOF                 ! 
           GDDFR   = (SUMDTTGRO - SUMDTT)/(DAP1)  ! 
           
@@ -2009,14 +1988,15 @@ C               XPTN = XGNP*6.25
 !          AGEFAC =  1.0
 
 !        END SELECT
-      ENDIF
+      !ENDIF
         ENDIF
-
+      WRITE(*,*) "A"
       CALL Aloha2_NUPTAK (CONTROL, ISWITCH, 
      &    ISTAGE, NO3, NH4, PDWI, PGRORT, PLIGRT,         !Input
      &    PLTPOP, PTF, RANC, RCNP, RLV, RTWT, SOILPROP,   !Input
      &    STOVWT, SW, TCNP, XSTAGE,                       !Input
      &    ROOTN, SENESCE, STOVN, TANC, UNH4, UNO3, WTNUP) !Output
+      WRITE(*,*) "B"
 
 !=======================================================================
       ENDIF

@@ -149,6 +149,8 @@
         PS2_AV = PS2_AV + (1.0 - PSTRES2)
         KST_AV = KST_AV + (1.0 - KSTRES)
         COUNT = COUNT + 1
+        
+        write(*,*) "OUT 1"
 
 !       Accumulate senesced matter for surface and soil.
 !        SENSURFT = SENESCE % ResWt(0)
@@ -184,6 +186,7 @@
             KST_AV = KST_AV / COUNT
             COUNT = 0
           ENDIF
+        write(*,*) "OUT 2"
 
 !-----------------------------------------------------------------------
 !         PlantGro.OUT
@@ -205,6 +208,9 @@
                       
             
             BWAD = BASLFWT * GM2KG    !basal, kg/ha
+            
+            WRITE(*,*) "BASLFWT", BASLFWT, "GM2KG", GM2KG, "BWAD", BWAD
+            
             SUGD = SKWT    * GM2KG    !sucker,kg/ha
             RWAD = RTWT    * GM2KG    !roots, kg/ha
 
@@ -248,6 +254,7 @@
             ELSE
                SLA = 0.0
             ENDIF
+        write(*,*) "OUT 3"
 
 !           SEEDNO = GPSM
 !           PODWT  = CRWNWT
@@ -270,8 +277,12 @@
             ELSE
               PCNL = 0.0
             ENDIF
+        write(*,*) "OUT 4"
 
             IF (FMOPT /= 'C') THEN   ! VSH
+                    write(*,*) "OUT 4.1.1", YEAR, DOY, DAS, DAP, VSTAGE, ISTAGE, XLAI, TBASE, SUMDTT, DTT, TMAXGRO, SUMTMAXGRO, SUMTMAX, SUMDTTGRO,        &
+              NINT(LWAD), NINT(SWAD), NINT(FLWAD), NINT(FWAD), NINT(CRAD), NINT(BWAD)
+
               WRITE (NOUTDG,400) YEAR, DOY, DAS, DAP, VSTAGE, ISTAGE, XLAI,         & 
               TBASE, SUMDTT, DTT, TMAXGRO, SUMTMAXGRO, SUMTMAX, SUMDTTGRO,          &
               SRADGRO, SUMSRADGRO, SUMSRAD, GDDFR, NINT(TOPWT),  NINT(VWAD),        &
@@ -279,6 +290,7 @@
               NINT(BWAD), NINT(SUGD), NINT(RWAD), HI,NINT(EYWAD), NINT(GPSM),       & 
               (1.0-SWFAC), (1.0-TURFAC), (1.0-NSTRES),PCNL, SLA, (RTDEP/100.),      & 
               (RLV(I),I=1,10)
+        write(*,*) "OUT 4.1.2"
 
 !YEAR DOY   DAS   DAP VSTAGE ISTAGE   XLAI  TOPWT   VWAD   LWAD   SWAD  FLWAD   FWAD   CRAD   BWAD   SUGD   RWAD    HI   EYWAD  GPSM   SWFAC TURFAC NSTRES   PCNL    SLA  RTDEP   RLV(I),I=1,10
 !YEAR DOY   DAS   DAP   L#SD   GSTD   LAID   CWAD   VWAD   LWAD   SWAD  FLWAD   FWAD   CRAD   BWAD   SUGD   RWAD   HIAD  EYWAD  EY#AD   WSPD   WSGD   NSTD   LN%D   SLAD   RDPD   RL1D   RL2D   RL3D   RL4D   RL5D   RL6D   RL7D   RL8D   RL9D   RL10
@@ -290,7 +302,7 @@
                   3(1X,F6.1), 1X,F8.1, &                                             
                   5X,F8.1, 2X,F8.1, 4X,F8.1, 4X,F6.1, 5X,F8.1, 3X,F6.1, 4X,F4.1, &
                     
-                  10(1X,I6),3X,F6.3, 2X,          &    
+                  7(1X,I6),2X,I50, 2(2X,I6), 3X,F6.3, 2X,          &    
                   2(1X,I6), 3(1X,F6.3),       &
                   1X,F6.2, 2X,F6.1, F7.2, 10(1X,F6.2))                                      
                   
@@ -309,6 +321,7 @@
               !CALL Linklst(vCsvline)
             ENDIF
           ENDIF     !Print PlantGro report
+        write(*,*) "OUT 4.1"
 
 !-----------------------------------------------------------------------
 !         PlantN.OUT
@@ -321,18 +334,21 @@
             WTNCAN = (STOVN + GRAINN) * PLTPOP
             WTNVEG  = (WTNLF + WTNST)
             WTNGRN  = (WTNSH + WTNSD)
+        write(*,*) "OUT 4.2"
 
             IF (STMWT .GT. 0.0) THEN
               PCNST = WTNST/(STMWT * PLTPOP) * 100.0
             ELSE
               PCNST = 0.0
             ENDIF
+        write(*,*) "OUT 4.3"
 
             IF (RTWT .GT. 0.0) THEN
               PCNRT = ROOTN/RTWT * 100.0
             ELSE
               PCNRT = 0.0
             ENDIF
+        write(*,*) "OUT 4.4"
 
             IF ((WTLF+STMWT) .GT. 0.0) THEN
                PCNVEG = (WTNLF+WTNST)/(WTLF+(STMWT*PLTPOP))*100.0
@@ -345,6 +361,7 @@
             ELSE
                PCNGRN = 0.0
             ENDIF
+        write(*,*) "OUT 5"
 
 !-----------------------------------------------------------------------
 
@@ -382,6 +399,7 @@
         PS1_AV = 0.0
         PS2_AV = 0.0
         KST_AV = 0.0
+        write(*,*) "OUT 6"
 
 !-----------------------------------------------------------------------
 !       Save values at maturity for Overview.OUT

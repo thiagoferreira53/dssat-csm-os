@@ -245,7 +245,7 @@ C-----------------------------------------------------------------------
 !      CASE (INTEGR)
       ELSEIF (DYNAMIC .EQ. INTEGR) THEN
 !=======================================================================
-        WRITE(*,*) YRDOY, "INTGR"
+
         CALL Aloha2_ROOTGR (CONTROL,
      &     CUMDTT, DTT, GRORT, ISTAGE, ISWITCH, NO3, NH4,     !Input
      &     SOILPROP, SW, SWFAC,                               !Input
@@ -289,6 +289,7 @@ C-----------------------------------------------------------------------
      &   EDATE1, EDATE2, EDATE3, EDATE5, EDATE6, EDATE7,
      &   BIOMAS1, LAI1, BIOMAS13, LAI13, BIOMAS2, LAI2,
      &   BIOMAS3, LAI3, BIOMAS4, LAI4, LN2, LN3, LN4, HIFact)                      !Input
+        WRITE(*,*) "ENTROU OUT 3" 
 
 !=======================================================================
 C     Call end of season output routine
