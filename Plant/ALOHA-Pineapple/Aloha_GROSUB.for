@@ -64,7 +64,7 @@
       INTEGER   ICOLD
       REAL      PCARB,PRFT,PC,TI,GRF,RGFILL,
      &          SLFW,SLFN,SLFC,SLFT,PLAS
-      REAL      TABEX,PCO2,Y1
+      REAL      TABEX,PCO2,Y1, XLAT
 
       CHARACTER ISWNIT*1
       REAL    GROGRN,SFAC,TFAC,RMNC,XNF,TNLAB,RNLAB
@@ -99,7 +99,7 @@
       REAL    PAR, CC, TRF2, CARBO, SWFAC, TEMPM  !,TRNU, 
       REAL    DTT, TURFAC, XN, CMF, TOTPLTWT, SUMDTT, GPP, SUMTMAX, SUMDTTGRO, SUMTMAXGRO
       REAL    PDWI, PGRORT, DM, FBIOM, MAXLAI, PHOTOSYNEYE, FRUITS, SUMSRADGRO, SUMSRAD, SUMPARGRO, SUMPAR
-      REAL    YIELD, GPSM, XSTAGE  !, FDMC
+      REAL    YIELD, GPSM, XSTAGE, YIELD1, TEMPAd  !, FDMC
 
       REAL    CO2, SRAD, TMIN, TMAX
       REAL    PLTPOP, SDWTPL, PLANTSIZE
@@ -125,6 +125,7 @@
       SRAD = WEATHER % SRAD
       TMIN = WEATHER % TMIN
       TMAX = WEATHER % TMAX
+      XLAT = WEATHER % XLAT
 
 !=======================================================================
       SELECT CASE (DYNAMIC)
@@ -174,6 +175,7 @@
       PTF    = 0.0
       FRUITS = 0.0
       PLTadj = 0.0
+      
 
       DO I = 1, NL
          RLV(I) = 0.0
@@ -284,7 +286,15 @@
 !=======================================================================
       CASE (RATE)
 !=======================================================================
-      TEMPM = (WEATHER % TMAX + WEATHER % TMIN) / 2.
+      !TEMPM = (WEATHER % TMAX + WEATHER % TMIN) / 2.
+
+      IF (TMIN .GT. TBASE .AND. TMAX .LT. 38.0) THEN
+             IF (XLAT .LT. 21.0 .and. XLAT .GT. -21.0) THEN
+                TEMPM = 0.6*TMIN+0.4*TMAX
+              ELSE
+                TEMPM = (TMAX+TMIN)/2
+             ENDIF
+             ENDIF
 
       IF (ISWNIT .NE. 'N') THEN
 !       Top actual N concentration (g N/g Dry weight)
@@ -302,45 +312,79 @@
 
 !-----------------------------------------------------------------
 
+       IF (TMAX .GE. 33) THEN
+       TEMPAd = TMAX
+       ELSE
+       TEMPAd = (TMAX - 25)
+       ENDIF
+
+       Yieldfact =  EXP(-TEMPAd*(TEMPAd/20000))
+
+      !HIFact = Yieldfact !0.935 + ((0.082*EXP(0.1*TEMPM))/(20))  !factor fruit
+      YIELD1 = Yieldfact * 0.0520 !0.065 + ((0.082*EXP(0.1*TEMPM))/(20))  !Factor crown
       PAR   = 0.5*SRAD
       Y1    = EXP(-LIFAC*LAI)                       ! Beer's law
-      PCARB = CC*PAR/PLTPOP*(1.0-Y1)                ! on per plant basis
+      
+      PLTadj = -0.0172 * PLTPOP**2 + 0.2162 * PLTPOP + 0.9308    ! File DSSAT ecuations y = -0.0172x2 + 0.2162x + 0.9308 R² = 0.9005 
+       
+      PCARB = CC*PAR/(PLTPOP/PLTadj)*(1.0-Y1)                ! on per plant basis
       !
       ! Calculate Photosynthetic Response to CO2
       !
       PCO2  = TABEX (CO2Y,CO2X,CO2,10)
       PCARB = PCARB*PCO2
 
-      TEMPM = 0.6*TMIN + 0.4*TMAX
+      !TEMPM = 0.6*TMIN + 0.4*TMAX
+      IF (TMIN .GT. TBASE .AND. TMAX .LT. 38.0) THEN
+             IF (XLAT .LT. 21.0 .and. XLAT .GT. -21.0) THEN
+                TEMPM = 0.6*TMIN+0.4*TMAX
+              ELSE
+                TEMPM = (TMAX+TMIN)/2
+             ENDIF
+             ENDIF
       SELECT CASE (ISTAGE)
-        CASE (1,2,3,4,5,11,12,13)                      
-          IF (TEMPM .LE. 25.0) THEN
+        CASE (1,2,3,4,11,12,13)                      
+          IF (TEMPM .LE. 20.0) THEN
+             PRFT = 1.0-0.015*(TEMPM-25.0)**2    !  PRFT   : Photosynthetic reduction factor for low and high temperatures
+           ELSEIF (TEMPM .LE. 25.0) THEN
              PRFT = 1.0-0.001*(TEMPM-25.0)**2    !  PRFT   : Photosynthetic reduction factor for low and high temperatures
            ELSEIF (TEMPM .LT. 29.0) THEN
              PRFT = 1.0-0.056*(TEMPM-25.0)**2
            ELSE
              PRFT = 0.1                                   
           ENDIF
-        CASE (6,7,8,9,10)                                   
-          PRFT = 1.0-0.005*((0.4*TMIN+0.6*TMAX)-26.)**2
+        CASE (5,6,7,8,9,10)                                   
+          IF (TEMPM .LE. 20.0) THEN
+             PRFT = 1.0-0.190*(TEMPM-20.0)**2    !  PRFT   : Photosynthetic reduction factor for low and high temperatures
+           ELSEIF (TEMPM .LT. 25.0) THEN
+             PRFT = 1.0-0.005*(TEMPM-25.0)**2
+           ELSEIF (TEMPM .LT. 29.0) THEN
+             PRFT = 1.0-0.0504*(TEMPM-26.)**2
+           ELSE
+             PRFT = 0.1                                   
+          ENDIF
+          
+          
+          
+          
           PRFT = AMAX1 (PRFT,0.0)
       END SELECT
 !-----------------------------------------------------------------
       !
       ! Temperature factor
       !
-      IF (TEMPM .LT. 15.0) THEN                               ! 
-         TRF2 = 0.45                                          ! 
-       ELSEIF (TEMPM .GE. 15.0 .AND. TEMPM .LT. 30.0) THEN    ! 
-         TRF2 = 0.082*EXP(0.1*TEMPM)
+      IF (TEMPM .LT. 20.0) THEN                               ! 
+         TRF2 = 0.35                                          ! 
+       ELSEIF (TEMPM .GE. 20.0 .AND. TEMPM .LT. 26.0) THEN    ! 
+         TRF2 = 1.13314845306683*EXP(-0.005*TEMPM)   !1-0.005*(TEMPM-25) !
        ELSE
-         TRF2 = 1.65                                          ! 
+         TRF2 = 0.98                                          ! 
       ENDIF
 
-      IF (ISTAGE .GE. 5 .AND. ISTAGE .LT. 13) THEN                
-         CARBO = PCARB*AMIN1(PRFT,0.55+0.45*SWFAC,NSTRES)      
+      IF (ISTAGE .GE. 4 .AND. ISTAGE .LT. 13) THEN                
+         CARBO = TRF2*PCARB*AMIN1(PRFT,TRF2*SWFAC,NSTRES)      
        ELSE
-         CARBO = PCARB*AMIN1(PRFT,SWFAC,NSTRES)
+         CARBO = TRF2*PCARB*AMIN1(PRFT,SWFAC,NSTRES)
       ENDIF
       DTT = AMAX1 (DTT,0.0)
       
@@ -547,7 +591,7 @@
         ENDIF
 
 !-----------------------------------------------------------------
-      CASE (4)
+C      CASE (4)
         !
         !       Leaf cycle 2  to Leaf cycle 3
         !
@@ -555,25 +599,25 @@
 !        IF ((LN) .GT. (26) . AND. (LN) .LE. (39)) THEN
 
 
-          LFWT        = ((LFWT3/P4)*DTT)     + LFWT                      
-          BASLFWT     = ((BASLFWT3/P4)*DTT)  + BASLFWT                   
-          STMWT       = ((STMWT3/P4)*DTT)    + STMWT
-          GRORT       = ((GRORT3/P4)*DTT)    + GRORT                    
-          MAXLAI      = ((LAI2/P3)*DTT)      + MAXLAI  
+C          LFWT        = ((LFWT3/P4)*DTT)     + LFWT                      
+C          BASLFWT     = ((BASLFWT3/P4)*DTT)  + BASLFWT                   
+C          STMWT       = ((STMWT3/P4)*DTT)    + STMWT
+C          GRORT       = ((GRORT3/P4)*DTT)    + GRORT                    
+C          MAXLAI      = ((LAI2/P3)*DTT)      + MAXLAI  
                                                                                    
         !
         ! Check the balance of supply and demand
         !
-        GRORT = CARBO - GROLF - GROBSL - GROSTM
-        IF (GRORT .LT. 0.15*CARBO) THEN
-           IF (GROLF .GT. 0.0 .OR. GROBSL .GT. 0.0 .OR.
-     &         GROSTM .GT. 0.0) THEN
-              GRF   = CARBO*0.9/(GROLF+GROBSL+GROSTM)
-              GRORT = CARBO*0.1
-            ELSE
-              GRF = 1.0
-           ENDIF  
-        ENDIF
+C        GRORT = CARBO - GROLF - GROBSL - GROSTM
+C        IF (GRORT .LT. 0.15*CARBO) THEN
+C          IF (GROLF .GT. 0.0 .OR. GROBSL .GT. 0.0 .OR.
+C     &         GROSTM .GT. 0.0) THEN
+C              GRF   = CARBO*0.9/(GROLF+GROBSL+GROSTM)
+C              GRORT = CARBO*0.1
+C            ELSE
+C              GRF = 1.0
+C           ENDIF  
+C        ENDIF
 
 
 !-----------------------------------------------------------------
@@ -588,42 +632,11 @@
 C-----------------------------------------------------------------
 C Flower and fruit growth factor
 c ----------------------------------------------------------------
-                TMAXGROF = TMAX
-                SRADGROF = SRAD
-                WEATHERFact = (DTT/SRADGROF/TMAXGROF)
 
-      IF (WEATHERFact .LT. 0.12 .AND. TMAXGROF .GT. 22.0) THEN
-                   YIELDFact = 22.4
-                   PLTadj    = 0.0 
-               
-      ELSEIF (WEATHERFact .LT. 0.16 .AND. TMAXGROF .GT. 22.0) THEN
-                   YIELDFact = 8.9
-                   PLTadj    = 0.0
-                              
-      ELSEIF (WEATHERFact .LE. 0.20 .AND. TMAXGROF .LE. 22.0) THEN
-                   YIELDFact = 50
-                   PLTadj    = -0.60
-
-      ELSEIF (WEATHERFact .LT. 0.25 .AND. TMAXGROF .GT. 22.0) THEN
-                   YIELDFact = 12.5
-                   PLTadj    = 0.0
-
-      ELSEIF (WEATHERFact .LT. 0.31 .AND. TMAXGROF .GT. 22.0) THEN
-                   YIELDFact = 12.0
-                   PLTadj    = 0.0        
-
-      ELSEIF (WEATHERFact .GE. 0.31 .AND. TMAXGROF .GT. 22.0) THEN
-                   YIELDFact = 24.4
-                   PLTadj    = 0.0  
-                 
-      ELSE
-                   YIELDFact = 20.5
-                   PLTadj    = 0.0075
-      ENDIF
 
         GRORT  = 0.05 * GROLF
         GRORT  = AMAX1 (GRORT,0.0)
-        GROFLR = (1.26-0.17*PLTPOP-PLTadj*PLTPOP**2)*DTT/YIELDFact   
+        GROFLR = (1.26-0.17*PLTPOP+0.0075*PLTPOP**2)*DTT/20.5   
      &           *AMIN1(AGEFAC,TURFAC)
         GROFLR = AMAX1 (GROFLR,0.0)
         GROSTM = CARBO - GROLF - GROBSL - GRORT - GROFLR
@@ -671,10 +684,10 @@ c ----------------------------------------------------------------
         !RGFILL  = 1-0.0025*(TEMPM-26.)**2                  
         
 
-           GROFRT = RGFILL*GPP*G3*0.001*(0.7+0.2*SWFAC+1.55)!AQUI
+           GROFRT = RGFILL*GPP*G3*0.001*(0.7+0.2*SWFAC+1.30)
 
-        GROCRWN = 0.125*GROFRT
-        GRORT   = CARBO*0.05
+        GROCRWN = GROFRT * Yieldfact
+        GRORT   = CARBO  * YIELD1
 
         IF (TOTPLTWT .GT. 600.0) then
            GROSK  = CARBO*0.09
@@ -705,12 +718,12 @@ c ----------------------------------------------------------------
                   GROSTM  = CARBO
                 ELSEIF (SRAD .LT. 13.0) THEN
                   GROSTM  = CARBO*((13.-SRAD)/7.)
-                  GROFRT  = (CARBO - GROSTM)*0.889/0.9
-                  GROCRWN = (CARBO - GROSTM)*0.111/0.9
+                  GROFRT  = (CARBO - GROSTM)* Yieldfact
+                  GROCRWN = (CARBO - GROSTM)* YIELD1
                 ELSE
                    GROSTM  = 0.0
-                   GROFRT  = 0.889  * CARBO
-                   GROCRWN = 0.111  * CARBO
+                   GROFRT  = Yieldfact  * CARBO
+                   GROCRWN = YIELD1 * CARBO
                ENDIF
                STMWT  = STMWT  + GROSTM
                CRWNWT = CRWNWT + GROCRWN
@@ -719,24 +732,24 @@ c ----------------------------------------------------------------
                   GROSTM  = CARBO
                 ELSEIF (SRAD .LT. 13.0) THEN
                   GROSTM  = CARBO*((13.0-SRAD)/7.0)
-                  GROFRT  = (CARBO - GROSTM)*0.889
-                  GROCRWN = (CARBO - GROSTM)*0.111
+                  GROFRT  = (CARBO - GROSTM)*Yieldfact
+                  GROCRWN = (CARBO - GROSTM)*YIELD1
                   STMWT   = STMWT  + GROSTM
                   CRWNWT  = CRWNWT + GROCRWN
                 ELSE
                   STMWT   = STMWT + CARBO - GROFRT - GROCRWN - GRORT
                   IF (STMWT .LT. SWMIN) THEN
                      STMWT   = SWMIN
-                     GROFRT  = 0.889  * CARBO
-                     GROCRWN = 0.111  * CARBO
+                     GROFRT  = Yieldfact  * CARBO /0.9
+                     GROCRWN = YIELD1  * CARBO /0.9
                      CRWNWT  = CRWNWT + GROCRWN
                   ENDIF
                ENDIF
             ENDIF
           CASE (0)
             GROSTM  = 0.0
-            GROFRT  = 0.889  * CARBO / 0.9
-            GROCRWN = 0.111  * CARBO / 0.9
+            GROFRT  = Yieldfact  * CARBO / 0.9
+            GROCRWN = YIELD1  * CARBO / 0.9
             !STMWT   = STMWT  + GROSTM
             CRWNWT  = CRWNWT + GROCRWN
         END SELECT
@@ -786,6 +799,7 @@ c ----------------------------------------------------------------
         ! Update fruit weight
         !
         FRTWT = FRTWT + GROFRT
+        CRWNWT = CRWNWT + GROCRWN
         
         IF (SUMDTT .GT. P8) THEN       !IF (SUMDTT .GT. 0.8*P4) THEN   
            !STMWT = AMIN1 (STMWT,SWMAX)
@@ -811,8 +825,8 @@ c ----------------------------------------------------------------
            GO TO 2400
         ENDIF
 
-        GROCRWN = 0.125*GROFRT
-        GRORT   = CARBO*0.05
+        GROCRWN = Yieldfact*GROFRT
+        GRORT   = CARBO*YIELD1
 
         IF (TOTPLTWT .GT. 600.0) then
            GROSK  = CARBO*0.09
@@ -917,6 +931,10 @@ c ----------------------------------------------------------------
 !       for consistency with daily and seasonal outputs.
       SELECT CASE(ISTAGE)
       CASE(8,9,10)                                            
+!       In this case we need sum the crown
+        BIOMAS   = (LFWT + STMWT + BASLFWT + SKWT)*PLTPOP 
+     &                + (FRTWT * FRUITS) + (CRWNWT * FRUITS)
+      CASE(5,6,7)                                            
 !       In this case FLRWT is fruit + crown
         BIOMAS   = (LFWT + STMWT + BASLFWT + SKWT)*PLTPOP 
      &                + (FLRWT * FRUITS)
@@ -1035,7 +1053,36 @@ C-----------------------------------------------------------------------
           ADJTMAX13 = (SUMTMAXGRO - SUMTMAX)
           ADJSRAD13 = (SUMSRADGRO - SUMSRAD)
 
-        
+
+
+         
+          
+C          IF (TEMPM .LT. 20.0) THEN                               ! 
+C         TRF2 = 0.98                                          ! 
+C       ELSEIF (TEMPM .GE. 20.0 .AND. TEMPM .LT. 26.0) THEN    ! 
+C         TRF2 = 1.13314845306683*EXP(-0.005*TEMPM)   !1-0.005*(TEMPM-25) !
+C       ELSE
+C         TRF2 = 0.98                                          ! 
+C      ENDIF
+          
+C          IF ((LOG(GDDFR/(TMAXGRO/SRADGRO))).LT. 1.0) THEN                
+C         CARBO = TRF2*PCARB*AMIN1(PRFT,TRF2*SWFAC,NSTRES)
+
+C       ELSEIF ((LOG(GDDFR/(TMAXGRO/SRADGRO))).LT. 1.93) THEN   
+C         CARBO = TRF2*PCARB*AMIN1(PRFT,SWFAC,NSTRES)
+
+C         ELSEIF ((LOG(GDDFR/(TMAXGRO/SRADGRO))).GT. 1.93) THEN   
+C         CARBO = TRF2*PCARB*AMIN1(PRFT,SWFAC,NSTRES)
+C       ENDIF 
+
+C          PLA13 = LFWT * 0.5
+C          LFWT13 = CARBO * 10
+C          BASLFWT13 = CARBO * 10
+C          STMWT13 = CARBO * 10
+
+
+
+
          RLAE13    = 0.01289488 * (LOG(GDDFR/(TMAXGRO/SRADGRO)))**2 - 0.02086888 
      & * (LOG(GDDFR/(TMAXGRO/SRADGRO))) + 0.00524122     !y = 0.01289488x2 - 0.02086888x + 0.00524122 R² = 0.8379  
          PLA13     = PLA12*EXP(RLAE13*(DAP1))                  
@@ -1099,7 +1146,7 @@ C-----------------------------------------------------------------------
          SRADGRO = (ADJSRAD13 + ADJSRAD1)/(DAP3+DAP1)
           
          PARGRO =  (SUMPARGRO - SUMPAR)/(DAP3)     
-         SEEDQLY = ((1-(BASLFWT12/LFWT12))*PLTPOP) !  Seed quality adjusts LFWT1
+         SEEDQLY = ((1-(BASLFWT12/LFWT12))*1.3) !  Seed quality adjusts LFWT1
          
          
          RLAE1    = 0.01341697 * (LOG(GDDFR/(TMAXGRO/SRADGRO)))**2 - 0.02224724 
@@ -1314,7 +1361,7 @@ C-----------------------------------------------------------------------
           LAI     = AMAX1(LAI2, LAI) 
           LAI     = AMAX1(LAI3, LAI) 
           LAI     = AMAX1(LAI4, LAI) 
-
+          BIOMAS= (LFWT + STMWT + BASLFWT + FLRWT)*PLTPOP
          
 !---------------------------------------------------------NEW END          
 
@@ -1355,7 +1402,7 @@ C         G2 is genetic coefficient for potential eye number
           LAI     = AMAX1(LAI2, LAI) 
           LAI     = AMAX1(LAI3, LAI) 
           LAI     = AMAX1(LAI4, LAI)
-             
+          BIOMAS= (LFWT + STMWT + BASLFWT + FLRWT)*PLTPOP   
 !-----------------------------------------------------------------------
    
 
@@ -1395,7 +1442,7 @@ C         G2 is genetic coefficient for potential eye number
              LAI     = AMAX1(LAI2, LAI) 
              LAI     = AMAX1(LAI3, LAI) 
              LAI     = AMAX1(LAI4, LAI)
-             
+             BIOMAS= (LFWT + STMWT + BASLFWT + FLRWT)*PLTPOP
 !-----------------------------------------------------------------------              
  
         CASE (8)                
@@ -1422,7 +1469,7 @@ C         G2 is genetic coefficient for potential eye number
              LAI     = AMAX1(LAI4, LAI)  
 
  
-          FRUITS = PLTPOP*(1.-0.10*PLTPOP/14.0)  
+          FRUITS = PLTPOP*(1.-0.10*PLTPOP/65.0)  
 C         There will be some loss of mass when going from flower mass  !  
 C           to fruit + crown because FRUITS (#/m2) < PLTPOP (#/m2)     !  
 C                                                                      ! 
@@ -1437,6 +1484,7 @@ C     change ratios to add up to 1, maintaining approximately the same ratio.
 
           SWMAX  = 0.0
           SWMIN  = 0.0
+          BIOMAS= (LFWT + STMWT + BASLFWT + FLRWT)*PLTPOP
           
         CASE (9)       
           
@@ -1459,11 +1507,10 @@ C     change ratios to add up to 1, maintaining approximately the same ratio.
              LAI     = AMAX1(LAI1, LAI) 
              LAI     = AMAX1(LAI2, LAI) 
              LAI     = AMAX1(LAI3, LAI) 
-             LAI     = AMAX1(LAI4, LAI)  
+             LAI     = AMAX1(LAI4, LAI)
+             !BIOMAS= (LFWT + STMWT + BASLFWT + FLRWT)*PLTPOP  
 
-c         YIELD = FRTWT*10.0*FRUITS                         ! Smooth Cayenne yield 'only fruit weight'
-          YIELD = (FRTWT*10.0*FRUITS) + (CRWNWT*10.0*FRUITS) ! MD-2 yield is fruit + crown       
-          
+        
             STGDOY (ISTAGE) = YRDOY
 
 !-----------------------------------------------------------------------
@@ -1482,6 +1529,11 @@ c         YIELD = FRTWT*10.0*FRUITS                         ! Smooth Cayenne yie
              LAI     = AMAX1(LAI2, LAI) 
              LAI     = AMAX1(LAI3, LAI) 
              LAI     = AMAX1(LAI4, LAI)  
+
+c         YIELD = FRTWT*10.0*FRUITS                         ! Smooth Cayenne yield 'only fruit weight'
+          YIELD = (FRTWT*10.0*FRUITS) + (CRWNWT*10.0*FRUITS) ! Only fruit but MD-2 yield is fruit + crown
+             
+  
 !-----------------------------------------------------------------------
         CASE (11) 
         YRDOY   = CONTROL % YRDOY

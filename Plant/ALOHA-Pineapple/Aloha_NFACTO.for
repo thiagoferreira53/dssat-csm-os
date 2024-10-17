@@ -63,7 +63,9 @@
       IF (ISTAGE .EQ. 5 .OR. ISTAGE .EQ. 6) THEN        
           NFAC = 1.0 - 1.80*EXP(-3.5*NFAC)
       ENDIF
-      NFAC   = AMAX1 (NFAC,0.001)
+      NFAC   = AMAX1 (NFAC,0.999)!AMAX1 (NFAC,0.001) !Minimum value eliminated
+                                 ! to avoid differences associated with soil types.
+                                 ! Since the soil is not calibrated for pineapple.
 
       AGEFAC = 1.0
       NDEF3  = 1.0

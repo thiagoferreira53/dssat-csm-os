@@ -338,15 +338,17 @@ C-----------------------------------------------------------------------
 !-----------------------------------------------------------------------
 !     Actual yield harvested (default is 100 %)
 !     YIELD variable is in kg/ha
+!     FRUITS = Fruits by squere meter
 !-----------------------------------------------------------------------
       IF (PLTPOP .GE. 0.0) THEN
          IF (GPP .GT. 0.0) THEN           ! GPP = eyes per fruit
-            EYEWT = FRTWT/GPP             ! Eye weight (g/eye)
+            EYEWT = (FRTWT+CRWNWT)/GPP    ! Eye weight (g/eye) in MD-2 or fresh fruit pineapple crown is included
             PEYEWT = EYEWT * 1000.0       ! Eye weight (mg/eye)
          ENDIF
          GPSM   = GPP*FRUITS              ! # eyes/m2
          STOVER = BIOMAS*10.0-YIELD       ! Total plant weight except fruit (g/m2)
-         YIELDFresh  = YIELD / Species % FDMC  ! Fresh fruit yield (kg/ha)
+         !YIELDFresh  = YIELD / Species % FDMC  ! Fresh fruit yield (kg/ha)
+         YIELDFresh  = ((FRTWT*10.0*FRUITS) + (CRWNWT*10.0*FRUITS)) / Species % FDMC  ! Fresh fruit yield (kg/ha)
          YIELDB = YIELDFresh / 0.8914          ! Fresh fruit yield (lb/acre)
       ENDIF
 
@@ -367,7 +369,10 @@ C-----------------------------------------------------------------------
       ENDIF
 
       IF (BIOMAS .GT. 0.0 .AND. YIELD .GE. 0.0) THEN
-          HI = (YIELD + CRWNWT)/(FBIOM*10)
+          !HI = (YIELD + (CRWNWT*10*FRUITS))/(FBIOM*10)
+          !HI = ((FRTWT*10.0*FRUITS) + (CRWNWT*10.0*FRUITS))/(FBIOM*10)
+          !HI = ((YIELD/1000)/FBIOM*10)*10
+          HI = (YIELD/FBIOM)/10
        ELSE
          HI = 0.0
       ENDIF

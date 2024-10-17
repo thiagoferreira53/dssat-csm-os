@@ -173,20 +173,33 @@ c                TEMPM = 0.6*TMIN+0.4*TMAX
 c          ENDIF
       
       
-        CASE (1,2,3,4, 11,12,13)        
+        CASE (1,2,3, 11,12,13)        
  
+        IF (TMIN .GT. TBASE .AND. TMAX .LT. 38.0) THEN
              IF (XLAT .LT. 21.0 .and. XLAT .GT. -21.0) THEN
-
-               IF (TMIN .GT. TBASE .AND. TMAX .LT. 38.0) THEN
-                    TEMPM = 0.6*TMIN+0.4*TMAX
-                  ELSE
-                  TEMPM = (TMAX+TMIN)/2
+                TEMPM = 0.6*TMIN+0.4*TMAX
+              ELSE
+                TEMPM = (TMAX+TMIN)/2
              ENDIF
              DTT = TEMPM - TBASE
              ELSEIF (TMIN .LE. TBASE .OR. TMAX .GE. 38.0) THEN 
              IF (TMAX .LT. TBASE) THEN
              DTT = 0.0
                 ENDIF
+
+                          
+c            IF (XLAT .LT. 21.0 .and. XLAT .GT. -21.0) THEN
+
+c               IF (TMIN .GT. TBASE .AND. TMAX .LT. 33.5) THEN
+c                    TEMPM = 0.6*TMIN+0.4*TMAX
+c                  ELSE
+c                  TEMPM = 0.9*TMIN+0.1*TMAX
+c                ENDIF
+c             DTT = TEMPM - TBASE
+c             ELSEIF (TMIN .LE. TBASE .OR. TMAX .GE. 33.5) THEN 
+c             IF (TMAX .LT. TBASE) THEN
+c             DTT = 0.0
+c                ENDIF
 
              IF (DTT .NE. 0.0) THEN                          
                 DTT = 0.0
@@ -206,7 +219,7 @@ c          ENDIF
 !-----------------------------------------------------------------
 !       Reproductive Phase
 
-        CASE (5,6,7,8,9,10)
+        CASE (4,5,6,7,8,9,10)
           IF (TMAX .LT. TBASE) THEN     
              DTT = 0.0
           ENDIF
@@ -301,14 +314,14 @@ c          ENDIF
           SUMPAR = PAR
           
 
-          IF (ISWWAT .EQ. 'N') RETURN
-          CUMDEP = 0.0
-          DO L = 1, NLAYR
-             CUMDEP = CUMDEP + DLAYR(L)
-             IF (SDEPTH .LT. CUMDEP) EXIT
-          END DO
-          L0 = L
-          RETURN
+c !          IF (ISWWAT .EQ. 'N') RETURN
+c           CUMDEP = 0.0
+c           DO L = 1, NLAYR
+c              CUMDEP = CUMDEP + DLAYR(L)
+c              IF (SDEPTH .LT. CUMDEP) EXIT
+c           END DO
+c           L0 = L
+c           RETURN
 
           
           
@@ -318,14 +331,14 @@ c          ENDIF
           ! Stage 12 >> Planting to root initiation
           !
 
-!         Check for soil too dry for rooting
-          IF (ISWWAT .NE. 'N') THEN
-             IF (SW(L0) .LE. LL(L0)) THEN
-                 SWSD = (SW(L0)-LL(L0))*0.65+(SW(L0+1)-LL(L0+1))*0.35
-                 NDAS = NDAS + 1
-                 IF (SWSD .LT. 0.02) RETURN
-             ENDIF
-          ENDIF
+c !         Check for soil too dry for rooting
+c           IF (ISWWAT .NE. 'N') THEN
+c              IF (SW(L0) .LE. LL(L0)) THEN
+c                  SWSD = (SW(L0)-LL(L0))*0.65+(SW(L0+1)-LL(L0+1))*0.35
+c                  NDAS = NDAS + 1
+c                  IF (SWSD .LT. 0.02) RETURN
+c              ENDIF
+c           ENDIF
 
 !         After 140 days, give up
           IF (NDAS .GT. 140) THEN  
