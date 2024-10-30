@@ -702,14 +702,14 @@ c     Total LAI must exceed or be equal to healthy LAI:
         XHLAI = LAI
 !     -------------------------------------------------
 !     New Aloha-PineApple version based on Jhonny Vasquez changes 
-!      CASE('PIAL2')
-!        CALL Aloha2_Pineapple(CONTROL, ISWITCH,
-!     &    EOP, HARVFRAC, NH4, NO3, SOILPROP, SW, TRWUP,   !Input
-!     &    WEATHER, YRPLT,                                 !Input
-!     &    LAI, MDATE, RLV, SENESCE, STGDOY, UNH4, UNO3)   !Output
-!
-!        XLAI  = LAI
-!        XHLAI = LAI
+      CASE('PIAL2')
+        CALL Aloha2_Pineapple(CONTROL, ISWITCH,
+     &    EOP, HARVFRAC, NH4, NO3, SOILPROP, SW, TRWUP,   !Input
+     &    WEATHER, YRPLT,                                 !Input
+     &    LAI, MDATE, RLV, SENESCE, STGDOY, UNH4, UNO3)   !Output
+
+        XLAI  = LAI
+        XHLAI = LAI
       END SELECT
 
 !***********************************************************************
