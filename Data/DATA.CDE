@@ -76,6 +76,7 @@ ETCM   ET total mm     Total season evapotranspiration, simulation-harvest (mm) 
 ETCP   ET plant seas   Total evapotranspiration, planting to harvest (mm)       .
 EWAM   Ear wt. kg/ha   Ear (grain+chaff) or eye weight at maturity (kg [dm]/ha) .
 EWUM   Eye wt. g       Eye weight (g)                                           .
+EYLDH  Eco. Yld t/ha   Economic Yield (ton/ha)                                  .
 FBWAH  Fr. byproduct   By-product removed during harvest fresh wt (kg/ha)       . 
 FCWAM  Fr tops wt      Fresh tops weight at maturity (kg/ha)                    .
 FDAP   Forcing dap     Forcing or flowering date (dap)                          .
@@ -444,27 +445,27 @@ NDN8D  Denit layer 8   Daily denitrification, soil layer 8 (g[N]/ha)            
 NDN9D  Denit layer 9   Daily denitrification, soil layer 9 (g[N]/ha)            .
 NFXC   N Fixed kg/ha   N fixed (kg/ha)                                          .
 NFXD   N Fixed kg/ha.d N fixation rate (kg/(ha.day))                            .
-NH10   NH4  layer 10   NH4, soil layer 10(g[N]/kg[soil])                        .
-NH1D   NH4  layer 1    NH4, soil layer 1 (g[N]/kg[soil])                        .
-NH2D   NH4  layer 2    NH4, soil layer 2 (g[N]/kg[soil])                        .
-NH3D   NH4  layer 3    NH4, soil layer 3 (g[N]/kg[soil])                        .
-NH4D   NH4  layer 4    NH4, soil layer 4 (g[N]/kg[soil])                        .
-NH5D   NH4  layer 5    NH4, soil layer 5 (g[N]/kg[soil])                        .
-NH6D   NH4  layer 6    NH4, soil layer 6 (g[N]/kg[soil])                        .
-NH7D   NH4  layer 7    NH4, soil layer 7 (g[N]/kg[soil])                        .
-NH8D   NH4  layer 8    NH4, soil layer 8 (g[N]/kg[soil])                        .
-NH9D   NH4  layer 9    NH4, soil layer 9 (g[N]/kg[soil])                        .
+NH10   NH4  layer 10   NH4, soil layer 10(mg[N]/kg[soil])                        .
+NH1D   NH4  layer 1    NH4, soil layer 1 (mg[N]/kg[soil])                        .
+NH2D   NH4  layer 2    NH4, soil layer 2 (mg[N]/kg[soil])                        .
+NH3D   NH4  layer 3    NH4, soil layer 3 (mg[N]/kg[soil])                        .
+NH4D   NH4  layer 4    NH4, soil layer 4 (mg[N]/kg[soil])                        .
+NH5D   NH4  layer 5    NH4, soil layer 5 (mg[N]/kg[soil])                        .
+NH6D   NH4  layer 6    NH4, soil layer 6 (mg[N]/kg[soil])                        .
+NH7D   NH4  layer 7    NH4, soil layer 7 (mg[N]/kg[soil])                        .
+NH8D   NH4  layer 8    NH4, soil layer 8 (mg[N]/kg[soil])                        .
+NH9D   NH4  layer 9    NH4, soil layer 9 (mg[N]/kg[soil])                        .
 NHTD   Total NH4 kg/ha Total soil NH4 (kg [N]/ha)                               .
-NI10   NO3 layer 10    NO3, soil layer 10(g[N]/kg[soil])                        .
-NI1D   NO3 layer 1     NO3, soil layer 1 (g[N]/kg[soil])                        .
-NI2D   NO3 layer 2     NO3, soil layer 2 (g[N]/kg[soil])                        .
-NI3D   NO3 layer 3     NO3, soil layer 3 (g[N]/kg[soil])                        .
-NI4D   NO3 layer 4     NO3, soil layer 4 (g[N]/kg[soil])                        .
-NI5D   NO3 layer 5     NO3, soil layer 5 (g[N]/kg[soil])                        .
-NI6D   NO3 layer 6     NO3, soil layer 6 (g[N]/kg[soil])                        .
-NI7D   NO3 layer 7     NO3, soil layer 7 (g[N]/kg[soil])                        .
-NI8D   NO3 layer 8     NO3, soil layer 8 (g[N]/kg[soil])                        .
-NI9D   NO3 layer 9     NO3, soil layer 9 (g[N]/kg[soil])                        .
+NI10   NO3 layer 10    NO3, soil layer 10(mg[N]/kg[soil])                        .
+NI1D   NO3 layer 1     NO3, soil layer 1 (mg[N]/kg[soil])                        .
+NI2D   NO3 layer 2     NO3, soil layer 2 (mg[N]/kg[soil])                        .
+NI3D   NO3 layer 3     NO3, soil layer 3 (mg[N]/kg[soil])                        .
+NI4D   NO3 layer 4     NO3, soil layer 4 (mg[N]/kg[soil])                        .
+NI5D   NO3 layer 5     NO3, soil layer 5 (mg[N]/kg[soil])                        .
+NI6D   NO3 layer 6     NO3, soil layer 6 (mg[N]/kg[soil])                        .
+NI7D   NO3 layer 7     NO3, soil layer 7 (mg[N]/kg[soil])                        .
+NI8D   NO3 layer 8     NO3, soil layer 8 (mg[N]/kg[soil])                        .
+NI9D   NO3 layer 9     NO3, soil layer 9 (mg[N]/kg[soil])                        .
 NIAD   Tot soil N kg/haTotal soil NO3+NH4 (kg [N]/ha)                           .
 NIMC   N Immobilized   Cumulative N immobilization (kg [N]/ha)                  .
 NITC   Nitrification   Cumulative nitrification (kg [N]/ha)                     .
@@ -628,6 +629,106 @@ SW17D  SWC layer17     Soil water, soil layer 17 (cm3/cm3)                      
 SW18D  SWC layer18     Soil water, soil layer 18 (cm3/cm3)                      .
 SW19D  SWC layer19     Soil water, soil layer 19 (cm3/cm3)                      .
 SW20D  SWC layer20     Soil water, soil layer 20 (cm3/cm3)                      .
+LL1D   SWC LL layer 1  Soil water at Lower Limit, soil layer 1 (cm3/cm3)        .
+LL2D   SWC LL layer 2  Soil water at Lower Limit, soil layer 2 (cm3/cm3)        .
+LL3D   SWC LL layer 3  Soil water at Lower Limit, soil layer 3 (cm3/cm3)        .
+LL4D   SWC LL layer 4  Soil water at Lower Limit, soil layer 4 (cm3/cm3)        .
+LL5D   SWC LL layer 5  Soil water at Lower Limit, soil layer 5 (cm3/cm3)        .
+LL6D   SWC LL layer 6  Soil water at Lower Limit, soil layer 6 (cm3/cm3)        .
+LL7D   SWC LL layer 7  Soil water at Lower Limit, soil layer 7 (cm3/cm3)        .
+LL8D   SWC LL layer 8  Soil water at Lower Limit, soil layer 8 (cm3/cm3)        .
+LL9D   SWC LL layer 9  Soil water at Lower Limit, soil layer 9 (cm3/cm3)        .
+LL10D  SWC LL layer10  Soil water at Lower Limit, soil layer 10 (cm3/cm3)       .
+LL11D  SWC LL layer11  Soil water at Lower Limit, soil layer 11 (cm3/cm3)       .
+LL12D  SWC LL layer12  Soil water at Lower Limit, soil layer 12 (cm3/cm3)       .
+LL13D  SWC LL layer13  Soil water at Lower Limit, soil layer 13 (cm3/cm3)       .
+LL14D  SWC LL layer14  Soil water at Lower Limit, soil layer 14 (cm3/cm3)       .
+LL15D  SWC LL layer15  Soil water at Lower Limit, soil layer 15 (cm3/cm3)       .
+LL16D  SWC LL layer16  Soil water at Lower Limit, soil layer 16 (cm3/cm3)       .
+LL17D  SWC LL layer17  Soil water at Lower Limit, soil layer 17 (cm3/cm3)       .
+LL18D  SWC LL layer18  Soil water at Lower Limit, soil layer 18 (cm3/cm3)       .
+LL19D  SWC LL layer19  Soil water at Lower Limit, soil layer 19 (cm3/cm3)       .
+LL20D  SWC LL layer20  Soil water at Lower Limit, soil layer 20 (cm3/cm3)       .
+DUL1D  SWC DUL layer 1 Soil water at D. Upper Limit, soil layer 1 (cm3/cm3)     .
+DUL2D  SWC DUL layer 2 Soil water at D. Upper Limit, soil layer 2 (cm3/cm3)     .
+DUL3D  SWC DUL layer 3 Soil water at D. Upper Limit, soil layer 3 (cm3/cm3)     .
+DUL4D  SWC DUL layer 4 Soil water at D. Upper Limit, soil layer 4 (cm3/cm3)     .
+DUL5D  SWC DUL layer 5 Soil water at D. Upper Limit, soil layer 5 (cm3/cm3)     .
+DUL6D  SWC DUL layer 6 Soil water at D. Upper Limit, soil layer 6 (cm3/cm3)     .
+DUL7D  SWC DUL layer 7 Soil water at D. Upper Limit, soil layer 7 (cm3/cm3)     .
+DUL8D  SWC DUL layer 8 Soil water at D. Upper Limit, soil layer 8 (cm3/cm3)     .
+DUL9D  SWC DUL layer 9 Soil water at D. Upper Limit, soil layer 9 (cm3/cm3)     .
+DUL10D SWC DUL layer10 Soil water at D. Upper Limit, soil layer 10 (cm3/cm3)    .
+DUL11D SWC DUL layer11 Soil water at D. Upper Limit, soil layer 11 (cm3/cm3)    .
+DUL12D SWC DUL layer12 Soil water at D. Upper Limit, soil layer 12 (cm3/cm3)    .
+DUL13D SWC DUL layer13 Soil water at D. Upper Limit, soil layer 13 (cm3/cm3)    .
+DUL14D SWC DUL layer14 Soil water at D. Upper Limit, soil layer 14 (cm3/cm3)    .
+DUL15D SWC DUL layer15 Soil water at D. Upper Limit, soil layer 15 (cm3/cm3)    .
+DUL16D SWC DUL layer16 Soil water at D. Upper Limit, soil layer 16 (cm3/cm3)    .
+DUL17D SWC DUL layer17 Soil water at D. Upper Limit, soil layer 17 (cm3/cm3)    .
+DUL18D SWC DUL layer18 Soil water at D. Upper Limit, soil layer 18 (cm3/cm3)    .
+DUL19D SWC DUL layer19 Soil water at D. Upper Limit, soil layer 19 (cm3/cm3)    .
+DUL20D SWC DUL layer20 Soil water at D. Upper Limit, soil layer 20 (cm3/cm3)    .
+SAT1D  SWC SAT layer 1 Soil water at Saturation, soil layer 1 (cm3/cm3)         .
+SAT2D  SWC SAT layer 2 Soil water at Saturation, soil layer 2 (cm3/cm3)         .
+SAT3D  SWC SAT layer 3 Soil water at Saturation, soil layer 3 (cm3/cm3)         .
+SAT4D  SWC SAT layer 4 Soil water at Saturation, soil layer 4 (cm3/cm3)         .
+SAT5D  SWC SAT layer 5 Soil water at Saturation, soil layer 5 (cm3/cm3)         .
+SAT6D  SWC SAT layer 6 Soil water at Saturation, soil layer 6 (cm3/cm3)         .
+SAT7D  SWC SAT layer 7 Soil water at Saturation, soil layer 7 (cm3/cm3)         .
+SAT8D  SWC SAT layer 8 Soil water at Saturation, soil layer 8 (cm3/cm3)         .
+SAT9D  SWC SAT layer 9 Soil water at Saturation, soil layer 9 (cm3/cm3)         .
+SAT10D SWC SAT layer10 Soil water at Saturation, soil layer 10 (cm3/cm3)        .
+SAT11D SWC SAT layer11 Soil water at Saturation, soil layer 11 (cm3/cm3)        .
+SAT12D SWC SAT layer12 Soil water at Saturation, soil layer 12 (cm3/cm3)        .
+SAT13D SWC SAT layer13 Soil water at Saturation, soil layer 13 (cm3/cm3)        .
+SAT14D SWC SAT layer14 Soil water at Saturation, soil layer 14 (cm3/cm3)        .
+SAT15D SWC SAT layer15 Soil water at Saturation, soil layer 15 (cm3/cm3)        .
+SAT16D SWC SAT layer16 Soil water at Saturation, soil layer 16 (cm3/cm3)        .
+SAT17D SWC SAT layer17 Soil water at Saturation, soil layer 17 (cm3/cm3)        .
+SAT18D SWC SAT layer18 Soil water at Saturation, soil layer 18 (cm3/cm3)        .
+SAT19D SWC SAT layer19 Soil water at Saturation, soil layer 19 (cm3/cm3)        .
+SAT20D SWC SAT layer20 Soil water at Saturation, soil layer 20 (cm3/cm3)        .
+SAT1D  SWC SAT layer 1 Soil water at Saturation, soil layer 1 (cm3/cm3)         .
+SAT2D  SWC SAT layer 2 Soil water at Saturation, soil layer 2 (cm3/cm3)         .
+SAT3D  SWC SAT layer 3 Soil water at Saturation, soil layer 3 (cm3/cm3)         .
+SAT4D  SWC SAT layer 4 Soil water at Saturation, soil layer 4 (cm3/cm3)         .
+SAT5D  SWC SAT layer 5 Soil water at Saturation, soil layer 5 (cm3/cm3)         .
+SAT6D  SWC SAT layer 6 Soil water at Saturation, soil layer 6 (cm3/cm3)         .
+SAT7D  SWC SAT layer 7 Soil water at Saturation, soil layer 7 (cm3/cm3)         .
+SAT8D  SWC SAT layer 8 Soil water at Saturation, soil layer 8 (cm3/cm3)         .
+SAT9D  SWC SAT layer 9 Soil water at Saturation, soil layer 9 (cm3/cm3)         .
+SAT10D SWC SAT layer10 Soil water at Saturation, soil layer 10 (cm3/cm3)        .
+SAT11D SWC SAT layer11 Soil water at Saturation, soil layer 11 (cm3/cm3)        .
+SAT12D SWC SAT layer12 Soil water at Saturation, soil layer 12 (cm3/cm3)        .
+SAT13D SWC SAT layer13 Soil water at Saturation, soil layer 13 (cm3/cm3)        .
+SAT14D SWC SAT layer14 Soil water at Saturation, soil layer 14 (cm3/cm3)        .
+SAT15D SWC SAT layer15 Soil water at Saturation, soil layer 15 (cm3/cm3)        .
+SAT16D SWC SAT layer16 Soil water at Saturation, soil layer 16 (cm3/cm3)        .
+SAT17D SWC SAT layer17 Soil water at Saturation, soil layer 17 (cm3/cm3)        .
+SAT18D SWC SAT layer18 Soil water at Saturation, soil layer 18 (cm3/cm3)        .
+SAT19D SWC SAT layer19 Soil water at Saturation, soil layer 19 (cm3/cm3)        .
+SAT20D SWC SAT layer20 Soil water at Saturation, soil layer 20 (cm3/cm3)        .
+BD1D   BD layer 1      Bulk Density, soil layer 1 (g/cm3)                       .
+BD2D   BD layer 2      Bulk Density, soil layer 2 (g/cm3)                       .
+BD3D   BD layer 3      Bulk Density, soil layer 3 (g/cm3)                       .
+BD4D   BD layer 4      Bulk Density, soil layer 4 (g/cm3)                       .
+BD5D   BD layer 5      Bulk Density, soil layer 5 (g/cm3)                       .
+BD6D   BD layer 6      Bulk Density, soil layer 6 (g/cm3)                       .
+BD7D   BD layer 7      Bulk Density, soil layer 7 (g/cm3)                       .
+BD8D   BD layer 8      Bulk Density, soil layer 8 (g/cm3)                       .
+BD9D   BD layer 9      Bulk Density, soil layer 9 (g/cm3)                       .
+BD10D  BD layer10      Bulk Density, soil layer 10 (g/cm3)                      .
+BD11D  BD layer11      Bulk Density, soil layer 11 (g/cm3)                      .
+BD12D  BD layer12      Bulk Density, soil layer 12 (g/cm3)                      .
+BD13D  BD layer13      Bulk Density, soil layer 13 (g/cm3)                      .
+BD14D  BD layer14      Bulk Density, soil layer 14 (g/cm3)                      .
+BD15D  BD layer15      Bulk Density, soil layer 15 (g/cm3)                      .
+BD16D  BD layer16      Bulk Density, soil layer 16 (g/cm3)                      .
+BD17D  BD layer17      Bulk Density, soil layer 17 (g/cm3)                      .
+BD18D  BD layer18      Bulk Density, soil layer 18 (g/cm3)                      .
+BD19D  BD layer19      Bulk Density, soil layer 19 (g/cm3)                      .
+BD20D  BD layer20      Bulk Density, soil layer 20 (g/cm3)                      .
 SWTD   Total water     Total soil water in profile (mm)                         .
 SWXD   Extr water mm   Extractable water (mm)                                   .
 TCADD  Canopy-air temp Canopy-air temperature difference (oC)                   .
@@ -903,7 +1004,7 @@ IRRD   Eff Irrig mm/d  Daily effective irrigation (mm/d)                        
 IRRAD  App Irrig mm/d  Daily applied irrigation (includes losses) (mm/d)        .
 TL#C   TILLAGE #       Number of tillage operations                             .
 TLBD   BD Lyr1-3 g/cm3 Bulk Density average Lyr 1 to 3 after tillage (g/cm3)    .
-TLDD   TILL DEP cm     Depth of last tillage operation (cm)                     .    
+TLDD   TILL DEP cm     Depth of last tillage operation (cm)                     .
 
 *WEATHER
 @CDE   LABEL           DESCRIPTION............................................  SYNONYMS
@@ -1449,6 +1550,8 @@ CH4STD CH4Stored       CH4 stored in soil and floodwater (kg[C]/ha)             
 CO2EC  Cum CO2 emitted Cumulative CO2 emissions from soil (kg[C]/ha)            .
 CO2ED  CO2emission kg  Daily CO2 emission (kg[C]/ha)                            .
 CO2GED CO2emission g   Daily CO2 emission (g[C]/ha)                             .
+CO2ENC CO2emi net kg/d Cumulative net CO2 emissions kg/d                        .
+CO2END CO2emi net g/d  Daily net CO2 emissions kg/d                             .
 CO2TC  CumNewCO2       Cumul. CO2 from surface + soil OM decomp. (kg[C]/ha)     .
 CO2TD  newCO2Tot       Daily CO2 from surface + soil OM decomp. (g[C]/ha)       .
 MCEQC  CO2eq-CH4       Methane emissions as CO2 equivalent (kg[CO2eq]/ha)       .
@@ -1473,3 +1576,4 @@ N2O8D  N2O flux lyr 8  Daily N2O flux, soil layer 8 (g[N]/ha)                   
 N2O9D  N2O flux lyr 9  Daily N2O flux, soil layer 9 (g[N]/ha)                   .
 NCEQC  CO2eq-N2O       N2O emissions as CO2 equivalent (kg[CO2eq]/ha)           .
 TCEQC  CO2eq-Total     Total GHG emissions as CO2 equivalent (kg[CO2eq]/ha)     .
+

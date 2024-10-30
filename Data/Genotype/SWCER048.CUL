@@ -8,7 +8,7 @@
 ! ECO#        Ecotype code or this cultivar, points to the Ecotype in the
 !             ECO file (currently not used).
 ! P1          Thermal time from seedling emergence to the end of the juvenile
-!             phase (expressed in degree days above a base temperature of 8øC)
+!             phase (expressed in degree days above a base temperature of 8ï¿½C)
 !             during which the plant is not responsive to changes in
 !             photoperiod.
 ! P2          Extent to which development (expressed as days) is delayed for
@@ -16,7 +16,7 @@
 !             at which development proceeds at a maximum rate (which is
 !             considered to be 12.5 hours).
 ! P5          Thermal time from silking to physiological maturity (expressed
-!             in degree days above a base temperature of 8øC).
+!             in degree days above a base temperature of 8ï¿½C).
 ! G2          Maximum possible number of kernels per plant.
 ! G3          Kernel filling rate during the linear grain filling stage and
 !             under optimum conditions (mg/day).
@@ -30,7 +30,7 @@
 !              P/G/N:Phenology/Growth/Not used for calbration
 ! 
 @VAR#  VRNAME.......... EXPNO   ECO#    P1    P2    P5    G2    G3 PHINT
-!Coeffient #                             1     2     3     4     5     6
+!Coefficient #                           1     2     3     4     5     6
 !Calibration                             P     P     P     G     G     P
 
 999991 MINIMA               . DFAULT 150.0 0.300 680.0 600.0  5.50 35.00

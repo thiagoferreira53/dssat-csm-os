@@ -34,6 +34,8 @@
         SUBROUTINE MULTIRUN(RUN, YRPLT)
 !       Updates header for multi-year runs
         IMPLICIT NONE
+        EXTERNAL YR_DOY, NAILUJ, LENSTRING
+
         CHARACTER*3 RMS
         CHARACTER*8 WSTAT
         CHARACTER*11 TEXT
@@ -141,6 +143,7 @@ C=======================================================================
       USE ModuleDefs
       USE HeaderMod
       IMPLICIT NONE
+      EXTERNAL LENSTRING, NAILUJ, YR_DOY
       SAVE
 
       INCLUDE 'COMSWI.blk'
@@ -452,7 +455,7 @@ C-----------------------------------------------------------------------
      &       'PLANTS/m2 :',F5.1,5X,'ROW SPACING :',F5.0,'cm ')
   500 FORMAT (1X,'WEATHER',8X,':',1X,A4,3X,I4)
   600 FORMAT (1X,'SOIL',11X,':',1X,A10,5X,'TEXTURE : ',A5,' - ',A25)
-  625 FORMAT (1X,'SOIL INITIAL C ',':',1X,'DEPTH:',I3,'cm',1X,
+  625 FORMAT (1X,'SOIL INIT COND ',':',1X,'DEPTH:',I3,'cm',1X,
      &     'EXTR. H2O:',F5.1,'mm  NO3:',F5.1,'kg/ha  NH4:',F5.1,'kg/ha')
   650 FORMAT (1X,'WATER BALANCE',2X,':',1X,'IRRIGATE ON',
      &           ' REPORTED DATE(S)')
@@ -512,6 +515,7 @@ C  03/11/2005 GH  Remove ANS, RNMODE and NYRS
 !  11/26/2007 CHP THRESH, SDPRO, SDLIP moved from eco to cul file
 C  08/09/2012 GH  Updated for cassava
 C  09/18/2020 GH  Update for quinoa, safflower, sunflower
+C  07/08/2022 GH  Update for cucumber
 C-----------------------------------------------------------------------
 C  INPUT  : IDETO,NOUTDO,NYRS,LL,DUL,SAT,DLAYR,SWINIT,DS,NLAYR,ESW
 C           SHF,BD,PH,INO3,INH4,OC,TLL,TDUL,TSAT,TPESW,TSWINI,AINO3,AINH4
@@ -540,6 +544,7 @@ C=======================================================================
       USE ModuleDefs
       USE HeaderMod
       IMPLICIT NONE
+      EXTERNAL LenString
 
       INCLUDE 'COMGEN.blk'
 
@@ -618,14 +623,14 @@ C=======================================================================
 !     CROPGRO
       CASE ('CRGRO','PRFRM')
 !      IF (INDEX (MODEL, 'CRGRO') > 0) THEN
-        IF (INDEX ('BN,CH,CP,FB,GB,LT,PE,PN,PP,SB,VB,BG',CROP) 
+        IF (INDEX ('BG,BN,CH,CP,FB,GB,LT,PE,PN,PP,SB,VB',CROP) 
      &    > 0) THEN
            WRITE (HEADER(I), 850) CSDVAR,PPSEN,PH2T5,
      &                        PHTHRS(8),PHTHRS(10); I=I+1
            WRITE (HEADER(I),851) WTPSD,SDPDVR,SFDUR,PODUR,XFRUIT; I=I+1
 
-        ELSEIF (INDEX ('BH,BM,BR,CB,CI,CN,CO,NP,PR,QU,SF,SU,TM',CROP)
-     &          .GT. 0) THEN
+        ELSEIF (INDEX ('AM,BC,BH,BM,BR,CB,CI,CN,CO,CU,GY,NP,PR,QU,
+     &     SF,SR,SU,TM',CROP) .GT. 0) THEN
            WRITE (HEADER(I), 850) CSDVAR,PPSEN,PH2T5,
      &                        PHTHRS(8),PHTHRS(10); I=I+1
            WRITE (HEADER(I),852) WTPSD,SDPDVR,SFDUR,PODUR,XFRUIT; I=I+1

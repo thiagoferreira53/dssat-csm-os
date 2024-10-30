@@ -30,6 +30,7 @@ C=======================================================================
                          ! which contain control information, soil
                          ! parameters, hourly weather data.
       IMPLICIT NONE
+      EXTERNAL ERROR, FIND, GETLUN, IGNORE
 !-----------------------------------------------------------------------
       CHARACTER*1   PLME, BLANK
       CHARACTER*2   CROP
@@ -214,7 +215,7 @@ C-----------------------------------------------------------------------
             READ (C255,3100,IOSTAT=ERR) ECOTYP, ECONAM, IVRGRP, 
      &          IVRTEM, THVAR, (PHTHRS(K), K=1,4), PM06, PM09,
      &          (PHTHRS(K),K=11,12), TRIFOL, R1PPO, OPTBI, SLOBI
- 3100       FORMAT (A6, 1X, A16, 1X, 2(1X,I2), 7(1X,F5.0), 6X, 
+ 3100       FORMAT (A6, 1X, A16, 1X, 2(1X,A2), 7(1X,F5.0), 6X, 
      &          3(1X,F5.0), 2(6X), 3(1X,F5.0))
             IF (ERR .NE. 0) CALL ERROR(ERRKEY,ERR,FILEGC,LNUM)
             IF (ECOTYP .EQ. ECONO) THEN
@@ -252,7 +253,7 @@ C-----------------------------------------------------------------------
 !-----------------------------------------------------------------------
 !     IPPHENOL LOCAL VARIABLES:  (Other variables defined in PHENOL)
 !-----------------------------------------------------------------------
-! ATEMP     Temperature of transplant environment (°C)
+! ATEMP     Temperature of transplant environment (Â°C)
 ! CHAR      Contains the contents of last record read 
 ! CLDVAR    Critical daylength above which development rate remains at min 
 !             value (prior to flowering) (hours)
@@ -301,7 +302,7 @@ C-----------------------------------------------------------------------
 ! NSENP(I)  Sensitivity of phase I to Nitrogen stress. Varies from -1 
 !             (slows dev) to +1 (hastens dev) 
 ! OPTBI     Temperature below which growth rate is slowed from emergence to 
-!             flowering (°C)
+!             flowering (Â°C)
 ! PATHCR    Pathname for SPE file or FILEE. 
 ! PATHEC    Pathname for FILEC 
 ! PATHL     Number of characters in path name (path plus filename for 

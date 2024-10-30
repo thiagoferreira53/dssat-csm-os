@@ -17,34 +17,35 @@
         INTEGER :: Build = @BUILD@
       END TYPE VersionType
       TYPE (VersionType) Version
-!     CMake no longer able to change the branch name, do it manually.      
-!     CHARACTER(len=*), PARAMETER :: VBranch = '-@BRANCH@'
-      CHARACTER(len=*), PARAMETER :: VBranch = '-develop'
+      CHARACTER(len=*), PARAMETER :: VBranch = '-@BRANCH@'
 
-!     Version history:  
-!       4.8.0.20 chp 2022-01-14 More ETPHOT protections, mulch water initialization, 
-!                               fix puddling date, filepath length for linux, misc.
-!       4.8.0.19 chp 2021-12-13 Remove plant.for initializations in seasinit 
-!       4.8.0.18 chp 2021-12-10 ETPHOT protections, FO 
-!       4.8.0.17 chp 2021-10-25 Pre-season forecast enabled, portability issues 
-!       4.8.0.16 chp 2021-09-24 OilCropSun model added, 
-!                               updated calibration quinoa, chia, safflower
-!       4.8.0.15 chp 2021-08-20 Roll back some ETPHOT protections 
-!       4.8.0.14 chp 2021-08-19 OilCrop-Sun model added, mods to chia, quinoa, cassava,
-!                               safflower 
-!       4.8.0.13 chp 2021-08-12 Forage model minor mods
-!       4.8.0.12 chp 2021-08-06 Ceres-teff added, Changes to CSYCA and PRFRM models 
-!                               update genotype files for GLUE compatibility
-!       4.8.0.11 chp 2021-07-23 July 2021 Sprint version 
-!       4.8.0.10 chp 2021-06-25 FP protections, cassava minor, Mow file path 
-!       4.8.0.9  chp 2021-06-04 v4.8 (=v4.7.5.41) Summary: Lat-long, freshweight
-!       4.8.0.8  chp 2021-06-04 v4.8 (=v4.7.5.39) Bugfix SW_INIT, Allow TMAX = TMIN
-!       4.8.0.7  chp 2021-05-14 v4.8 (=v4.7.5.37) May 2021 Workshop
-!       4.8.0.6  chp 2021-05-04 v4.8 (=v4.7.5.36+) Pre-release test version
-!       4.8.0.5  chp 2021-04-23 v4.8 (=v4.7.5.36)
-!       4.8.0.4  chp 2021-04-04 v4.8 (=v4.7.5.33)
-!       4.8.0.3  chp 2021-02-08 v4.8 (=v4.7.5.29)
-!       4.8.0.2  chp 2020-07-21 v4.8 (=v4.7.5.28)
+!     Version history:
+!       4.8.2.24  FO 2024-10-28 PR 452 Commit SHA: 05d0d58
+!       4.8.2.23  FO 2024-10-28 PR 449 Commit SHA: 2bbadd1
+!       4.8.2.22  FO 2024-10-28 PR 451 Commit SHA: 448192c
+!       4.8.2.21  FO 2024-09-28 PR 446 Commit SHA: 433f2fd
+!       4.8.2.20  FO 2024-09-27 PR 446 Commit SHA: 83e008b
+!       4.8.2.19  FO 2024-09-20 PR 441 Commit SHA: e9c64bf
+!       4.8.2.18  FO 2024-09-06 PR 437 Commit SHA: 44bfa27
+!       4.8.2.17  FO 2024-09-06 PR 436 Commit SHA: 88e3060
+!       4.8.2.16  FO 2024-08-23 PR 431 Commit SHA: 635a664
+!       4.8.2.15  FO 2024-08-23 PR 434 Commit SHA: ff849ef
+!       4.8.2.14  FO 2024-08-09 PR 429 Commit SHA: c93205a
+!       4.8.2.13  FO 2024-07-13 PR 424 Commit SHA: 0c15449
+!       4.8.2.12  FO 2024-06-13 PR 408 Commit SHA: 4fd64a3
+!       4.8.2.11  FO 2024-06-13 PR 409 Commit SHA: 2e5a360
+!       4.8.2.10  FO 2024-05-16 PR 413 Commit SHA: 1e6ac3c
+!       4.8.2.9   FO 2024-05-16 PR 412 Commit SHA: 6488713
+!       4.8.2.8   FO 2024-04-26 PR 406 Commit SHA: f65fc5c
+!       4.8.2.7   FO 2024-03-22 PR 402 Commit SHA: 9b4a3cd
+!       4.8.2.6   FO 2024-02-16 PR 397 & 400 Commit SHA: fccf858
+!       4.8.2.5   FO 2024-02-16 PR 398 Commit SHA: 4870729
+!       4.8.2.4   FO 2024-01-26 PR 394 Commit SHA: 28ad6da
+!       4.8.2.3   FO 2024-01-26 PR 388 Commit SHA: 32b61e9
+!       4.8.2.2   FO 2024-01-26 PR 395 Commit SHA: 8a2a06f
+!       4.8.2.1   FO 2023-10-20 Commit SHA: 8be2eef
+!       4.8.2.0   FO 2023-09-02 v4.8.2 Release 2023
+!       4.8.1.0   FO 2022-10-28 v4.8.1 Interim release 2022
 !       4.8.0.1  chp 2020-07-21 v4.8 (=v4.7.5.14)
 !       4.7.5.0  chp 2018-12-18 Pre-release version
 !       4.7.2.0  chp 2018-05-07 v4.7.2 Release 2018 Workshop

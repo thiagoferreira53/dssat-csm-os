@@ -7,14 +7,15 @@
 !=======================================================================
       SUBROUTINE Aloha_OpGrow (CONTROL, ISWITCH,          &
         BASLFWT, BIOMAS, CRWNWT, EYEWT, FLRWT, FRTWT,     &
-        FRUITS, GPP, GPSM, ISTAGE, LAI, LFWT, LN, MDATE, DAP1, DAP3, DAP5, DAP7, DAP9, DAP13, DAP15, DAP17, DAP19, DAP21,  &
+        FRUITS, GPP, GPSM, ISTAGE, LAI, LFWT, LN, MDATE,  &
         NSTRES, PLTPOP, RLV, ROOTN,  RTDEP, RTWT, SKWT,   &
-        STMWT, STOVN, STOVWT, SWFAC, TURFAC, WTNCAN, SRADGRO, PARGRO, SUMSRADGRO, SUMSRAD, SUMPARGRO, SUMPAR,    &
-        WTNGRN, WTNUP, YRPLT, TMAXGRO, SUMTMAXGRO, SUMTMAX,        &
-        VNAM, VWATM, CNAM, TBASE, SUMDTT, DTT, SUMDTTGRO, GDDFR, FBIOM, MAXLAI, WEATHERFact, TMAXGROF, SRADGROF)    !Output for Overview.OUT 
+        STMWT, STOVN, STOVWT, SWFAC, TURFAC, WTNCAN,      &
+        WTNGRN, WTNUP, YRPLT,                             &
+        VNAM, VWATM, CNAM)    !Output for Overview.OUT 
 
       USE Aloha_mod
       IMPLICIT  NONE
+      EXTERNAL GETLUN, HEADER, TIMDIF, YR_DOY
       SAVE
 
       INTEGER DYNAMIC, ERRNUM, NOUTDG, NOUTPN, RUN, ISTAGE, TIMDIF
@@ -22,16 +23,15 @@
       LOGICAL FEXIST
       REAL SWF_AV, TUR_AV, NST_AV, EXW_AV, PS1_AV , PS2_AV, KST_AV
       REAL SWFAC, TURFAC, NSTRES, PSTRES1, PSTRES2, KSTRES
-      REAL LFWT, PLTPOP, SDWT, XLAI, LAI, CRWNWT, LN
+      REAL LFWT, PLTPOP, SDWT, XLAI, LAI, CRWNWT, LN   
       REAL GM2KG, HI, BIOMAS, VWAD, STMWT
       REAL RTWT, RTDEP, RLV(NL)
-      REAL BASLFWT, SKWT, TOPWT, FBIOM, MD2HI, MAXLAI, WEATHERFact, TMAXGROF, SRADGROF
+      REAL BASLFWT, SKWT, TOPWT 
       REAL STOVN, GRAINN, STOVWT, ROOTN, WTNVEG, WTNGRN, PCNVEG, PCNGRN
-      REAL VNAM, VWATM, CNAM, TBASE, DTT, SUMDTT, TMAXGRO, SUMTMAXGRO, TEMPM
-      REAL SUMTMAX, TMAX, SUMDTTGRO, SUMSRAD, SRAD, SUMSRADGRO, GDDFR, SUMPAR, SUMPARGRO, SRADGRO, PARGRO  
+      REAL VNAM, VWATM, CNAM
 
       INTEGER I, LEAFNO
-      INTEGER DAP,YRPLT,YRDOY 
+      INTEGER DAP,YRPLT,YRDOY
       INTEGER DAS
       INTEGER COUNT, FROP, MDATE, YEAR, DOY
 
@@ -41,14 +41,6 @@
 
       REAL    LWAD, SWAD, CRAD, BWAD, SUGD, RWAD, FWAD, EYWAD, EYEWT, FLWAD
       REAL    FRUITS, FRTWT, FLRWT, GPP, GPSM
-      REAL    TOPWT13, TOPWT12,TOPWT10, TOPWT9, TOPWT8, TOPWT7, TOPWT6, TOPWT5, TOPWT4, TOPWT3, TOPWT2, TOPWT1
-      REAL    WTLF13, WTLF12, WTLF10, WTLF9, WTLF8, WTLF7, WTLF6, WTLF5, WTLF4, WTLF3, WTLF2, WTLF1
-      REAL    FRACT1, FRACT2, FRACT3
-      REAL    LWAD13, LWAD12, LWAD10, LWAD9, LWAD8, LWAD7, LWAD6, LWAD5, LWAD4, LWAD3, LWAD2, LWAD1
-      REAL    SWAD13, SWAD12, SWAD10, SWAD9, SWAD8, SWAD7, SWAD6, SWAD5, SWAD4, SWAD3, SWAD2, SWAD1
-      REAL    VWAD13, VWAD12, VWAD10, VWAD9, VWAD8, VWAD7, VWAD6, VWAD5, VWAD4, VWAD3, VWAD2, VWAD1
-      REAL    BWAD13, BWAD12, BWAD10, BWAD9, BWAD8, BWAD7, BWAD6, BWAD5, BWAD4, BWAD3, BWAD2, BWAD1
-      REAL    DAP1, DAP3, DAP5, DAP7, DAP9, DAP13, DAP15, DAP17, DAP19, DAP21          
 
       TYPE (ControlType) CONTROL
       TYPE (SwitchType)  ISWITCH
@@ -96,10 +88,10 @@
           CALL HEADER(SEASINIT, NOUTDG, RUN)
 
           WRITE (NOUTDG,'(A,/,A,/,A,/,A)') & 
- '!                       Leaf   Grow                                 <--------------------------- Dry  Weight --------------------------->   Harv     <--- Eye ---> <-- Stress (0-1) -->  Leaf   Spec  Root   <--------------- Root Length Density ------------------------------>', &
- '!                        Num  Stage    LAI                          Tops    Veg   Leaf   Stem Flower  Fruit  Crown  Basal   Suck   Root     Index     Wgt.    No.      Water      Nitr   Nitr   Leaf  Depth  <---------------   cm3/cm3  of soil  ------------------------------>', &
- '!                                                                   <------------------------------ kg/Ha ------------------------------>            kg/ha          Phot   Grow           %     Area    m    <------------------------------------------------------------------>', &
- '@YEAR DOY   DAS   DAP   L#SD   GSTD   LAID  TBASE SUMDTT    DTT     CWAD   VWAD   LWAD   SWAD  FLWAD   FWAD   CRAD   BWAD   SUGD   RWAD     HIAD     EYWAD  EY#AD   WSPD   WSGD   NSTD   LN%D   SLAD   RDPD   RL1D   RL2D   RL3D   RL4D   RL5D   RL6D   RL7D   RL8D   RL9D   RL10'
+ '!                       Leaf   Grow        <--------------------------- Dry  Weight --------------------------->   Harv <--- Eye ---> <-- Stress (0-1) -->   Leaf   Spec   Root  <--------------- Root Length Density ------------------------------>', &
+ '!                        Num  Stage    LAI   Tops    Veg   Leaf   Stem Flower  Fruit  Crown  Basal   Suck   Root  Index   Wgt.    No.      Water      Nitr   Nitr   Leaf  Depth  <---------------   cm3/cm3  of soil  ------------------------------>', &
+ '!                                          <------------------------------ kg/Ha ------------------------------>         kg/ha          Phot   Grow             %   Area      m  <------------------------------------------------------------------>', &
+ '@YEAR DOY   DAS   DAP   L#SD   GSTD   LAID   CWAD   VWAD   LWAD   SWAD  FLWAD   FWAD   CRAD   BWAD   SUGD   RWAD   HIAD  EYWAD  EY#AD   WSPD   WSGD   NSTD   LN%D   SLAD   RDPD   RL1D   RL2D   RL3D   RL4D   RL5D   RL6D   RL7D   RL8D   RL9D   RL10'
 
         ENDIF
 
@@ -198,26 +190,22 @@
 !-----------------------------------------------------------------------
           IF (IDETG == 'Y') THEN
 
-           LEAFNO = LN
-           VSTAGE = REAL (LEAFNO)
+            LEAFNO = LN
+            VSTAGE = REAL (LEAFNO)
 
 !           GM2KG converts gm/plant to kg/ha
             GM2KG  = PLTPOP * 10.0
             
-           
             TOPWT  = BIOMAS * 10.    !topwt in kg/ha, biomas in g/m2
-            
+
             WTLF = LFWT * PLTPOP      !leaf, g/m2
             LWAD = LFWT * GM2KG       !leaf, kg/ha
             SWAD = STMWT* GM2KG       !stem, kg/ha
-            VWAD = LWAD + SWAD + BWAD       !veg,  kg/ha
-                      
-            
-            BWAD = BASLFWT * GM2KG    !basal, kg/ha
-            SUGD = (SKWT    * GM2KG) + SUGD    !sucker,kg/ha
-            RWAD = RTWT    * GM2KG    !roots, kg/ha
+            VWAD = LWAD + SWAD        !veg,  kg/ha
 
-             
+            BWAD = BASLFWT * GM2KG    !basal, kg/ha
+            SUGD = SKWT    * GM2KG    !sucker,kg/ha
+            RWAD = RTWT    * GM2KG    !roots, kg/ha
 
             IF (FRUITS < 1.E-6) THEN
 !             At stage 5, flower weight becomes fruit and crown
@@ -229,16 +217,11 @@
 !             Fruit and crown weights are calculated using FRUITS/m2, not PLTPOP/m2
               FWAD = FRTWT * FRUITS * 10. !fruit, kg/ha
               CRAD = CRWNWT* FRUITS * 10. !crown, kg/ha
-              MD2HI  = (FWAD + CRAD)/(FBIOM * 10) !The HI for MD-2 or any fresh fruit must include the crown weight.
-              
-              
               FLWAD = 0.0
             ENDIF
 
             IF (TOPWT .GT. 0.0) THEN
-              
-              HI = MD2HI 
-             !HI = FWAD / TOPWT  !Incorrect, the HI is weight of the fruit at harvest divided by weight of the plant at the time of forcing
+              HI = FWAD / TOPWT
             ELSE
               HI = 0.0
             ENDIF
@@ -253,14 +236,9 @@
               EYWAD = 0.0
             ENDIF        
             
-            XLAI   = MAXLAI
-            IF (WTLF .GT. 0.0) THEN        
-               SLA  = MAXLAI * 10000 / WTLF   
-               
-
-               
-               
-               
+            XLAI   = LAI
+            IF (WTLF .GT. 0.0) THEN
+               SLA  = LAI * 10000 / WTLF
             ELSE
                SLA = 0.0
             ENDIF
@@ -288,12 +266,11 @@
             ENDIF
 
             IF (FMOPT /= 'C') THEN   ! VSH
-              WRITE (NOUTDG,400) YEAR, DOY, DAS, DAP, VSTAGE, ISTAGE, &
-                XLAI, TBASE, SUMDTT, DTT,  & ! TMAXGROF, SRADGROF, WEATHERFact, &
-                !TMAXGRO, SUMTMAXGRO, SUMTMAX, SUMDTTGRO, SRADGRO, SUMSRADGRO, SUMSRAD, GDDFR, &
-                NINT(TOPWT),  NINT(VWAD), NINT(LWAD), NINT(SWAD), NINT(FLWAD), NINT(FWAD), NINT(CRAD), NINT(BWAD), NINT(SUGD), NINT(RWAD), HI,     &
+              WRITE (NOUTDG,400) YEAR, DOY, DAS, DAP, VSTAGE, ISTAGE, XLAI,         &
+                NINT(TOPWT),  NINT(VWAD), NINT(LWAD), NINT(SWAD), NINT(FLWAD),      &
+                NINT(FWAD), NINT(CRAD), NINT(BWAD), NINT(SUGD), NINT(RWAD), HI,     &
                 NINT(EYWAD), NINT(GPSM), (1.0-SWFAC), (1.0-TURFAC), (1.0-NSTRES),   &
-                PCNL, SLA, (RTDEP/100.), (RLV(I),I=1,10)                                          !PCNL, SLA, (RTDEP/100.), (RLV(I),I=1,10)
+                PCNL, SLA, (RTDEP/100.), (RLV(I),I=1,10)       
 
 !YEAR DOY   DAS   DAP VSTAGE ISTAGE   XLAI  TOPWT   VWAD   LWAD   SWAD  FLWAD   FWAD   CRAD   BWAD   SUGD   RWAD    HI   EYWAD  GPSM   SWFAC TURFAC NSTRES   PCNL    SLA  RTDEP   RLV(I),I=1,10
 !YEAR DOY   DAS   DAP   L#SD   GSTD   LAID   CWAD   VWAD   LWAD   SWAD  FLWAD   FWAD   CRAD   BWAD   SUGD   RWAD   HIAD  EYWAD  EY#AD   WSPD   WSGD   NSTD   LN%D   SLAD   RDPD   RL1D   RL2D   RL3D   RL4D   RL5D   RL6D   RL7D   RL8D   RL9D   RL10
@@ -301,12 +278,10 @@
 !1989 167     8     1    0.0      9   0.22    595    384    315     68      0      0      0    208      0      0  0.000      0      0  0.000  0.000  0.000   0.00   71.3   0.05   0.00   0.00   0.00   0.00   0.00   0.00   0.00   0.00   0.00   0.00
 
 
-  400          FORMAT (1X,I4,  1X,I3.3,  2I6,  1X,F6.1,  1X,I6,  1X,F6.2,  &                      
-                  1X,F6.1,  1X,F6.1,  1X,F6.1,           &                                             
-                  !3X,I6, &!1X,F6.1, 5X,F6.1, 7X,F6.1, 4X,F6.1, 4X,F6.1, 5X,F6.1, 4X,F6.1, 4X,F6.1, &  
-                  3X,I6,  9(1X,I6),  4X,F6.3, &                                              
-                  2(X,I6), 3X,F6.1, 1X,F6.1, 1X,F6.1,       &                                
-                  1X,F6.2, 1X,F6.1, F7.2, 10(1X,F6.2))                                       
+  400          FORMAT (1X,I4,1X,I3.3,2I6,1X,F6.1,1X,I6,1X,F6.2,   &
+                  10(1X,I6),1X,F6.3,           &    
+                  2(1X,I6), 3(1X,F6.3),       &
+                  1X,F6.2, 1X,F6.1, F7.2, 10(1X,F6.2))        
                   
 
 !-------------------------------------------------------------------------

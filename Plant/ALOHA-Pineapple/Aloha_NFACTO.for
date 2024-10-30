@@ -8,7 +8,6 @@
 !  1. Written
 !  2  Modified by
 !  3. Header revision and minor changes             P.W.W.      2-8-93
-!  4. JVJ Stages changes for inclusion in Overview          09/05/2020
 !=======================================================================
 
       SUBROUTINE Aloha_NFACTO (DYNAMIC, 
@@ -60,12 +59,10 @@
 
       NFAC   = 1.0 - (TCNP-TANC)/(TCNP-TMNC)
       NFAC   = AMIN1 (NFAC,1.0)
-      IF (ISTAGE .EQ. 5 .OR. ISTAGE .EQ. 6) THEN        
+      IF (ISTAGE .EQ. 3 .OR. ISTAGE .EQ. 4) THEN
           NFAC = 1.0 - 1.80*EXP(-3.5*NFAC)
       ENDIF
-      NFAC   = AMAX1 (NFAC,0.999)!AMAX1 (NFAC,0.001) !Minimum value eliminated
-                                 ! to avoid differences associated with soil types.
-                                 ! Since the soil is not calibrated for pineapple.
+      NFAC   = AMAX1 (NFAC,0.001)
 
       AGEFAC = 1.0
       NDEF3  = 1.0

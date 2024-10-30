@@ -1,7 +1,6 @@
 !=======================================================================
 !  MODULE Aloha_mod
 !  03/28/2017 CHP Written
-!  09/05/2020 JVJ Stages inclusion for Overview.    
 !=======================================================================
 
       MODULE Aloha_mod
@@ -14,8 +13,8 @@
         CHARACTER*12 CULfile
         CHARACTER*16 VRNAME
         CHARACTER*80 CULpath
-        REAL TC, P1, P2, P3, P4, P5, P6, P7, P8
-        REAL G1, G2, G3, PHINT
+        REAL P1, P2, P3, P4, P5, P6
+        REAL G2, G3, PHINT
       END TYPE AlohaCul_type
 
       TYPE AlohaSpe_type
@@ -42,27 +41,27 @@
       CHARACTER*10 STNAME(20)
 !     REAL TEMPM
 
-      DATA STNAME/    &               
-        'Foliar C1 ', &   ! 1   
-        'Foliar C2 ', &   ! 2   
-        'Foliar C3 ', &   ! 3   
-        'Forcing   ', &   ! 4   
-        'Open Heart', &   ! 5   
-        'EarlyAnthe', &   ! 6   
-        'LastAnthes', &   ! 7   
-        'PhMaturity', &   ! 8   
-        'Fruit Harv', &   ! 9   
-        'PRUEBA1   ', &   ! 10   
-        'Planting  ', &   ! 11     
-        'Root Init.', &   ! 12         
-        'Leaf Emerg', &   ! 13  
-        'Start Sim ', &   ! 14     
-        'PRUEBA2   ', &   ! 15     
-        'PRUEBA3   ', &   ! 16          
-        'PRUEBA4   ', &   ! 17    
-        'PRUEBA5   ', &   ! 18   
-        'PRUEBA6   ', &   ! 19   
-        'Harvest   '/     ! 20
+      DATA STNAME/    &
+        'Zero Stem ', &   ! 1
+        'Forcing   ', &   ! 2
+        'SCY       ', &   ! 3
+        'Early Flwr', &   ! 4
+        'Fruit Harv', &   ! 5
+        'Maturity  ', &   ! 6
+        'Planting  ', &   ! 7
+        'Root Init.', &   ! 8
+        'Leaf Emerg', &   ! 9
+        '          ', &   !10
+        '          ', &   !11
+        '          ', &   !12
+        '          ', &   !13
+        'Start Sim ', &   !14
+        'End Sim   ', &   !15
+        '          ', &   !16
+        '          ', &   !17
+        '          ', &   !18
+        '          ', &   !19
+        'Harvest   '/     !20
 
 
 
@@ -76,11 +75,11 @@
 !
 !  06/15/1994 PWW Original written
 !  03/29/2017 CGO Revised for v4.6
-!  10/29/2021 FO  Fixed unit conflict on species file for gfortran
 !=======================================================================
       SUBROUTINE Aloha_IPCROP (CONTROL)
 
       IMPLICIT    NONE
+      EXTERNAL GETLUN, ERROR, FIND, IGNORE
       SAVE
 
       CHARACTER*6 SECTION
@@ -131,10 +130,9 @@
       CASE(2); EXIT   !End of section 
       END SELECT !ISECT
     ENDDO
-    CLOSE(LUNSPE)
 
     CLOSE(LUNSPE)
-
+    
     RETURN
 
 100 CALL ERROR(ERRKEY,ERR,FILESPE,LNUM)   
@@ -160,6 +158,7 @@
       SUBROUTINE Aloha_IpPlant (CONTROL)
 
       IMPLICIT NONE
+      EXTERNAL GETLUN, FIND, ERROR
       SAVE
 
       CHARACTER*6, PARAMETER :: ERRKEY = 'IPPLNT'
@@ -242,9 +241,9 @@
        ELSE
          READ (LUNIO,1800,IOSTAT=ERR) & 
             Cultivar % VARNO, Cultivar % VRNAME, Cultivar % ECONO,     &
-            Cultivar % TC, Cultivar % P1, Cultivar % P2, Cultivar % P3, Cultivar % P4, Cultivar % P5, & 
-            Cultivar % P6, Cultivar % P7, Cultivar % P8, Cultivar % G1, Cultivar % G2, Cultivar % G3, Cultivar % PHINT  
- 1800    FORMAT (A6,1X,A16,1X,A6,1X,15F6.0)               !FORMAT (A6,1X,A16,1X,A6,1X,15F6.0)    
+            Cultivar % P1, Cultivar % P2, Cultivar % P3, Cultivar % P4, Cultivar % P5, & 
+            Cultivar % P6, Cultivar % G2, Cultivar % G3, Cultivar % PHINT  
+ 1800    FORMAT (A6,1X,A16,1X,A6,1X,15F6.0)    
 !B0066 SC-F153          IB0001   60.0  629.  381. 2640.  400.  60.0  200.  14.0  40.0
          IF (ERR .NE. 0) CALL ERROR(ERRKEY,ERR,FILEIO,LNUM)
        ENDIF
