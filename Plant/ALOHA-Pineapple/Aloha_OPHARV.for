@@ -367,8 +367,9 @@ C-----------------------------------------------------------------------
       IF (GPSM .GT. 0.0 .AND. SDWT  .GE. 0.0) THEN
          PSDWT = SDWT/GPSM            !Unit weight of eye g/unit = (g/m2) / (#/m2)
       ENDIF
-
-      IF (BIOMAS .GT. 0.0 .AND. YIELD .GE. 0.0) THEN
+      
+      IF (BIOMAS .GT. 0.0 .AND. YIELD .GE. 0.0 
+     & .AND. FBIOM .GT. 0.0) THEN
           !HI = (YIELD + (CRWNWT*10*FRUITS))/(FBIOM*10)
           !HI = ((FRTWT*10.0*FRUITS) + (CRWNWT*10.0*FRUITS))/(FBIOM*10)
           !HI = ((YIELD/1000)/FBIOM*10)*10

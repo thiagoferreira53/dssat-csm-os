@@ -234,7 +234,7 @@ C-----------------------------------------------------------------------
      &     CUMDTT, DTT, GRORT, ISTAGE, ISWITCH, NO3, NH4,     !Input
      &     SOILPROP, SW, SWFAC,                               !Input
      &     RLV, RTDEP, RTWT)                                  !Output
-     
+
         CALL Aloha_GROSUB  (CONTROL, ISWITCH, 
      &    DTT, ISTAGE, NH4, NO3, SOILPROP, SW, SWFAC,!Input
      &    SUMDTT, TBASE, TURFAC, WEATHER, XSTAGE, DAP1, DAP3, DAP5, DAP7, DAP9, DAP13, DAP15, DAP17, DAP19, DAP21,            !Input
@@ -267,7 +267,7 @@ C-----------------------------------------------------------------------
      &   WTNUP, YIELD, YRDOY, YRPLT, EDATE12, EDATE13,
      &   EDATE1, EDATE2, EDATE3, EDATE5, EDATE6, EDATE7,
      &   BIOMAS1, LAI1, BIOMAS13, LAI13, BIOMAS2, LAI2,
-     &   BIOMAS3, LAI3, BIOMAS4, LAI4, LN2, LN3, LN4, HIFact, MAXLAI, WEATHERFact, TMAXGROF, SRADGROF)                      !Input
+     &   BIOMAS3, LAI3, BIOMAS4, LAI4, LN2, LN3, LN4, HIFact, MAXLAI)                      !Input
 
 !=======================================================================
 C     Call end of season output routine
@@ -291,7 +291,7 @@ C-----------------------------------------------------------------------
      &   WTNUP, YIELD, YRDOY, YRPLT, EDATE12, EDATE13,
      &   EDATE1, EDATE2, EDATE3, EDATE5, EDATE6, EDATE7,
      &   BIOMAS1, LAI1, BIOMAS13, LAI13, BIOMAS2, LAI2, 
-     &   BIOMAS3, LAI3, BIOMAS4, LAI4, LN2, LN3, LN4, HIFact, MAXLAI, WEATHERFact, TMAXGROF, SRADGROF)                      !Input
+     &   BIOMAS3, LAI3, BIOMAS4, LAI4, LN2, LN3, LN4, HIFact, MAXLAI)                      !Input
 
         !Set senescence variable to zero for next season
         SENESCE % ResWt    = 0.0
