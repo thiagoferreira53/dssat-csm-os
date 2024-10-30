@@ -733,6 +733,13 @@ C-GH &               P1,P2O,P2R,P5,G1,G2,PHINT,P3,P4
  1970 FORMAT (A6,1X,A16,1X,A6,1X,F6.1,7F6.0,F6.1,3F6.0,2F6.1)  !
 !B0067 SC-ANGUE         IB0001  60.0   500   500  2195   400  60.0   200  14.0  95.0
 
+!       New Aloha-PineApple version based on Jhonny Vasquez changes 
+        CASE ('PIAL2')
+            WRITE (LUNIO,1971,IOSTAT=ERRNUM) VARNO,VRNAME,ECONO,
+     &            TC,P1,P2,P3,P4,P5,P6,P7,P8,G1,G2,G3,PHINT
+ 1971 FORMAT (A6,1X,A16,1X,A6,1X,F6.1,7F6.0,F6.1,3F6.0,2F6.1) 
+
+
 !       Aroids taro & tanier
         CASE ('TRARO','TNARO')
             WRITE (LUNIO,1975,IOSTAT=ERRNUM) VARNO,VRNAME,ECONO,
