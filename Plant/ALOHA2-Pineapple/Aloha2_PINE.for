@@ -127,7 +127,7 @@ C-----------------------------------------------------------------------
      &    FLRWT, FRTWT, FRUITS, GPP, GPSM, GRAINN, GRORT, SUMSRADGRO, SUMSRAD, SRADGRO, PARGRO, SUMPARGRO, SUMPAR,    !Output
      &    LAI, LFWT, LN, NSTRES, RLV, ROOTN, RTWT, SUMDTTGRO, SUMTMAXGRO, !Output
      &    SENESCE, SKWT, STMWT, STOVN, STOVWT,  TEMPM, SUMTMAX, TMAXGRO, GDDFR, BIOMAS4, LAI4, LN2, LN3, LN4, HIFact,       !Output
-     &    UNH4, UNO3, WTNUP, WTINITIAL, XGNP, YIELD, BIOMAS1, LAI1, BIOMAS13, LAI13, BIOMAS2, LAI2, BIOMAS3, LAI3)          !Output
+     &    UNH4, UNO3, WTNUP, WTINITIAL, XGNP, YIELD, BIOMAS1, LAI1, BIOMAS13, BIOMAS2, BIOMAS3, LAI3)          !Output
 
       CALL Aloha2_ROOTGR (CONTROL,
      &     CUMDTT, DTT, GRORT, ISTAGE, ISWITCH, NO3, NH4,     !Input
@@ -208,7 +208,7 @@ C-----------------------------------------------------------------------
      &    FLRWT, FRTWT, FRUITS, GPP, GPSM, GRAINN, GRORT, SUMSRADGRO, SUMSRAD, SRADGRO, PARGRO, SUMPARGRO, SUMPAR,   !Output
      &    LAI, LFWT, LN, NSTRES, RLV, ROOTN, RTWT, SUMDTTGRO, SUMTMAXGRO, !Output
      &    SENESCE, SKWT, STMWT, STOVN, STOVWT,  TEMPM, SUMTMAX, TMAXGRO, GDDFR, BIOMAS4, LAI4, LN2, LN3, LN4, HIFact,    !Output
-     &    UNH4, UNO3, WTNUP, WTINITIAL, XGNP, YIELD, BIOMAS1, LAI1, BIOMAS13, LAI13, BIOMAS2, LAI2, BIOMAS3, LAI3)          !Output
+     &    UNH4, UNO3, WTNUP, WTINITIAL, XGNP, YIELD, BIOMAS1, LAI1, BIOMAS13, BIOMAS2, BIOMAS3, LAI3)          !Output
 
          IF (YRDOY .EQ. STGDOY(3)) THEN
             CANNAA = STOVN*PLTPOP
@@ -242,7 +242,7 @@ C-----------------------------------------------------------------------
      &    FLRWT, FRTWT, FRUITS, GPP, GPSM, GRAINN, GRORT, SUMSRADGRO, SUMSRAD, SRADGRO, PARGRO, SUMPARGRO, SUMPAR,    !Output
      &    LAI, LFWT, LN, NSTRES, RLV, ROOTN, RTWT, SUMDTTGRO, SUMTMAXGRO, !Output
      &    SENESCE, SKWT, STMWT, STOVN, STOVWT,  TEMPM, SUMTMAX, TMAXGRO, GDDFR, BIOMAS4, LAI4, LN2, LN3, LN4, HIFact,   !Output
-     &    UNH4, UNO3, WTNUP, WTINITIAL, XGNP, YIELD, BIOMAS1, LAI1, BIOMAS13, LAI13, BIOMAS2, LAI2, BIOMAS3, LAI3)          !Output
+     &    UNH4, UNO3, WTNUP, WTINITIAL, XGNP, YIELD, BIOMAS1, LAI1, BIOMAS13, BIOMAS2, BIOMAS3, LAI3)          !Output
 
 !=======================================================================
 C        Call daily output subroutine
