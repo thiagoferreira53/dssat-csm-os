@@ -135,7 +135,7 @@ C-----------------------------------------------------------------------
 
       CALL Aloha2_OpGrow (CONTROL, ISWITCH,  
      &  BASLFWT, BIOMAS, CRWNWT, EYEWT, FLRWT, FRTWT,     
-     &  FRUITS, GPP, GPSM, ISTAGE, LAI, LFWT, LN, MDATE, DAP1, DAP3, DAP5, DAP7, DAP9, DAP13, DAP15, DAP17, DAP19, DAP21,  
+     &  FRUITS, GPP, GPSM, ISTAGE, LAI, LFWT, LN, MDATE,
      &  NSTRES, PLTPOP, RLV, ROOTN,  RTDEP, RTWT, SKWT,   
      &  STMWT, STOVN, STOVWT, SWFAC, TURFAC, WTNCAN, SRADGRO, PARGRO, SUMSRADGRO, SUMSRAD, SUMPARGRO, SUMPAR,    
      &  WTNGRN, WTNUP, YRPLT, TMAXGRO, SUMTMAXGRO, SUMTMAX,                
@@ -249,7 +249,7 @@ C-----------------------------------------------------------------------
 
       CALL Aloha2_OpGrow (CONTROL, ISWITCH,  
      &  BASLFWT, BIOMAS, CRWNWT, EYEWT, FLRWT, FRTWT,     
-     &  FRUITS, GPP, GPSM, ISTAGE, LAI, LFWT, LN, MDATE, DAP1, DAP3, DAP5, DAP7, DAP9, DAP13, DAP15, DAP17, DAP19, DAP21, 
+     &  FRUITS, GPP, GPSM, ISTAGE, LAI, LFWT, LN, MDATE,
      &  NSTRES, PLTPOP, RLV, ROOTN,  RTDEP, RTWT, SKWT,   
      &  STMWT, STOVN, STOVWT, SWFAC, TURFAC, WTNCAN, SRADGRO, PARGRO, SUMSRADGRO, SUMSRAD, SUMPARGRO, SUMPAR,    
      &  WTNGRN, WTNUP, YRPLT, TMAXGRO, SUMTMAXGRO, SUMTMAX,                          
@@ -272,7 +272,7 @@ C-----------------------------------------------------------------------
 !=======================================================================
       CALL Aloha2_OpGrow (CONTROL, ISWITCH,  
      &  BASLFWT, BIOMAS, CRWNWT, EYEWT, FLRWT, FRTWT,     
-     &  FRUITS, GPP, GPSM, ISTAGE, LAI, LFWT, LN, MDATE, DAP1, DAP3, DAP5, DAP7, DAP9, DAP13, DAP15, DAP17, DAP19, DAP21, 
+     &  FRUITS, GPP, GPSM, ISTAGE, LAI, LFWT, LN, MDATE,
      &  NSTRES, PLTPOP, RLV, ROOTN,  RTDEP, RTWT, SKWT,   
      &  STMWT, STOVN, STOVWT, SWFAC, TURFAC, WTNCAN, SRADGRO, PARGRO, SUMSRADGRO, SUMSRAD, SUMPARGRO, SUMPAR,    
      &  WTNGRN, WTNUP, YRPLT, TMAXGRO, SUMTMAXGRO, SUMTMAX,                          
