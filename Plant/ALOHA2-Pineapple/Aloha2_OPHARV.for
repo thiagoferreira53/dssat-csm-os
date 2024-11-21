@@ -15,8 +15,8 @@
      &   TURFAC, VWATM, WTINITIAL, WTNCAN, WTNGRN,        
      &   WTNUP, YIELD, YRDOY, YRPLT, EDATE12, EDATE13,
      &   EDATE1, EDATE2, EDATE3, EDATE5, EDATE6, EDATE7,
-     &   BIOMAS1, LAI1, BIOMAS13, LAI13, BIOMAS2, LAI2,
-     &   BIOMAS3, LAI3, BIOMAS4, LAI4, LN2, LN3, LN4, HIFact, MAXLAI) 
+     &   LAI1, LAI13, LAI2,
+     &   LAI3, LAI4, HIFact, MAXLAI) 
 
 !-----------------------------------------------------------------------
       USE Aloha2_mod
@@ -52,11 +52,11 @@
       
       REAL AGEFAC, BWAH
       REAL CRWNWT, EYEWT, FBIOM, FBTONS, FRTWT, FRUITS
-      REAL GPP, GPSM, HI, RIBIO, BIOMAS1, RILAI, LAI1
-      REAL LEBIO, BIOMAS13, LELAI, LAI13
-      REAL L1BIO, BIOMAS2, L1LAI, LAI2, L1LN, LN2
-      REAL L2BIO, BIOMAS3, L2LAI, LAI3, L2LN, LN3
-      REAL L3BIO, BIOMAS4, L3LAI, LAI4, L3LN, LN4, HIFact
+      REAL GPP, GPSM, HI, RIBIO, RILAI, LAI1
+      REAL LEBIO, LELAI, LAI13
+      REAL L1BIO, L1LAI, LAI2, L1LN
+      REAL L2BIO, L2LAI, LAI3, L2LN
+      REAL L3BIO, L3LAI, LAI4, L3LN, HIFact
       REAL MAXLAI, NSTRES, PBIOMS, PEYEWT, PSDWT, PLTPOP 
       REAL Pstres1, Pstres2   
       REAL SDRATE
@@ -388,24 +388,24 @@ C-----------------------------------------------------------------------
       BWAH = (BWAM + StovSenes) * HARVFRAC(2) 
 !-----------------------------------------------------------------------
 
-      RIBIO = BIOMAS13*10
+      RIBIO = BIOMAS*10
       RILAI = LAI13
       
       
-      LEBIO = BIOMAS1*10
+      LEBIO = BIOMAS*10
       LELAI = LAI1
 
-      L1BIO = BIOMAS2*10
+      L1BIO = BIOMAS*10
       L1LAI = LAI2
-      L1LN  = LN2
+      L1LN  = LN
       
-      L2BIO = BIOMAS3*10
+      L2BIO = BIOMAS*10
       L2LAI = LAI3
-      L2LN  = LN3
+      L2LN  = LN
 
-      L3BIO = BIOMAS4*10
+      L3BIO = BIOMAS*10
       L3LAI = LAI4
-      L3LN  = LN4
+      L3LN  = LN
 !-----------------------------------------------------------------------
   
       IF ((INDEX('YE',IDETO) > 0 .OR. INDEX('IAEBCGDT',RNMODE) .GT. 0) 

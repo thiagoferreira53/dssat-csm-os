@@ -57,9 +57,9 @@
      &    SUMSRAD, SRADGRO, PARGRO, SUMPARGRO, SUMPAR,                      ! Output
      &    LAI, LFWT, LN, NSTRES, RLV, ROOTN, RTWT, SUMDTTGRO, SUMTMAXGRO,   ! Output
      &    SENESCE, SKWT, STMWT, STOVN, STOVWT,  TEMPM, SUMTMAX,             ! Output
-     &    TMAXGRO, GDDFR, BIOMAS4, LAI4, LN2, LN3, LN4, HIFact,             ! Output
-     &    UNH4, UNO3, WTNUP, WTINITIAL, XGNP, YIELD, BIOMAS1, JTLAI,        ! Output
-     &    BIOMAS13, BIOMAS2, BIOMAS3, LAI3)                                 ! Output
+     &    TMAXGRO, GDDFR, LAI4, HIFact,             ! Output
+     &    UNH4, UNO3, WTNUP, WTINITIAL, XGNP, YIELD, JTLAI,        ! Output
+     &    LAI3)                                 ! Output
 
       USE Aloha2_mod
       USE Interface_SenLig_Ceres
@@ -85,16 +85,16 @@
       INTEGER STGDOY(20), YRPLT
       INTEGER DYNAMIC
       REAL    PLA, LAI, BIOMAS, LFWT, BASLFWT, STMWT, STOVWT 
-      REAL    WTINITIAL, BIOMAS1, BIOMAS13, BIOMAS2, BIOMAS3
-      REAL    BIOMAS4, SEEDQLY 
+      REAL    WTINITIAL
+      REAL    SEEDQLY 
       REAL    RSTMWT13, JTLAI, PLA13, LFWT13, BASLFWT13, STMWT13
       REAL    ADJGDDF13, ADJTMAX13, ADJSRAD13  !CASE 13
       REAL    JTRLAE, JTRLDW, JTRSTMWT, JTPLA, JTLFWT, JTBASLFWT
       REAL    JTSTMWT, GRORTI, JTRGRORT, GRORT1, JTTI, ADJGDDF1
       REAL    ADJTMAX, ADJSRAD1  !CASE 1
-      REAL    JTRBWTDW, LN2, GRORT2 !CASE 2
-      REAL    LAI3, LN3, GRORT3 !CASE 3
-      REAL    LAI4, LN4, GRORT4, HIFact, YIELDFact !CASE 4
+      REAL    JTRBWTDW, GRORT2 !CASE 2
+      REAL    LAI3, GRORT3 !CASE 3
+      REAL    LAI4, GRORT4, HIFact, YIELDFact !CASE 4
       REAL    LN6 !CASE 6
       REAL    LN7 !CASE 7
       REAL    LN8 !CASE 8
@@ -1074,7 +1074,6 @@ C-----------------------------------------------------------------------
           STMWT       = STMWT13                 
           STOVWT= STMWT
           BIOMAS= (LFWT + STMWT + BASLFWT)*PLTPOP
-          BIOMAS13 = BIOMAS
           JTLAI = LAI
           MAXLAI = LAI
 
@@ -1146,7 +1145,6 @@ C-----------------------------------------------------------------------
           STMWT       = JTSTMWT                 
           STOVWT= STMWT
           BIOMAS= (LFWT + STMWT + BASLFWT)*PLTPOP
-          BIOMAS1 = BIOMAS
           JTLAI = LAI 
           MAXLAI = LAI
           
@@ -1193,9 +1191,7 @@ C-----------------------------------------------------------------------
              STMWT       = JTSTMWT                       
              STOVWT= STMWT
              BIOMAS= (LFWT + STMWT + BASLFWT)*PLTPOP         
-             BIOMAS2 = BIOMAS
              JTLAI = LAI
-             LN2  = LN 
              MAXLAI = LAI
             
 !-----------------------------------------------------------------------
@@ -1243,9 +1239,7 @@ C-----------------------------------------------------------------------
              STMWT       = JTSTMWT                       
              STOVWT= STMWT
              BIOMAS= (LFWT + STMWT + BASLFWT)*PLTPOP  
-             BIOMAS3 = BIOMAS
              LAI3 = LAI
-             LN3  = LN 
              MAXLAI = LAI
 
 !-------------------------------------------------------- 
@@ -1292,9 +1286,7 @@ C-----------------------------------------------------------------------
              STMWT       = JTSTMWT                       
              STOVWT= STMWT
              BIOMAS= (LFWT + STMWT + BASLFWT)*PLTPOP  
-             BIOMAS4 = BIOMAS
              LAI4 = LAI
-             LN4  = LN
   
 !--------------------------------------------------------   
 
