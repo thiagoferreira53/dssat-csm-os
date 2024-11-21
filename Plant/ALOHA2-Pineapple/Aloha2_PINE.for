@@ -54,7 +54,7 @@ C=======================================================================
       REAL      CANNAA,CANWAA
       REAL      DTT
       REAL      CUMDTT, SUMDTT, SUMDTTGRO, SUMTMAXGRO, SUMTMAX, TMAXGRO, GDDFR
-      REAL          LAI1, LAI13
+      REAL          LAI1
       REAL      LAI3, LAI4, HIFact
       REAL      XLAT, SUMSRADGRO, SUMSRAD, SRADGRO, PARGRO, SUMPARGRO, SUMPAR, LAI2
       REAL      EOP, EP1, TRWUP, RWUEP1
@@ -148,7 +148,7 @@ C-----------------------------------------------------------------------
      &   PSTRES1, PSTRES2, STGDOY, STOVER, SWFAC,         !Input
      &   TURFAC, VWATM, WTINITIAL, WTNCAN, WTNGRN,        !Input
      &   WTNUP, YIELD, YRDOY, YRPLT, EDATE,
-     &   LAI1, LAI13, LAI2,
+     &   LAI1,  LAI2,
      &   LAI3, LAI4, HIFact, MAXLAI)                      !Input
 
 !=======================================================================
@@ -262,7 +262,7 @@ C-----------------------------------------------------------------------
      &   PSTRES1, PSTRES2, STGDOY, STOVER, SWFAC,         !Input
      &   TURFAC, VWATM, WTINITIAL, WTNCAN, WTNGRN,        !Input
      &   WTNUP, YIELD, YRDOY, YRPLT, EDATE,
-     &   LAI1, LAI13, LAI2,
+     &   LAI1,  LAI2,
      &   LAI3, LAI4, HIFact, MAXLAI)                      !Input
 
 !=======================================================================
@@ -285,7 +285,7 @@ C-----------------------------------------------------------------------
      &   PSTRES1, PSTRES2, STGDOY, STOVER, SWFAC,         !Input
      &   TURFAC, VWATM, WTINITIAL, WTNCAN, WTNGRN,        !Input
      &   WTNUP, YIELD, YRDOY, YRPLT, EDATE,
-     &   LAI1, LAI13, LAI2, 
+     &   LAI1,  LAI2, 
      &   LAI3, LAI4, HIFact, MAXLAI)                      !Input
 
         !Set senescence variable to zero for next season

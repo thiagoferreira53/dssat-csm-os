@@ -14,7 +14,7 @@
      &   PSTRES1, PSTRES2, STGDOY, STOVER, SWFAC,         
      &   TURFAC, VWATM, WTINITIAL, WTNCAN, WTNGRN,        
      &   WTNUP, YIELD, YRDOY, YRPLT, EDATE,
-     &   LAI1, LAI13, LAI2,
+     &   LAI1, LAI2,
      &   LAI3, LAI4, HIFact, MAXLAI) 
 
 !-----------------------------------------------------------------------
@@ -52,7 +52,7 @@
       REAL AGEFAC, BWAH
       REAL CRWNWT, EYEWT, FBIOM, FBTONS, FRTWT, FRUITS
       REAL GPP, GPSM, HI, RIBIO, RILAI, LAI1
-      REAL LEBIO, LELAI, LAI13
+      REAL LEBIO, LELAI
       REAL L1BIO, L1LAI, LAI2, L1LN
       REAL L2BIO, L2LAI, LAI3, L2LN
       REAL L3BIO, L3LAI, LAI4, L3LN, HIFact
@@ -388,7 +388,7 @@ C-----------------------------------------------------------------------
 !-----------------------------------------------------------------------
 
       RIBIO = BIOMAS*10
-      RILAI = LAI13
+      RILAI = LAI
       
       
       LEBIO = BIOMAS*10
