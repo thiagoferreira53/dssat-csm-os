@@ -14,7 +14,7 @@
      &   PSTRES1, PSTRES2, STGDOY, STOVER, SWFAC,         
      &   TURFAC, VWATM, WTINITIAL, WTNCAN, WTNGRN,        
      &   WTNUP, YIELD, YRDOY, YRPLT, EDATE,
-     &   EDATE1, EDATE2, EDATE3, EDATE5, EDATE6, EDATE7,
+     &   EDATE3, EDATE5, EDATE6, EDATE7,
      &   LAI1, LAI13, LAI2,
      &   LAI3, LAI4, HIFact, MAXLAI) 
 
@@ -37,8 +37,8 @@
       INTEGER IMAT, IFORC, IHARV, DFR1, DFORC, DHARV, HDAP
       INTEGER DROOT, IROOT, RIDAP, EDATE
       INTEGER DFNL, IFNL, LEDAP
-      INTEGER DLC1, ILC1, L1DAP, EDATE1
-      INTEGER DLC2, ILC2, L2DAP, EDATE2
+      INTEGER DLC1, ILC1, L1DAP
+      INTEGER DLC2, ILC2, L2DAP
       INTEGER DLC3, ILC3, L3DAP, EDATE3
       INTEGER DROH, IROH, OHDAF, EDATE5
       INTEGER DREA, IREA, EADAF, EDATE6
@@ -588,8 +588,8 @@ C-----------------------------------------------------------------------
 
 !       Leaf cycle 1 date to DAP PART2
 
-       IF (EDATE1 .GT. 0 .AND. EDATE1 .LE. ISDATE) THEN
-          L1DAP = TIMDIF (YRPLT,EDATE1)
+       IF (EDATE .GT. 0 .AND. EDATE .LE. ISDATE) THEN
+          L1DAP = TIMDIF (YRPLT,EDATE)
           IF (L1DAP .LE. 0) THEN
             L1DAP = -99
           ENDIF
@@ -599,8 +599,8 @@ C-----------------------------------------------------------------------
 
 !       Leaf cycle 2 date to DAP PART2
 
-       IF (EDATE2 .GT. 0 .AND. EDATE2 .LE. ISDATE) THEN
-          L2DAP = TIMDIF (YRPLT,EDATE2)
+       IF (EDATE .GT. 0 .AND. EDATE .LE. ISDATE) THEN
+          L2DAP = TIMDIF (YRPLT,EDATE)
           IF (L2DAP .LE. 0) THEN
             L2DAP = -99
           ENDIF
