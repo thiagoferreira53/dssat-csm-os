@@ -18,7 +18,7 @@ C=======================================================================
      &    SUMTMAX, DTT, EDATE, ISDATE, ISTAGE, MDATE, PMDATE, 
      &    SUMSRADGRO, SUMSRAD, SUMPARGRO, SUMPAR, STGDOY, SUMDTT, 
      &    TBASE, TEMPM, XSTAGE,
-     &    EDATE3, EDATE5, EDATE6, EDATE7)               
+     &    EDATE5, EDATE6, EDATE7)               
 
       USE Aloha2_mod
       IMPLICIT    NONE
@@ -38,7 +38,7 @@ C=======================================================================
 !     REAL, DIMENSION(20) :: SI1, SI2, SI3, SI4
 
       INTEGER      DYNAMIC, EDATE, MDATE, HAREND
-      INTEGER      EDATE3, EDATE5, EDATE6, EDATE7
+      INTEGER      EDATE5, EDATE6, EDATE7
       REAL         XSTAGE
 !TEMP      REAL         GRAINN
 
@@ -497,7 +497,7 @@ c           ENDIF
 
 !         Ready for next stage
           STGDOY(ISTAGE) = YRDOY
-          EDATE3 = YRDOY
+          EDATE = YRDOY
 
           ISTAGE = 4
           SUMDTTGRO= SUMDTT               

@@ -14,7 +14,7 @@
      &   PSTRES1, PSTRES2, STGDOY, STOVER, SWFAC,         
      &   TURFAC, VWATM, WTINITIAL, WTNCAN, WTNGRN,        
      &   WTNUP, YIELD, YRDOY, YRPLT, EDATE,
-     &   EDATE3, EDATE5, EDATE6, EDATE7,
+     &   EDATE5, EDATE6, EDATE7,
      &   LAI1, LAI13, LAI2,
      &   LAI3, LAI4, HIFact, MAXLAI) 
 
@@ -39,7 +39,7 @@
       INTEGER DFNL, IFNL, LEDAP
       INTEGER DLC1, ILC1, L1DAP
       INTEGER DLC2, ILC2, L2DAP
-      INTEGER DLC3, ILC3, L3DAP, EDATE3
+      INTEGER DLC3, ILC3, L3DAP
       INTEGER DROH, IROH, OHDAF, EDATE5
       INTEGER DREA, IREA, EADAF, EDATE6
       INTEGER DRLA, IRLA, LADAF, EDATE7
@@ -610,8 +610,8 @@ C-----------------------------------------------------------------------
 
 !       Leaf cycle 3 date to DAP PART2
 
-       IF (EDATE3 .GT. 0 .AND. EDATE3 .LE. ISDATE) THEN
-          L3DAP = TIMDIF (YRPLT,EDATE3)
+       IF (EDATE .GT. 0 .AND. EDATE .LE. ISDATE) THEN
+          L3DAP = TIMDIF (YRPLT,EDATE)
           IF (L3DAP .LE. 0) THEN
             L3DAP = -99
           ENDIF
