@@ -54,7 +54,7 @@ C=======================================================================
       REAL      CANNAA,CANWAA
       REAL      DTT
       REAL      CUMDTT, SUMDTT, SUMDTTGRO, SUMTMAXGRO, SUMTMAX, TMAXGRO, GDDFR
-      REAL       EDATE5, EDATE6, EDATE7, LAI1, LAI13
+      REAL          LAI1, LAI13
       REAL      LAI3, LAI4, HIFact
       REAL      XLAT, SUMSRADGRO, SUMSRAD, SRADGRO, PARGRO, SUMPARGRO, SUMPAR, LAI2
       REAL      EOP, EP1, TRWUP, RWUEP1
@@ -117,8 +117,7 @@ C-----------------------------------------------------------------------
       CALL Aloha2_PHENOL (CONTROL, ISWITCH,
      &    SW, WEATHER, SOILPROP, YRPLT, SUMDTTGRO, SUMTMAXGRO, SUMTMAX,!Input
      &    DTT, EDATE, ISDATE, ISTAGE, MDATE, PMDATE, SUMSRADGRO, SUMSRAD, SUMPARGRO, SUMPAR,!Output
-     &    STGDOY, SUMDTT, TBASE, TEMPM, XSTAGE,    EDATE5,
-     &    EDATE6, EDATE7)    !Output
+     &    STGDOY, SUMDTT, TBASE, TEMPM, XSTAGE)    !Output
 
       CALL Aloha2_GROSUB  (CONTROL, ISWITCH, 
      &    DTT, ISTAGE, NH4, NO3, SOILPROP, SW, SWFAC,         !Input
@@ -149,7 +148,6 @@ C-----------------------------------------------------------------------
      &   PSTRES1, PSTRES2, STGDOY, STOVER, SWFAC,         !Input
      &   TURFAC, VWATM, WTINITIAL, WTNCAN, WTNGRN,        !Input
      &   WTNUP, YIELD, YRDOY, YRPLT, EDATE,
-     &      EDATE5, EDATE6, EDATE7,
      &   LAI1, LAI13, LAI2,
      &   LAI3, LAI4, HIFact, MAXLAI)                      !Input
 
@@ -219,8 +217,7 @@ C-----------------------------------------------------------------------
           CALL Aloha2_PHENOL (CONTROL, ISWITCH, 
      &    SW, WEATHER, SOILPROP, YRPLT, SUMDTTGRO, SUMTMAXGRO, SUMTMAX,   !Input
      &    DTT, EDATE, ISDATE, ISTAGE, MDATE, PMDATE, SUMSRADGRO, SUMSRAD, SUMPARGRO, SUMPAR, !Output
-     &    STGDOY, SUMDTT, TBASE, TEMPM, XSTAGE,    EDATE5,
-     &    EDATE6, EDATE7)               !Output
+     &    STGDOY, SUMDTT, TBASE, TEMPM, XSTAGE)               !Output
         ENDIF
 
         CUMDTT = CUMDTT + DTT
@@ -265,7 +262,6 @@ C-----------------------------------------------------------------------
      &   PSTRES1, PSTRES2, STGDOY, STOVER, SWFAC,         !Input
      &   TURFAC, VWATM, WTINITIAL, WTNCAN, WTNGRN,        !Input
      &   WTNUP, YIELD, YRDOY, YRPLT, EDATE,
-     &      EDATE5, EDATE6, EDATE7,
      &   LAI1, LAI13, LAI2,
      &   LAI3, LAI4, HIFact, MAXLAI)                      !Input
 
@@ -289,7 +285,6 @@ C-----------------------------------------------------------------------
      &   PSTRES1, PSTRES2, STGDOY, STOVER, SWFAC,         !Input
      &   TURFAC, VWATM, WTINITIAL, WTNCAN, WTNGRN,        !Input
      &   WTNUP, YIELD, YRDOY, YRPLT, EDATE,
-     &      EDATE5, EDATE6, EDATE7,
      &   LAI1, LAI13, LAI2, 
      &   LAI3, LAI4, HIFact, MAXLAI)                      !Input
 

@@ -17,8 +17,7 @@ C=======================================================================
      &    SW, WEATHER, SOILPROP, YRPLT, SUMDTTGRO, SUMTMAXGRO,
      &    SUMTMAX, DTT, EDATE, ISDATE, ISTAGE, MDATE, PMDATE, 
      &    SUMSRADGRO, SUMSRAD, SUMPARGRO, SUMPAR, STGDOY, SUMDTT, 
-     &    TBASE, TEMPM, XSTAGE,
-     &    EDATE5, EDATE6, EDATE7)               
+     &    TBASE, TEMPM, XSTAGE)               
 
       USE Aloha2_mod
       IMPLICIT    NONE
@@ -38,7 +37,6 @@ C=======================================================================
 !     REAL, DIMENSION(20) :: SI1, SI2, SI3, SI4
 
       INTEGER      DYNAMIC, EDATE, MDATE, HAREND
-      INTEGER      EDATE5, EDATE6, EDATE7
       REAL         XSTAGE
 !TEMP      REAL         GRAINN
 
@@ -585,7 +583,7 @@ c           ENDIF
 
 !         Ready for next stage
           STGDOY(ISTAGE) = YRDOY
-          EDATE5 = YRDOY
+          EDATE = YRDOY
 
           ISTAGE = 6
           SUMDTTGRO= SUMDTT             
@@ -608,7 +606,7 @@ c           ENDIF
 
 !         Ready for next stage
           STGDOY(ISTAGE) = YRDOY
-          EDATE6 = YRDOY
+          EDATE = YRDOY
 
           ISTAGE = 7                    
           SUMDTTGRO= SUMDTT               
@@ -633,7 +631,7 @@ c           ENDIF
 
 !         Ready for next stage
           STGDOY(ISTAGE) = YRDOY
-          EDATE7 = YRDOY
+          EDATE = YRDOY
 
           ISTAGE = 8                    
           SUMDTTGRO= SUMDTT               

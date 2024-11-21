@@ -14,7 +14,6 @@
      &   PSTRES1, PSTRES2, STGDOY, STOVER, SWFAC,         
      &   TURFAC, VWATM, WTINITIAL, WTNCAN, WTNGRN,        
      &   WTNUP, YIELD, YRDOY, YRPLT, EDATE,
-     &   EDATE5, EDATE6, EDATE7,
      &   LAI1, LAI13, LAI2,
      &   LAI3, LAI4, HIFact, MAXLAI) 
 
@@ -40,9 +39,9 @@
       INTEGER DLC1, ILC1, L1DAP
       INTEGER DLC2, ILC2, L2DAP
       INTEGER DLC3, ILC3, L3DAP
-      INTEGER DROH, IROH, OHDAF, EDATE5
-      INTEGER DREA, IREA, EADAF, EDATE6
-      INTEGER DRLA, IRLA, LADAF, EDATE7
+      INTEGER DROH, IROH, OHDAF
+      INTEGER DREA, IREA, EADAF
+      INTEGER DRLA, IRLA, LADAF
       INTEGER ISDATE, ISENS, LINC, LNUM, LUNIO, MDATE, ISTAGE, RUN
       INTEGER TIMDIF, TRTNUM, YRNR1, YRNR2, YRNR3
       INTEGER YRDOY, YREMRG, YRNR5, YRSIM, YRPLT
@@ -661,7 +660,7 @@ C-----------------------------------------------------------------------
       !       Reproductive Open Heart date to DAP PART2
 
        IF (YRPLT .GT. 0) THEN
-          OHDAF = (TIMDIF (YRPLT,EDATE5)) - DFR1
+          OHDAF = (TIMDIF (YRPLT,EDATE)) - DFR1
           IF (OHDAF .LE. 0) THEN
             OHDAF = -99
           ENDIF
@@ -672,7 +671,7 @@ C-----------------------------------------------------------------------
 !       Reproductive Early Anthesys date to DAP PART2
 
        IF (YRPLT .GT. 0) THEN
-          EADAF = (TIMDIF (YRPLT,EDATE6)) - DFR1
+          EADAF = (TIMDIF (YRPLT,EDATE)) - DFR1
           IF (EADAF .LE. 0) THEN
             EADAF = -99
           ENDIF
@@ -683,7 +682,7 @@ C-----------------------------------------------------------------------
 !       Reproductive Last Anthesys date to DAP PART2
 
        IF (YRPLT .GT. 0) THEN
-          LADAF = (TIMDIF (YRPLT,EDATE7)) - DFR1
+          LADAF = (TIMDIF (YRPLT,EDATE)) - DFR1
           IF (LADAF .LE. 0) THEN
             LADAF = -99
           ENDIF
