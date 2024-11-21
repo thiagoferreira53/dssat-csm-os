@@ -13,7 +13,7 @@
      &   ISTAGE, LAI, LN, MDATE, NSTRES, PLTPOP, PMDATE,  
      &   PSTRES1, PSTRES2, STGDOY, STOVER, SWFAC,         
      &   TURFAC, VWATM, WTINITIAL, WTNCAN, WTNGRN,        
-     &   WTNUP, YIELD, YRDOY, YRPLT, EDATE, EDATE13,
+     &   WTNUP, YIELD, YRDOY, YRPLT, EDATE,
      &   EDATE1, EDATE2, EDATE3, EDATE5, EDATE6, EDATE7,
      &   LAI1, LAI13, LAI2,
      &   LAI3, LAI4, HIFact, MAXLAI) 
@@ -36,7 +36,7 @@
       INTEGER DNR7, DYNAMIC, ERRNUM, FOUND
       INTEGER IMAT, IFORC, IHARV, DFR1, DFORC, DHARV, HDAP
       INTEGER DROOT, IROOT, RIDAP, EDATE
-      INTEGER DFNL, IFNL, LEDAP, EDATE13
+      INTEGER DFNL, IFNL, LEDAP
       INTEGER DLC1, ILC1, L1DAP, EDATE1
       INTEGER DLC2, ILC2, L2DAP, EDATE2
       INTEGER DLC3, ILC3, L3DAP, EDATE3
@@ -578,7 +578,7 @@ C-----------------------------------------------------------------------
 !       First new leaf date to DAP PART2
 
        IF (YRPLT .GT. 0) THEN
-          LEDAP = TIMDIF (YRPLT,EDATE13)
+          LEDAP = TIMDIF (YRPLT,EDATE)
           IF (LEDAP .LE. 0) THEN
             LEDAP = -99
           ENDIF

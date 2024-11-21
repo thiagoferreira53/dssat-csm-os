@@ -53,7 +53,7 @@ C=======================================================================
 
       REAL      CANNAA,CANWAA
       REAL      DTT
-      REAL      CUMDTT, SUMDTT, SUMDTTGRO, SUMTMAXGRO, SUMTMAX, TMAXGRO, GDDFR, EDATE13
+      REAL      CUMDTT, SUMDTT, SUMDTTGRO, SUMTMAXGRO, SUMTMAX, TMAXGRO, GDDFR
       REAL      EDATE1, EDATE2, EDATE3, EDATE5, EDATE6, EDATE7, LAI1, LAI13
       REAL      LAI3, LAI4, HIFact
       REAL      XLAT, SUMSRADGRO, SUMSRAD, SRADGRO, PARGRO, SUMPARGRO, SUMPAR, LAI2
@@ -117,7 +117,7 @@ C-----------------------------------------------------------------------
       CALL Aloha2_PHENOL (CONTROL, ISWITCH,
      &    SW, WEATHER, SOILPROP, YRPLT, SUMDTTGRO, SUMTMAXGRO, SUMTMAX,!Input
      &    DTT, EDATE, ISDATE, ISTAGE, MDATE, PMDATE, SUMSRADGRO, SUMSRAD, SUMPARGRO, SUMPAR,!Output
-     &    STGDOY, SUMDTT, TBASE, TEMPM, XSTAGE, EDATE13, EDATE1, EDATE2, EDATE3, EDATE5,
+     &    STGDOY, SUMDTT, TBASE, TEMPM, XSTAGE, EDATE1, EDATE2, EDATE3, EDATE5,
      &    EDATE6, EDATE7)    !Output
 
       CALL Aloha2_GROSUB  (CONTROL, ISWITCH, 
@@ -148,7 +148,7 @@ C-----------------------------------------------------------------------
      &   ISTAGE, LAI, LN, MDATE, NSTRES, PLTPOP, PMDATE,  !Input
      &   PSTRES1, PSTRES2, STGDOY, STOVER, SWFAC,         !Input
      &   TURFAC, VWATM, WTINITIAL, WTNCAN, WTNGRN,        !Input
-     &   WTNUP, YIELD, YRDOY, YRPLT, EDATE, EDATE13,
+     &   WTNUP, YIELD, YRDOY, YRPLT, EDATE,
      &   EDATE1, EDATE2, EDATE3, EDATE5, EDATE6, EDATE7,
      &   LAI1, LAI13, LAI2,
      &   LAI3, LAI4, HIFact, MAXLAI)                      !Input
@@ -219,7 +219,7 @@ C-----------------------------------------------------------------------
           CALL Aloha2_PHENOL (CONTROL, ISWITCH, 
      &    SW, WEATHER, SOILPROP, YRPLT, SUMDTTGRO, SUMTMAXGRO, SUMTMAX,   !Input
      &    DTT, EDATE, ISDATE, ISTAGE, MDATE, PMDATE, SUMSRADGRO, SUMSRAD, SUMPARGRO, SUMPAR, !Output
-     &    STGDOY, SUMDTT, TBASE, TEMPM, XSTAGE, EDATE13, EDATE1, EDATE2, EDATE3, EDATE5,
+     &    STGDOY, SUMDTT, TBASE, TEMPM, XSTAGE, EDATE1, EDATE2, EDATE3, EDATE5,
      &    EDATE6, EDATE7)               !Output
         ENDIF
 
@@ -264,7 +264,7 @@ C-----------------------------------------------------------------------
      &   ISTAGE, LAI, LN, MDATE, NSTRES, PLTPOP, PMDATE,  !Input
      &   PSTRES1, PSTRES2, STGDOY, STOVER, SWFAC,         !Input
      &   TURFAC, VWATM, WTINITIAL, WTNCAN, WTNGRN,        !Input
-     &   WTNUP, YIELD, YRDOY, YRPLT, EDATE, EDATE13,
+     &   WTNUP, YIELD, YRDOY, YRPLT, EDATE,
      &   EDATE1, EDATE2, EDATE3, EDATE5, EDATE6, EDATE7,
      &   LAI1, LAI13, LAI2,
      &   LAI3, LAI4, HIFact, MAXLAI)                      !Input
@@ -288,7 +288,7 @@ C-----------------------------------------------------------------------
      &   ISTAGE, LAI, LN, MDATE, NSTRES, PLTPOP, PMDATE,  !Input
      &   PSTRES1, PSTRES2, STGDOY, STOVER, SWFAC,         !Input
      &   TURFAC, VWATM, WTINITIAL, WTNCAN, WTNGRN,        !Input
-     &   WTNUP, YIELD, YRDOY, YRPLT, EDATE, EDATE13,
+     &   WTNUP, YIELD, YRDOY, YRPLT, EDATE,
      &   EDATE1, EDATE2, EDATE3, EDATE5, EDATE6, EDATE7,
      &   LAI1, LAI13, LAI2, 
      &   LAI3, LAI4, HIFact, MAXLAI)                      !Input
