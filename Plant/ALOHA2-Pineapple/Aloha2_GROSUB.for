@@ -50,7 +50,7 @@
       SUBROUTINE Aloha2_GROSUB (CONTROL, ISWITCH,                           ! Input
      &    DTT, ISTAGE, NH4, NO3, SOILPROP, SW, SWFAC,                       ! Input
      &    SUMDTT, TBASE, TURFAC, WEATHER, XSTAGE, DAP1, DAP3, DAP5,         ! Input
-     &    DAP7, DAP9, DAP13, DAP15, DAP17, DAP19, DAP21,                    ! Input
+     &    DAP7, DAP9, DAP13, DAP15, DAP17, DAP19, JTDAP,                    ! Input
      &    AGEFAC, BASLFWT, BIOMAS, CRWNWT, EYEWT, FBIOM, MAXLAI,            ! Output
      &    WEATHERFact, TMAXGROF, SRADGROF,                                  ! Output
      &    FLRWT, FRTWT, FRUITS, GPP, GPSM, GRAINN, JTGRORT, SUMSRADGRO,     ! Output
@@ -95,9 +95,9 @@
       REAL    JTRBWTDW, GRORT2 !CASE 2
       REAL    LAI3, GRORT3 !CASE 3
       REAL    LAI4, GRORT4, HIFact, YIELDFact !CASE 4
-      REAL    DAP1, DAP2, DAP3, DAP4, DAP5, DAP6, DAP7, DAP8, DAP9
-      REAL    DAP10, DAP11, DAP12, DAP13, DAP14, DAP15, DAP16, DAP17
-      REAL    DAP18, DAP19, DAP20, DAP21
+      REAL    DAP1, DAP3, DAP4, DAP5, DAP6, DAP7, DAP9
+      REAL    DAP10, DAP12, DAP13, DAP14, DAP15, DAP16, DAP17
+      REAL    DAP19, JTDAP
       REAL    PLAG, RTWT, FLRWT, GROSTM, SENLA, SLAN, JTGRORT
       REAL    GDDFR, TMAXGRO
       REAL    PLACASE, PLTadj, WEATHERFact, TMAXGROF, SRADGROF
@@ -1096,7 +1096,7 @@ C-----------------------------------------------------------------------
          
          YRDOY   = CONTROL % YRDOY   ! Root initiation date
          NDOF = TIMDIF(YRPLT, YRDOY)  
-         DAP2 = NDOF
+         JTDAP = NDOF
          DAP3     = NDOF - DAP1      
           
          ADJGDDF1 = (SUMDTTGRO - SUMDTT)
@@ -1152,7 +1152,7 @@ C-----------------------------------------------------------------------
           YRDOY   = CONTROL % YRDOY
           NDOF = TIMDIF(YRPLT, YRDOY)
           DAP4 = NDOF
-          DAP5    = NDOF-DAP2
+          DAP5    = NDOF-JTDAP
           GDDFR   = (SUMDTTGRO - SUMDTT)/(DAP5)  
           TMAXGRO = (SUMTMAXGRO - SUMTMAX)/(DAP5)
           SRADGRO = (SUMSRADGRO - SUMSRAD)/(DAP5)
@@ -1246,7 +1246,7 @@ C-----------------------------------------------------------------------
           
           YRDOY   = CONTROL % YRDOY
           NDOF = TIMDIF(YRPLT, YRDOY)
-          DAP8 = NDOF
+          JTDAP = NDOF
           DAP9 = NDOF-DAP6
 
           GDDFR   = (SUMDTTGRO - SUMDTT)/(DAP9)  
@@ -1294,12 +1294,12 @@ C-----------------------------------------------------------------------
           YRDOY   = CONTROL % YRDOY
           NDOF = TIMDIF(YRPLT, YRDOY)
           DAP10 = NDOF
-          DAP11 = NDOF-DAP8
+          JTDAP = NDOF-JTDAP
 
-          GDDFR   = (SUMDTTGRO - SUMDTT)/(DAP11)  
-          TMAXGRO = (SUMTMAXGRO - SUMTMAX)/(DAP11)
-          SRADGRO = (SUMSRADGRO - SUMSRAD)/(DAP11)
-          PARGRO  = (SUMPARGRO - SUMPAR)/(DAP11)
+          GDDFR   = (SUMDTTGRO - SUMDTT)/(JTDAP)  
+          TMAXGRO = (SUMTMAXGRO - SUMTMAX)/(JTDAP)
+          SRADGRO = (SUMSRADGRO - SUMSRAD)/(JTDAP)
+          PARGRO  = (SUMPARGRO - SUMPAR)/(JTDAP)
           
                   
           FBIOM  = BIOMAS               
@@ -1437,7 +1437,7 @@ C         G2 is genetic coefficient for potential eye number
           
           YRDOY   = CONTROL % YRDOY
           NDOF = TIMDIF(YRPLT, YRDOY)
-          DAP18 = NDOF
+          JTDAP = NDOF
           DAP19 = NDOF-DAP16
 
           GDDFR   = (SUMDTTGRO - SUMDTT)/(DAP19)  
@@ -1466,9 +1466,9 @@ C         G2 is genetic coefficient for potential eye number
           
           YRDOY   = CONTROL % YRDOY
           NDOF = TIMDIF(YRPLT, YRDOY)
-          DAP20 = NDOF
-          DAP21 = NDOF-DAP18
-          !DAP21 = (DAP13 + DAP15 + DAP17 + DAP19) 
+          JTDAP = NDOF
+          JTDAP = NDOF-JTDAP
+          !JTDAP = (DAP13 + DAP15 + DAP17 + DAP19) 
 
            STGDOY (ISTAGE) = YRDOY
 
