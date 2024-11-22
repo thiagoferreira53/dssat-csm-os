@@ -41,29 +41,29 @@ C=======================================================================
       SAVE
 
       CHARACTER*1 ISWWAT
-      INTEGER EDATE, ISTAGE, YRDOY, YRPLT, MDATE, ISDATE, PMDATE, DAP1, DAP3, DAP5, DAP7, DAP9, DAP13, DAP15, DAP17, DAP19, JTDAP
+      INTEGER EDATE, ISTAGE, YRDOY, YRPLT, MDATE, ISDATE, PMDATE, DAP1
+      INTEGER DAP3, DAP5, DAP7, DAP9, DAP13, DAP15, DAP17, DAP19, JTDAP
       INTEGER, DIMENSION(20) :: STGDOY
-      REAL HARVFRAC(2)
-      REAL FBIOM, FDINT, MAXLAI, WEATHERFact, TMAXGROF, SRADGROF
-      REAL    LN, CRWNWT, EYEWT, FRTWT, FRUITS, FLRWT 
-      REAL    LFWT, STMWT, GPSM, GPP, GRAINN
-      REAL    BASLFWT, BIOMAS, LAI, NSTRES, STOVN, RTDEP, RTWT, SKWT
-      REAL    GRORT, XSTAGE, STOVWT, ROOTN, WTNUP, XGNP
+      
       REAL, DIMENSION(NL) :: NH4, NO3, RLV, SW, UNH4, UNO3
 
-      REAL      CANNAA,CANWAA
-      REAL      DTT
-      REAL      CUMDTT, SUMDTT, SUMDTTGRO, SUMTMAXGRO, SUMTMAX, TMAXGRO, GDDFR
-      REAL          LAI1
-      REAL      LAI3, LAI4, HIFact
-      REAL      XLAT, SUMSRADGRO, SUMSRAD, SRADGRO, PARGRO, SUMPARGRO, SUMPAR, LAI2
-      REAL      EOP, EP1, TRWUP, RWUEP1
-      REAL      SWFAC, TURFAC, TEMPM
+      REAL        HARVFRAC(2)
+      REAL        FBIOM, FDINT, MAXLAI, WEATHERFact, TMAXGROF, SRADGROF
+      REAL        LN, CRWNWT, EYEWT, FRTWT, FRUITS, FLRWT 
+      REAL        LFWT, STMWT, GPSM, GPP, GRAINN
+      REAL        BASLFWT, BIOMAS, LAI, NSTRES, STOVN, RTDEP, RTWT
+      REAL        SKWT, GRORT, XSTAGE, STOVWT, ROOTN, WTNUP, XGNP
+      REAL        CANNAA,CANWAA
+      REAL        DTT, CUMDTT, SUMDTT, SUMDTTGRO
+      REAL        SUMTMAXGRO, SUMTMAX, TMAXGRO, GDDFR
+      REAL        LAI1, LAI2, LAI3, LAI4, HIFact
+      REAL        XLAT, SUMSRADGRO, SUMSRAD, SRADGRO, SUMPARGRO, SUMPAR
+      REAL        EOP, EP1, TRWUP, RWUEP1
+      REAL        SWFAC, TURFAC, TEMPM
 
-      REAL      PLTPOP,   TBASE, STOVER, WTINITIAL, YIELD
-      REAL    WTNCAN, WTNGRN
-      REAL VNAM, VWATM, CNAM
-      REAL AGEFAC, PSTRES1, PSTRES2
+      REAL        PLTPOP,   TBASE, STOVER, WTINITIAL, YIELD
+      REAL        WTNCAN, WTNGRN, VNAM, VWATM, CNAM
+      REAL        AGEFAC, PSTRES1, PSTRES2
 
 !     ------------------------------------------------------------------
       TYPE (ControlType) CONTROL
@@ -115,19 +115,24 @@ C     Call PHENOLOGY initialization routine
 C-----------------------------------------------------------------------
 
       CALL Aloha2_PHENOL (CONTROL, ISWITCH,
-     &    SW, WEATHER, SOILPROP, YRPLT, SUMDTTGRO, SUMTMAXGRO, SUMTMAX,!Input
-     &    DTT, EDATE, ISDATE, ISTAGE, MDATE, PMDATE, SUMSRADGRO, SUMSRAD, SUMPARGRO, SUMPAR,!Output
-     &    STGDOY, SUMDTT, TBASE, TEMPM, XSTAGE)    !Output
+     &    SW, WEATHER, SOILPROP, YRPLT, SUMDTTGRO, SUMTMAXGRO, SUMTMAX, !Input
+     &    DTT, EDATE, ISDATE, ISTAGE, MDATE, PMDATE, SUMSRADGRO,        !Output
+     &    SUMSRAD, SUMPARGRO, SUMPAR, STGDOY, SUMDTT, TBASE, TEMPM,     !Output
+     &    XSTAGE)                                                       !Output
 
-      CALL Aloha2_GROSUB  (CONTROL, ISWITCH, 
-     &    DTT, ISTAGE, NH4, NO3, SOILPROP, SW, SWFAC,         !Input
-     &    SUMDTT, TBASE, TURFAC, WEATHER, XSTAGE, DAP1, DAP3, DAP5, DAP7, DAP9, DAP13, DAP15, DAP17, DAP19, JTDAP,            !Input
-     &    AGEFAC, BASLFWT, BIOMAS, CRWNWT, EYEWT, FBIOM, MAXLAI, WEATHERFact, TMAXGROF, SRADGROF,      !Output
-     &    FLRWT, FRTWT, FRUITS, GPP, GPSM, GRAINN, GRORT, SUMSRADGRO, SUMSRAD, SRADGRO, PARGRO, SUMPARGRO, SUMPAR,    !Output
-     &    LAI, LFWT, LN, NSTRES, RLV, ROOTN, RTWT, SUMDTTGRO, SUMTMAXGRO, !Output
-     &    SENESCE, SKWT, STMWT, STOVN, STOVWT,  TEMPM, SUMTMAX, TMAXGRO, GDDFR, LAI4, HIFact,       !Output
-     &    UNH4, UNO3, WTNUP, WTINITIAL, XGNP, YIELD, LAI1, LAI3)          !Output
-
+      CALL Aloha2_GROSUB (CONTROL, ISWITCH, 
+     &    DTT, ISTAGE, NH4, NO3, SOILPROP, SW, SWFAC,                   !Input
+     &    SUMDTT, TBASE, TURFAC, WEATHER, XSTAGE, DAP1, DAP3, DAP5,     !Input
+     &    DAP7, DAP9, DAP13, DAP15, DAP17, DAP19, JTDAP,                !Input
+     &    AGEFAC, BASLFWT, BIOMAS, CRWNWT, EYEWT, FBIOM,                !Output
+     &    MAXLAI, WEATHERFact, TMAXGROF, SRADGROF, FLRWT, FRTWT,        !Output
+     &    FRUITS, GPP, GPSM, GRAINN, GRORT, SUMSRADGRO, SUMSRAD,        !Output
+     &    SRADGRO, SUMPARGRO, SUMPAR, LAI, LFWT, LN,                    !Output
+     &    NSTRES, RLV, ROOTN, RTWT, SUMDTTGRO, SUMTMAXGRO,              !Output
+     &    SENESCE, SKWT, STMWT, STOVN, STOVWT,  TEMPM, SUMTMAX,         !Output
+     &    TMAXGRO, GDDFR, LAI4, HIFact, UNH4, UNO3, WTNUP,              !Output
+     &    WTINITIAL, XGNP, YIELD, LAI1, LAI3)                           !Output
+     
       CALL Aloha2_ROOTGR (CONTROL,
      &     CUMDTT, DTT, GRORT, ISTAGE, ISWITCH, NO3, NH4,     !Input
      &     SOILPROP, SW, SWFAC,                               !Input
@@ -137,9 +142,11 @@ C-----------------------------------------------------------------------
      &  BASLFWT, BIOMAS, CRWNWT, EYEWT, FLRWT, FRTWT,     
      &  FRUITS, GPP, GPSM, ISTAGE, LAI, LFWT, LN, MDATE,
      &  NSTRES, PLTPOP, RLV, ROOTN,  RTDEP, RTWT, SKWT,   
-     &  STMWT, STOVN, STOVWT, SWFAC, TURFAC, WTNCAN, SRADGRO, PARGRO, SUMSRADGRO, SUMSRAD, SUMPARGRO, SUMPAR,    
+     &  STMWT, STOVN, STOVWT, SWFAC, TURFAC, WTNCAN, SRADGRO,  
+     &  SUMSRADGRO, SUMSRAD, SUMPARGRO, SUMPAR,    
      &  WTNGRN, WTNUP, YRPLT, TMAXGRO, SUMTMAXGRO, SUMTMAX,                
-     &  VNAM, VWATM, CNAM, TBASE, SUMDTT, DTT, SUMDTTGRO, GDDFR, FBIOM, MAXLAI, WEATHERFact, TMAXGROF, SRADGROF)    !Output for Overview.OUT 
+     &  VNAM, VWATM, CNAM, TBASE, SUMDTT, DTT, SUMDTTGRO, GDDFR, 
+     &  FBIOM, MAXLAI, WEATHERFact, TMAXGROF, SRADGROF)
 
       CALL Aloha2_OPHARV(CONTROL, ISWITCH, 
      &   AGEFAC, BIOMAS, CNAM, CRWNWT, EYEWT, FBIOM,      !Input
@@ -199,14 +206,18 @@ C-----------------------------------------------------------------------
      &     SOILPROP, SW, SWFAC,                               !Input
      &     RLV, RTDEP, RTWT)                                  !Output
 
-        CALL Aloha2_GROSUB  (CONTROL, ISWITCH, 
-     &    DTT, ISTAGE, NH4, NO3, SOILPROP, SW, SWFAC,!Input
-     &    SUMDTT, TBASE, TURFAC, WEATHER, XSTAGE, DAP1, DAP3, DAP5, DAP7, DAP9, DAP13, DAP15, DAP17, DAP19, JTDAP,            !Input
-     &    AGEFAC, BASLFWT, BIOMAS, CRWNWT, EYEWT, FBIOM, MAXLAI, WEATHERFact, TMAXGROF, SRADGROF,      !Output
-     &    FLRWT, FRTWT, FRUITS, GPP, GPSM, GRAINN, GRORT, SUMSRADGRO, SUMSRAD, SRADGRO, PARGRO, SUMPARGRO, SUMPAR,   !Output
-     &    LAI, LFWT, LN, NSTRES, RLV, ROOTN, RTWT, SUMDTTGRO, SUMTMAXGRO, !Output
-     &    SENESCE, SKWT, STMWT, STOVN, STOVWT,  TEMPM, SUMTMAX, TMAXGRO, GDDFR, LAI4, HIFact,    !Output
-     &    UNH4, UNO3, WTNUP, WTINITIAL, XGNP, YIELD, LAI1, LAI3)          !Output
+         CALL Aloha2_GROSUB (CONTROL, ISWITCH, 
+     &    DTT, ISTAGE, NH4, NO3, SOILPROP, SW, SWFAC,                   !Input
+     &    SUMDTT, TBASE, TURFAC, WEATHER, XSTAGE, DAP1, DAP3, DAP5,     !Input
+     &    DAP7, DAP9, DAP13, DAP15, DAP17, DAP19, JTDAP,                !Input
+     &    AGEFAC, BASLFWT, BIOMAS, CRWNWT, EYEWT, FBIOM,                !Output
+     &    MAXLAI, WEATHERFact, TMAXGROF, SRADGROF, FLRWT, FRTWT,        !Output
+     &    FRUITS, GPP, GPSM, GRAINN, GRORT, SUMSRADGRO, SUMSRAD,        !Output
+     &    SRADGRO, SUMPARGRO, SUMPAR, LAI, LFWT, LN,                    !Output
+     &    NSTRES, RLV, ROOTN, RTWT, SUMDTTGRO, SUMTMAXGRO,              !Output
+     &    SENESCE, SKWT, STMWT, STOVN, STOVWT,  TEMPM, SUMTMAX,         !Output
+     &    TMAXGRO, GDDFR, LAI4, HIFact, UNH4, UNO3, WTNUP,              !Output
+     &    WTINITIAL, XGNP, YIELD, LAI1, LAI3)                           !Output
 
          IF (YRDOY .EQ. STGDOY(3)) THEN
             CANNAA = STOVN*PLTPOP
@@ -214,10 +225,11 @@ C-----------------------------------------------------------------------
          ENDIF
 
         IF (YRDOY .EQ. YRPLT .OR. ISTAGE .NE. 10) THEN              
-          CALL Aloha2_PHENOL (CONTROL, ISWITCH, 
-     &    SW, WEATHER, SOILPROP, YRPLT, SUMDTTGRO, SUMTMAXGRO, SUMTMAX,   !Input
-     &    DTT, EDATE, ISDATE, ISTAGE, MDATE, PMDATE, SUMSRADGRO, SUMSRAD, SUMPARGRO, SUMPAR, !Output
-     &    STGDOY, SUMDTT, TBASE, TEMPM, XSTAGE)               !Output
+            CALL Aloha2_PHENOL (CONTROL, ISWITCH,
+     &    SW, WEATHER, SOILPROP, YRPLT, SUMDTTGRO, SUMTMAXGRO, SUMTMAX, !Input
+     &    DTT, EDATE, ISDATE, ISTAGE, MDATE, PMDATE, SUMSRADGRO,        !Output
+     &    SUMSRAD, SUMPARGRO, SUMPAR, STGDOY, SUMDTT, TBASE, TEMPM,     !Output
+     &    XSTAGE)
         ENDIF
 
         CUMDTT = CUMDTT + DTT
@@ -232,14 +244,18 @@ C-----------------------------------------------------------------------
      &     SOILPROP, SW, SWFAC,                               !Input
      &     RLV, RTDEP, RTWT)                                  !Output
 
-        CALL Aloha2_GROSUB  (CONTROL, ISWITCH, 
-     &    DTT, ISTAGE, NH4, NO3, SOILPROP, SW, SWFAC,!Input
-     &    SUMDTT, TBASE, TURFAC, WEATHER, XSTAGE, DAP1, DAP3, DAP5, DAP7, DAP9, DAP13, DAP15, DAP17, DAP19, JTDAP,            !Input
-     &    AGEFAC, BASLFWT, BIOMAS, CRWNWT, EYEWT, FBIOM, MAXLAI, WEATHERFact, TMAXGROF, SRADGROF,      !Output
-     &    FLRWT, FRTWT, FRUITS, GPP, GPSM, GRAINN, GRORT, SUMSRADGRO, SUMSRAD, SRADGRO, PARGRO, SUMPARGRO, SUMPAR,    !Output
-     &    LAI, LFWT, LN, NSTRES, RLV, ROOTN, RTWT, SUMDTTGRO, SUMTMAXGRO, !Output
-     &    SENESCE, SKWT, STMWT, STOVN, STOVWT,  TEMPM, SUMTMAX, TMAXGRO, GDDFR, LAI4, HIFact,   !Output
-     &    UNH4, UNO3, WTNUP, WTINITIAL, XGNP, YIELD, LAI1, LAI3)          !Output
+        CALL Aloha2_GROSUB (CONTROL, ISWITCH, 
+     &    DTT, ISTAGE, NH4, NO3, SOILPROP, SW, SWFAC,                   !Input
+     &    SUMDTT, TBASE, TURFAC, WEATHER, XSTAGE, DAP1, DAP3, DAP5,     !Input
+     &    DAP7, DAP9, DAP13, DAP15, DAP17, DAP19, JTDAP,                !Input
+     &    AGEFAC, BASLFWT, BIOMAS, CRWNWT, EYEWT, FBIOM,                !Output
+     &    MAXLAI, WEATHERFact, TMAXGROF, SRADGROF, FLRWT, FRTWT,        !Output
+     &    FRUITS, GPP, GPSM, GRAINN, GRORT, SUMSRADGRO, SUMSRAD,        !Output
+     &    SRADGRO, SUMPARGRO, SUMPAR, LAI, LFWT, LN,                    !Output
+     &    NSTRES, RLV, ROOTN, RTWT, SUMDTTGRO, SUMTMAXGRO,              !Output
+     &    SENESCE, SKWT, STMWT, STOVN, STOVWT,  TEMPM, SUMTMAX,         !Output
+     &    TMAXGRO, GDDFR, LAI4, HIFact, UNH4, UNO3, WTNUP,              !Output
+     &    WTINITIAL, XGNP, YIELD, LAI1, LAI3)                           !Output
 
 !=======================================================================
 C        Call daily output subroutine
@@ -251,9 +267,11 @@ C-----------------------------------------------------------------------
      &  BASLFWT, BIOMAS, CRWNWT, EYEWT, FLRWT, FRTWT,     
      &  FRUITS, GPP, GPSM, ISTAGE, LAI, LFWT, LN, MDATE,
      &  NSTRES, PLTPOP, RLV, ROOTN,  RTDEP, RTWT, SKWT,   
-     &  STMWT, STOVN, STOVWT, SWFAC, TURFAC, WTNCAN, SRADGRO, PARGRO, SUMSRADGRO, SUMSRAD, SUMPARGRO, SUMPAR,    
-     &  WTNGRN, WTNUP, YRPLT, TMAXGRO, SUMTMAXGRO, SUMTMAX,                          
-     &  VNAM, VWATM, CNAM, TBASE, SUMDTT, DTT, SUMDTTGRO, GDDFR, FBIOM, MAXLAI, WEATHERFact, TMAXGROF, SRADGROF)    !Output for Overview.OUT 
+     &  STMWT, STOVN, STOVWT, SWFAC, TURFAC, WTNCAN, SRADGRO,  
+     &  SUMSRADGRO, SUMSRAD, SUMPARGRO, SUMPAR,    
+     &  WTNGRN, WTNUP, YRPLT, TMAXGRO, SUMTMAXGRO, SUMTMAX,                
+     &  VNAM, VWATM, CNAM, TBASE, SUMDTT, DTT, SUMDTTGRO, GDDFR, 
+     &  FBIOM, MAXLAI, WEATHERFact, TMAXGROF, SRADGROF)
 
       CALL Aloha2_OPHARV(CONTROL, ISWITCH, 
      &   AGEFAC, BIOMAS, CNAM, CRWNWT, EYEWT, FBIOM,      !Input
@@ -274,9 +292,11 @@ C-----------------------------------------------------------------------
      &  BASLFWT, BIOMAS, CRWNWT, EYEWT, FLRWT, FRTWT,     
      &  FRUITS, GPP, GPSM, ISTAGE, LAI, LFWT, LN, MDATE,
      &  NSTRES, PLTPOP, RLV, ROOTN,  RTDEP, RTWT, SKWT,   
-     &  STMWT, STOVN, STOVWT, SWFAC, TURFAC, WTNCAN, SRADGRO, PARGRO, SUMSRADGRO, SUMSRAD, SUMPARGRO, SUMPAR,    
-     &  WTNGRN, WTNUP, YRPLT, TMAXGRO, SUMTMAXGRO, SUMTMAX,                          
-     &  VNAM, VWATM, CNAM, TBASE, SUMDTT, DTT, SUMDTTGRO, GDDFR, FBIOM, MAXLAI, WEATHERFact, TMAXGROF, SRADGROF)    !Output for Overview.OUT 
+     &  STMWT, STOVN, STOVWT, SWFAC, TURFAC, WTNCAN, SRADGRO,  
+     &  SUMSRADGRO, SUMSRAD, SUMPARGRO, SUMPAR,    
+     &  WTNGRN, WTNUP, YRPLT, TMAXGRO, SUMTMAXGRO, SUMTMAX,                
+     &  VNAM, VWATM, CNAM, TBASE, SUMDTT, DTT, SUMDTTGRO, GDDFR, 
+     &  FBIOM, MAXLAI, WEATHERFact, TMAXGROF, SRADGROF)
 
       CALL Aloha2_OPHARV(CONTROL, ISWITCH,
      &   AGEFAC, BIOMAS, CNAM, CRWNWT, EYEWT, FBIOM,      !Input
