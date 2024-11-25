@@ -42,7 +42,7 @@
 !  RGFILL : Rate of grain fill - mg/day
 !  RMNC   : Root minimum nitrogen concentration (g N/g root dry weight)
 !  TI     : Fraction of a phyllochron interval which occurred as a fraction
-!           of today's daily thermal time
+!           of todays daily thermal time
 !  TNLAB  :
 !  TTMP   :
 !=======================================================================
@@ -101,7 +101,6 @@
       REAL    PLAG, RTWT, FLRWT, GROSTM, SENLA, SLAN, JTGRORT
       REAL    GDDFR, TMAXGRO
       REAL    PLACASE, PLTadj, WEATHERFact, TMAXGROF, SRADGROF
-      REAL    JTGDDFRS, JTTMAXGROS, JTSRADGROS
       REAL    GROBSL, GROLF, CUMPH, LN, CUMDEP, SUMP, PLAMX, GROFLR
       REAL    GROCRWN, GROFRT, FRTWT, CRWNWT, SKWT, GROSK, PTF, EYEWT
       REAL    SWMAX, SWMIN, NDEF3, NSTRES, AGEFAC, LIFAC, SRADGRO
@@ -1092,44 +1091,42 @@ C-----------------------------------------------------------------------
           
          
          
-         YRDOY   = CONTROL % YRDOY   ! Root initiation date
-         NDOF = TIMDIF(YRPLT, YRDOY)  
-         JTDAP = NDOF
-         DAP3     = NDOF - DAP1      
+          YRDOY   = CONTROL % YRDOY   ! Root initiation date
+          NDOF = TIMDIF(YRPLT, YRDOY)  
+          JTDAP = NDOF
+          DAP3     = NDOF - DAP1      
           
-         ADJGDDF1 = (SUMDTTGRO - SUMDTT)
-         ADJTMAX = (SUMTMAXGRO - SUMTMAX)
-         ADJSRAD1 = (SUMSRADGRO - SUMSRAD)
+          ADJGDDF1 = (SUMDTTGRO - SUMDTT)
+          ADJTMAX = (SUMTMAXGRO - SUMTMAX)
+          ADJSRAD1 = (SUMSRADGRO - SUMSRAD)
 
-         GDDFR   = (ADJGDDF13 + ADJGDDF1)/(DAP3+DAP1)
-         TMAXGRO = (ADJTMAX13 + ADJTMAX)/(DAP3+DAP1)
-         SRADGRO = (ADJSRAD13 + ADJSRAD1)/(DAP3+DAP1)
+          GDDFR   = (ADJGDDF13 + ADJGDDF1)/(DAP3+DAP1)
+          TMAXGRO = (ADJTMAX13 + ADJTMAX)/(DAP3+DAP1)
+          SRADGRO = (ADJSRAD13 + ADJSRAD1)/(DAP3+DAP1)
           
-         SEEDQLY = ((1-(JTBASLFWT/JTLFWT))*1.3) !  Seed quality adjusts JTLFWT
+          SEEDQLY = ((1-(JTBASLFWT/JTLFWT))*1.3) !  Seed quality adjusts JTLFWT
          
          
-         JTRLAE    = 0.01341697 * (LOG(GDDFR/(TMAXGRO/SRADGRO)))**2 -
+          JTRLAE    = 0.01341697 * (LOG(GDDFR/(TMAXGRO/SRADGRO)))**2 -
      &      0.02224724 * (LOG(GDDFR/(TMAXGRO/SRADGRO))) + 0.00607536     !y = 0.01341697x2 - 0.02224724x + 0.00607536 R² = 0.8349  
-         JTPLA     = JTPLA*EXP(JTRLAE*(DAP3+DAP1))                                                                                  
+          JTPLA     = JTPLA*EXP(JTRLAE*(DAP3+DAP1))                                                                                  
          
-         JTRLDW    = 16.64364072 * (LOG(GDDFR/(TMAXGRO/SRADGRO)))**2 - 
+          JTRLDW    = 16.64364072 * (LOG(GDDFR/(TMAXGRO/SRADGRO)))**2 - 
      &     32.63404677 * (LOG(GDDFR/(TMAXGRO/SRADGRO))) + 13.62813905  !y = 16.64364072x2 - 32.63404677x + 13.62813905 R² = 0.6795 
-         JTLFWT    = JTLFWT*EXP((JTRLDW/1000)*(DAP3+DAP1))/SEEDQLY
+          JTLFWT    = JTLFWT*EXP((JTRLDW/1000)*(DAP3+DAP1))/SEEDQLY
         
-         JTRBWTDW  = 81.57054008 * (LOG(GDDFR/(TMAXGRO/SRADGRO)))**2 - 
+          JTRBWTDW  = 81.57054008 * (LOG(GDDFR/(TMAXGRO/SRADGRO)))**2 - 
      &     339.67610159 * (LOG(GDDFR/(TMAXGRO/SRADGRO))) + 350.05047327   !y = 81.57054008x2 - 339.67610159x + 350.05047327 R² = 0.5642 
-         JTBASLFWT = JTBASLFWT
+          JTBASLFWT = JTBASLFWT
      &    *EXP((JTRBWTDW/1000)*(GDDFR/(TMAXGRO/SRADGRO)))/SEEDQLY
          
-         JTRSTMWT  = -39.90744022 * (LOG(GDDFR/(TMAXGRO/SRADGRO)))**2 + 
+          JTRSTMWT  = -39.90744022 * (LOG(GDDFR/(TMAXGRO/SRADGRO)))**2 + 
      &     129.64536249 * (LOG(GDDFR/(TMAXGRO/SRADGRO))) - 69.90080305   !y = -39.90744022x2 + 129.64536249x - 69.90080305 R² = 0.1494 
-         JTSTMWT   = JTSTMWT*EXP((JTRSTMWT/1000)*(DAP3+DAP1))/SEEDQLY                                                                 
+          JTSTMWT   = JTSTMWT*EXP((JTRSTMWT/1000)*(DAP3+DAP1))/SEEDQLY                                                                 
          
-         JTRGRORT = 110.22488765 * (LOG(GDDFR/(TMAXGRO/SRADGRO)))**2 - 
+          JTRGRORT = 110.22488765 * (LOG(GDDFR/(TMAXGRO/SRADGRO)))**2 - 
      &     72.34063846 * (LOG(GDDFR/(TMAXGRO/SRADGRO))) + 94.37884405   !y = 110.22488765x2 - 72.34063846x + 94.37884405 R² = 0.8617  
-         GRORT1  = GRORTI*EXP((JTRGRORT/1000)*(DAP3+DAP1))
-
-         
+          GRORT1  = GRORTI*EXP((JTRGRORT/1000)*(DAP3+DAP1))
          
           JTLAI    = PLTPOP*JTPLA*0.0001
           
@@ -1143,8 +1140,6 @@ C-----------------------------------------------------------------------
           MAXLAI = LAI
           
 !-----------------------------------------------------------------------         
-             
-    
         CASE (2)       ! First New Leaf to Leaf Cycle 1
          !GROSTM = 0.0  ! Daily stem growth (g/plant/day)
           YRDOY   = CONTROL % YRDOY
@@ -1155,38 +1150,40 @@ C-----------------------------------------------------------------------
           TMAXGRO = (SUMTMAXGRO - SUMTMAX)/(DAP5)
           SRADGRO = (SUMSRADGRO - SUMSRAD)/(DAP5)
    
-         JTRLAE    = -0.00042225*(LOG(GDDFR/(TMAXGRO/SRADGRO)))**2 + 
-     &         0.00730812 * (LOG(GDDFR/(TMAXGRO/SRADGRO))) - 0.00551540     !y = -0.00042225x2 + 0.00730812x - 0.00551540 R² = 0.8942  
-         JTPLA     = JTPLA*EXP(JTRLAE*(DAP5))                                                                                                                                                                                                                                      
+          JTRLAE    = -0.00042225*(LOG(GDDFR/(TMAXGRO/SRADGRO)))**2 + 
+     &      0.00730812 * (LOG(GDDFR/(TMAXGRO/SRADGRO))) - 0.00551540     !y = -0.00042225x2 + 0.00730812x - 0.00551540 R² = 0.8942  
+          JTPLA     = JTPLA*EXP(JTRLAE*(DAP5))                                                                                                                                                                                                                                      
              
-         JTRLDW    = 0.56659753*(LOG(GDDFR/(TMAXGRO/SRADGRO)))**2 + 
-     &         4.55511443 * (LOG(GDDFR/(TMAXGRO/SRADGRO))) - 2.97791272     !y = 0.56659753x2 + 4.55511443x - 2.97791272 R² = 0.8372 
-         JTLFWT    = JTLFWT*EXP((JTRLDW/1000)*(DAP5))                                                                                   
+          JTRLDW    = 0.56659753*(LOG(GDDFR/(TMAXGRO/SRADGRO)))**2 + 
+     &     4.55511443 * (LOG(GDDFR/(TMAXGRO/SRADGRO))) - 2.97791272     !y = 0.56659753x2 + 4.55511443x - 2.97791272 R² = 0.8372 
+          JTLFWT    = JTLFWT*EXP((JTRLDW/1000)*(DAP5))                                                                                   
          
-         JTRBWTDW  = 265.95155057*(LOG(GDDFR/(TMAXGRO/SRADGRO)))**2 - 
+          JTRBWTDW  = 265.95155057*(LOG(GDDFR/(TMAXGRO/SRADGRO)))**2 - 
      &     1019.47038606  * (LOG(GDDFR/(TMAXGRO/SRADGRO))) + 1044.29203812   !y = 265.95155057x2 - 1019.47038606x + 1044.29203812 R² = 0.9186 (used without ZIP1) 
-         JTBASLFWT = JTBASLFWT*EXP((JTRBWTDW/1000)*(GDDFR/(TMAXGRO/SRADGRO)))                                                             
+          JTBASLFWT = JTBASLFWT*EXP((JTRBWTDW/1000)*
+     &     (GDDFR/(TMAXGRO/SRADGRO)))                                                             
          
-         JTRSTMWT  = 252.16180637*(LOG(GDDFR/(TMAXGRO/SRADGRO)))**2 -  
-     &     1189.05973879 * (LOG(GDDFR/(TMAXGRO/SRADGRO))) + 1451.11634867   !y = 252.16180637x2 - 1189.05973879x + 1451.11634867 R² = 0.8903 
-         JTSTMWT   = JTSTMWT
-     &        *EXP((JTRSTMWT/1000)*(GDDFR/(TMAXGRO/SRADGRO)))                                                                
+          JTRSTMWT  = 252.16180637*(LOG(GDDFR/(TMAXGRO/SRADGRO)))**2 -  
+     &    1189.05973879 * (LOG(GDDFR/(TMAXGRO/SRADGRO))) + 1451.11634867   !y = 252.16180637x2 - 1189.05973879x + 1451.11634867 R² = 0.8903 
+          JTSTMWT   = JTSTMWT *
+     &     EXP((JTRSTMWT/1000)*(GDDFR/(TMAXGRO/SRADGRO)))                                                                
 
-             JTRGRORT = 3.41064008 * (LOG(GDDFR/(TMAXGRO/SRADGRO)))**2 + 20.16657317 
-     & * (LOG(GDDFR/(TMAXGRO/SRADGRO))) - 8.25952711   !y = 3.41064008x2 + 20.16657317x - 8.25952711 R² = 0.8636  
-             GRORT2  = GRORT1*EXP((JTRGRORT/1000)*(DAP5))                                                                                             
+          JTRGRORT = 3.41064008 * (LOG(GDDFR/(TMAXGRO/SRADGRO)))**2 +  
+     &     20.16657317 * (LOG(GDDFR/(TMAXGRO/SRADGRO))) - 8.25952711   !y = 3.41064008x2 + 20.16657317x - 8.25952711 R² = 0.8636  
+         
+          GRORT2  = GRORT1*EXP((JTRGRORT/1000)*(DAP5))                                                                                             
 
-             JTLAI    = PLTPOP*JTPLA*0.0001
-              
+          JTLAI    = PLTPOP*JTPLA*0.0001
+         
 
-             LAI         = JTLAI                         
-             LFWT        = JTLFWT                        
-             BASLFWT     = JTBASLFWT                     
-             STMWT       = JTSTMWT                       
-             STOVWT= STMWT
-             BIOMAS= (LFWT + STMWT + BASLFWT)*PLTPOP         
-             JTLAI = LAI
-             MAXLAI = LAI
+          LAI         = JTLAI                         
+          LFWT        = JTLFWT                        
+          BASLFWT     = JTBASLFWT                     
+          STMWT       = JTSTMWT                       
+          STOVWT= STMWT
+          BIOMAS= (LFWT + STMWT + BASLFWT)*PLTPOP         
+          JTLAI = LAI
+          MAXLAI = LAI
             
 !-----------------------------------------------------------------------
       
@@ -1202,37 +1199,41 @@ C-----------------------------------------------------------------------
           SRADGRO = (SUMSRADGRO - SUMSRAD)/(DAP7)
           
           
-             JTRLAE    = 0.42242459 * (LOG(GDDFR/(TMAXGRO/SRADGRO)))**2 - 1.70953080 
-     &  * (LOG(GDDFR/(TMAXGRO/SRADGRO)))  + 1.80173219     !y = 0.42242459x2 - 1.70953080x + 1.80173219 R² = 0.57828588  
-             JTPLA     = JTPLA*EXP(JTRLAE*(GDDFR/(TMAXGRO/SRADGRO)))                                                                                         
+          JTRLAE    = 0.42242459 * (LOG(GDDFR/(TMAXGRO/SRADGRO)))**2 - 
+     &      1.70953080 * (LOG(GDDFR/(TMAXGRO/SRADGRO)))  + 1.80173219     !y = 0.42242459x2 - 1.70953080x + 1.80173219 R² = 0.57828588  
+          JTPLA     = JTPLA*EXP(JTRLAE*(GDDFR/(TMAXGRO/SRADGRO)))                                                                                         
              
-             JTRLDW    = 321.20939543 * (LOG(GDDFR/(TMAXGRO/SRADGRO)))**2 - 1369.37265384 
-     &  * (LOG(GDDFR/(TMAXGRO/SRADGRO))) + 1536.95773441      !y = 321.20939543x2 - 1369.37265384x + 1536.95773441 R² = 0.7055 
-             JTLFWT    = JTLFWT*EXP((JTRLDW/1000)*(GDDFR/(TMAXGRO/SRADGRO)))                                                                               
+          JTRLDW    = 321.20939543 * (LOG(GDDFR/(TMAXGRO/SRADGRO)))**2 - 
+     &  1369.37265384 * (LOG(GDDFR/(TMAXGRO/SRADGRO))) + 1536.95773441      !y = 321.20939543x2 - 1369.37265384x + 1536.95773441 R² = 0.7055 
+          JTLFWT    = JTLFWT*EXP((JTRLDW/1000)*
+     &      (GDDFR/(TMAXGRO/SRADGRO)))                                                                               
          
-             JTRBWTDW  = -81.06861974 * (LOG(GDDFR/(TMAXGRO/SRADGRO)))**2 + 184.67892539 
-     &  * (LOG(GDDFR/(TMAXGRO/SRADGRO))) + 53.80929308  !y = -81.06861974x2 + 184.67892539x + 53.80929308 R² = 0.90920630 
-             JTBASLFWT = JTBASLFWT*EXP((JTRBWTDW/1000)*(GDDFR/(TMAXGRO/SRADGRO)))                                                             
+          JTRBWTDW  = -81.06861974 * (LOG(GDDFR/(TMAXGRO/SRADGRO)))**2 + 
+     &  184.67892539 * (LOG(GDDFR/(TMAXGRO/SRADGRO))) + 53.80929308  !y = -81.06861974x2 + 184.67892539x + 53.80929308 R² = 0.90920630 
+          JTBASLFWT = JTBASLFWT*EXP((JTRBWTDW/1000)*
+     &      (GDDFR/(TMAXGRO/SRADGRO)))                                                             
          
-             JTRSTMWT  = 1286.19102531 * (LOG(GDDFR/(TMAXGRO/SRADGRO)))**2 - 4995.56061201 
-     &  * (LOG(GDDFR/(TMAXGRO/SRADGRO))) + 4932.93231043   !y = 1286.19102531x2 - 4995.56061201x + 4932.93231043 R² = 0.74936713 
-             JTSTMWT   = JTSTMWT*EXP((JTRSTMWT/1000)*(GDDFR/(TMAXGRO/SRADGRO)))                                                                
+          JTRSTMWT  = 1286.19102531 * (LOG(GDDFR/(TMAXGRO/SRADGRO)))**2 - 
+     &  4995.56061201 * (LOG(GDDFR/(TMAXGRO/SRADGRO))) + 4932.93231043   !y = 1286.19102531x2 - 4995.56061201x + 4932.93231043 R² = 0.74936713 
+          JTSTMWT   = JTSTMWT*EXP((JTRSTMWT/1000)*
+     &      (GDDFR/(TMAXGRO/SRADGRO)))                                                                
 
-             JTRGRORT = 1946.55069451 * (LOG(GDDFR/(TMAXGRO/SRADGRO)))**2 - 7623.83657710 
-     &  * (LOG(GDDFR/(TMAXGRO/SRADGRO))) + 7519.46534541   !y = 1946.55069451x2 - 7623.83657710x + 7519.46534541 R² = 0.5264 
-             GRORT3  = GRORT2*EXP((JTRGRORT/1000)*(GDDFR/(TMAXGRO/SRADGRO)))                                                                                            
+          JTRGRORT = 1946.55069451 * (LOG(GDDFR/(TMAXGRO/SRADGRO)))**2 -  
+     &  7623.83657710 * (LOG(GDDFR/(TMAXGRO/SRADGRO))) + 7519.46534541   !y = 1946.55069451x2 - 7623.83657710x + 7519.46534541 R² = 0.5264 
+          GRORT3  = GRORT2*EXP((JTRGRORT/1000)*
+     &      (GDDFR/(TMAXGRO/SRADGRO)))                                                                                            
 
-             LAI3    = PLTPOP*JTPLA*0.0001
+          LAI3    = PLTPOP*JTPLA*0.0001
               
 
-             LAI         = LAI3                         
-             LFWT        = JTLFWT                        
-             BASLFWT     = JTBASLFWT                     
-             STMWT       = JTSTMWT                       
-             STOVWT= STMWT
-             BIOMAS= (LFWT + STMWT + BASLFWT)*PLTPOP  
-             LAI3 = LAI
-             MAXLAI = LAI
+          LAI         = LAI3                         
+          LFWT        = JTLFWT                        
+          BASLFWT     = JTBASLFWT                     
+          STMWT       = JTSTMWT                       
+          STOVWT= STMWT
+          BIOMAS= (LFWT + STMWT + BASLFWT)*PLTPOP  
+          LAI3 = LAI
+          MAXLAI = LAI
 
 !-------------------------------------------------------- 
          CASE (4)           !Leaf cycle 2 to Leaf cycle 3
@@ -1249,25 +1250,25 @@ C-----------------------------------------------------------------------
           TMAXGRO = (SUMTMAXGRO - SUMTMAX)/(DAP9)
           SRADGRO = (SUMSRADGRO - SUMSRAD)/(DAP9)
           
-             JTRLAE    = 0.02279067 * (LOG(GDDFR/(TMAXGRO/SRADGRO)))**2 - 0.09618739 
-     &  * (LOG(GDDFR/(TMAXGRO/SRADGRO)))  + 0.15232236     !y = 0.42157206x2 - 1.70530517x + 1.79648701 R² = 0.4883  
-             JTPLA     = JTPLA*EXP(JTRLAE*(GDDFR/(TMAXGRO/SRADGRO)))
+          JTRLAE    = 0.02279067 * (LOG(GDDFR/(TMAXGRO/SRADGRO)))**2 -
+     &      0.09618739 * (LOG(GDDFR/(TMAXGRO/SRADGRO)))  + 0.15232236     !y = 0.42157206x2 - 1.70530517x + 1.79648701 R² = 0.4883  
+          JTPLA     = JTPLA*EXP(JTRLAE*(GDDFR/(TMAXGRO/SRADGRO)))
           
-             JTRLDW    = 200.57284063 * (LOG(GDDFR/(TMAXGRO/SRADGRO)))**2 - 774.01981366 
-     &  * (LOG(GDDFR/(TMAXGRO/SRADGRO))) + 804.12791119      !y = 200.57284063x2 - 774.01981366x + 804.12791119 R² = 0.4563 
-             JTLFWT    = JTLFWT*EXP((JTRLDW/1000)*(GDDFR/(TMAXGRO/SRADGRO)))
+          JTRLDW    = 200.57284063 * (LOG(GDDFR/(TMAXGRO/SRADGRO)))**2 -  
+     &      774.01981366 * (LOG(GDDFR/(TMAXGRO/SRADGRO))) + 804.12791119      !y = 200.57284063x2 - 774.01981366x + 804.12791119 R² = 0.4563 
+          JTLFWT    = JTLFWT*EXP((JTRLDW/1000)*(GDDFR/(TMAXGRO/SRADGRO)))
 
-             JTRBWTDW  = 204.37991743 * (LOG(GDDFR/(TMAXGRO/SRADGRO)))**2 - 788.67484148 
-     &  * (LOG(GDDFR/(TMAXGRO/SRADGRO))) + 816.44955507  !y = 204.37991743x2 - 788.67484148x + 816.44955507 R² = 0.30922162 
-             JTBASLFWT = JTBASLFWT*EXP((JTRBWTDW/1000)*(GDDFR/(TMAXGRO/SRADGRO)))                                                             
+          JTRBWTDW  = 204.37991743 * (LOG(GDDFR/(TMAXGRO/SRADGRO)))**2 - 
+     &      788.67484148 * (LOG(GDDFR/(TMAXGRO/SRADGRO))) + 816.44955507  !y = 204.37991743x2 - 788.67484148x + 816.44955507 R² = 0.30922162 
+          JTBASLFWT = JTBASLFWT*EXP((JTRBWTDW/1000)*(GDDFR/(TMAXGRO/SRADGRO)))                                                             
          
-             JTRSTMWT  = 443.62453629 * (LOG(GDDFR/(TMAXGRO/SRADGRO)))**2 - 1745.81995161 
-     &  * (LOG(GDDFR/(TMAXGRO/SRADGRO))) + 1821.34841003   !y = 443.62453629x2 - 1745.81995161x + 1821.34841003 R² = 0.28684196 
-             JTSTMWT   = JTSTMWT*EXP((JTRSTMWT/1000)*(GDDFR/(TMAXGRO/SRADGRO)))
+          JTRSTMWT  = 443.62453629 * (LOG(GDDFR/(TMAXGRO/SRADGRO)))**2 - 
+     & 1745.81995161 * (LOG(GDDFR/(TMAXGRO/SRADGRO))) + 1821.34841003   !y = 443.62453629x2 - 1745.81995161x + 1821.34841003 R² = 0.28684196 
+          JTSTMWT   = JTSTMWT*EXP((JTRSTMWT/1000)*(GDDFR/(TMAXGRO/SRADGRO)))
                
-             JTRGRORT = -380.88231019 * (LOG(GDDFR/(TMAXGRO/SRADGRO)))**2 + 1533.01000755 
+          JTRGRORT = -380.88231019 * (LOG(GDDFR/(TMAXGRO/SRADGRO)))**2 + 1533.01000755 
      &  * (LOG(GDDFR/(TMAXGRO/SRADGRO))) - 1424.86934789   !y = -380.88231019x2 + 1533.01000755x - 1424.86934789 R² = 0.32845892 
-             GRORT4  = GRORT3*EXP((JTRGRORT/1000)*(GDDFR/(TMAXGRO/SRADGRO)))                                                                                            
+          GRORT4  = GRORT3*EXP((JTRGRORT/1000)*(GDDFR/(TMAXGRO/SRADGRO)))                                                                                            
 
              LAI4    = PLTPOP*JTPLA*0.0001
   
@@ -1401,9 +1402,6 @@ C         G2 is genetic coefficient for potential eye number
           TMAXGRO = (SUMTMAXGRO - SUMTMAX)/(DAP17)
           SRADGRO = (SUMSRADGRO - SUMSRAD)/(DAP17)
 
-          JTGDDFRS   = GDDFR
-          JTTMAXGROS = TMAXGRO
-          JTSRADGROS = SRADGRO
 
 
              LAI     = AMAX1(JTLAI, LAI) 
@@ -1432,9 +1430,6 @@ C         G2 is genetic coefficient for potential eye number
           TMAXGRO = (SUMTMAXGRO - SUMTMAX)/(DAP19)
           SRADGRO = (SUMSRADGRO - SUMSRAD)/(DAP19)
          
-          JTGDDFRS   = GDDFR
-          JTTMAXGROS = TMAXGRO
-          JTSRADGROS = SRADGRO
 
  
              LAI     = AMAX1(JTLAI, LAI) 
@@ -1533,5 +1528,17 @@ c         YIELD = FRTWT*10.0*FRUITS                         ! Smooth Cayenne yie
 !YIELD = fruit dry weight yield (kg/ha)
 ! TURFAC      !Soil water stress effect on expansion (0-1), 1 is no stress, 0 is full stress
 ! PC          !Used to compute fraction of phyllochron interval occurring today      
+! JTLFWT    = Leaf green tissue (dry weight g/plant)
+! JTBASLFWT = Leaf white tissue (dry weight g/plant)
+! JTRLDW    = Relative leaf dry weight (mg/g) green tissue
+! JTRBWTDW  = Relative leaf dry weight (mg/g) white tissue
+! JTRLAE    = Relative leaf area expansion rate (m2/m2)
+! JTPLA     = Leaf area (cm2/plant)
+ 
+! JTSTMWT   = Stem weight (dry weight g/plant)
+! JTRSTMWT  = Relative stem dry weight (mg/g)
+ 
+! JTGRORT   = Root weight (dry weight g/plant)
+! JTRGRORT    = Relative root dry weight (mg/g)
 
 
