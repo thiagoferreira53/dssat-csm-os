@@ -841,8 +841,8 @@ c          WRITE (HEADER(I),'(2F6.0,F6.2)') PHINT, LLIFA, STFR
 !-----------------------------------------------------------------------
 !     New Aloha-PineApple version based on Jhonny Vasquez changes 
       CASE ('PIAL2')
-         WRITE (HEADER(I),2012) P1,P2,P3,P4,P5,P6; I=I+1
-         WRITE (HEADER(I),2013) G2,G3,PHINT; I=I+1
+         WRITE (HEADER(I),2012) TC,P1,P2,P3,P4,P5,P6,P7,P8; I=I+1
+         WRITE (HEADER(I),2013) G1,G2,G3,PHINT; I=I+1
  2012    FORMAT (1X,'    TC:',F6.1,'    P1:',F6.1,
      &           '    P2:',F6.1,'    P3:',F6.1,
      &           '    P4:',F6.1,'    P5:',F6.1
