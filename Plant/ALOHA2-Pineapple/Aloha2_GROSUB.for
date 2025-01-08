@@ -974,7 +974,7 @@ C-----------------------------------------------------------------------
          SELECT CASE (ISTAGE)
 !-----------------------------------------------------------------------
          CASE (12)    !Planting initial variables      
-          YRDOY   = CONTROL % YRDOY
+          YRDOY   = CONTROL % YRDOY 
           
          
           WTINITIAL = SDWTPL/(PLTPOP*10.0)        ! kg/ha  --> g/plt
