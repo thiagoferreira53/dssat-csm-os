@@ -65,9 +65,9 @@
       CASE (RUNINIT, SEASINIT)
 !=======================================================================
       RTWT   =  0.0
-      RTDEP  = Planting % SDEPTH               ! Rooting depth = seeding depth (cm)
+      RTDEP  = PLANTING % SDEPTH               ! Rooting depth = seeding depth (cm)
 
-      PLTPOP = Planting % PLTPOP
+      PLTPOP = PLANTING % PLTPOP
       NLAYR  = SOILPROP % NLAYR
 
       FIRST = .TRUE.
@@ -98,7 +98,7 @@ C     models were insignificant considering the uncertainty of the value
 C     and the uncertainty of loss of assimilate by exudation and respiration.
 C     A compromise value of 0.98 was choosen for all crops.
 C
-      RLNEW  = GRORT * Species % RLWR * PLTPOP              ! Read in from species value
+      RLNEW  = GRORT * SPECIES % RLWR * PLTPOP              ! Read in from species value
 
       CUMDEP = 0.0
       RNFAC  = 1.0

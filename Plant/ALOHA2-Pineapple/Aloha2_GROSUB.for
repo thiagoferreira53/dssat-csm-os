@@ -138,9 +138,10 @@
       XLAT = WEATHER % XLAT
 
 !=======================================================================
-      SELECT CASE (DYNAMIC)
+!      SELECT CASE (DYNAMIC)
 !=======================================================================
-      CASE (RUNINIT)
+      IF(DYNAMIC.EQ.RUNINIT) THEN
+!      CASE (RUNINIT)
 !=======================================================================
       ISWNIT     = ISWITCH % ISWNIT
       PLA        = 0.0
@@ -241,14 +242,15 @@
      &    ROOTN, SENESCE, STOVN, TANC, UNH4, UNO3, WTNUP) !Output
 
 !=======================================================================
-      CASE (SEASINIT)
+      ELSEIF (DYNAMIC.EQ.SEASINIT) THEN
+!      CASE (SEASINIT)
 !=======================================================================
       SDWTPL    = PLANTING % SDWTPL
       PLTPOP    = PLANTING % PLTPOP
       PMTYPE    = PLANTING % PMTYPE
       NFORCING  = PLANTING % NFORCING
       PLANTSIZE = PLANTING % PLANTSIZE
-      NDOF     = Planting % NDOF
+      NDOF      = PLANTING % NDOF
 
       CO2X = SPECIES % CO2X
       CO2Y = SPECIES % CO2Y
@@ -294,7 +296,8 @@
      &    ROOTN, SENESCE, STOVN, TANC, UNH4, UNO3, WTNUP) !Output
 
 !=======================================================================
-      CASE (RATE)
+!      CASE (RATE)
+      ELSEIF (DYNAMIC.EQ.RATE) THEN
 !=======================================================================
       !TEMPM = (WEATHER % TMAX + WEATHER % TMIN) / 2.
 
@@ -398,7 +401,7 @@
       ENDIF
       DTT = AMAX1 (DTT,0.0)
       
-!--------------------------------------------- Leaf Number modification
+!----------------------------------------------------------------- Leaf Number modification
       IF (ISTAGE .LE. 4 .OR. ISTAGE .EQ. 13) THEN                                   
 !                                                                 
 !        Calculate leaf emergence                                 
@@ -475,7 +478,7 @@
 !     1 First new leaf emergence to foliar cycle 1
 !     2,3,4 Foliar cycle 1 to foliar cycle 2,3 and forcing 
 !     5 Forcing to Open Heart
-!     6 Open Heart to EarlyAnthesis
+!     6 Open Heart to Early Anthesis
 !     7 Early Anthesis to Last Anthesis
 !     8 Last Anthesis to Physiological maturity
 !     9 Physiology to Harvest
@@ -921,7 +924,7 @@ c ----------------------------------------------------------------
 !       for consistency with daily and seasonal outputs.
       SELECT CASE(ISTAGE)
       CASE(8,9,10)                                            
-!       In this case we need sum the crown
+!       In this case FLRWT is fruit + crown
         BIOMAS   = (LFWT + STMWT + BASLFWT + SKWT)*PLTPOP 
      &                + (FRTWT * FRUITS) + (CRWNWT * FRUITS)
       CASE(5,6,7)                                            
@@ -958,7 +961,7 @@ C-----------------------------------------------------------------------
 !=======================================================================
 !     Integration
 !-----------------------------------------------------------------------
-      CASE (INTEGR)
+      ELSEIF (DYNAMIC.EQ.INTEGR) THEN
 !=======================================================================
 !     This code used to be in PhaseI subroutine. Put here to make timing match 
 !     with old code.
@@ -1385,9 +1388,6 @@ C         G2 is genetic coefficient for potential eye number
 
 
              LAI     = AMAX1(JTLAI, LAI) 
-             LAI     = AMAX1(JTLAI, LAI) 
-             LAI     = AMAX1(LAI3, LAI) 
-             LAI     = AMAX1(LAI4, LAI)
              BIOMAS= (LFWT + STMWT + BASLFWT + FLRWT)*PLTPOP
 !-----------------------------------------------------------------------              
  
@@ -1404,10 +1404,7 @@ C         G2 is genetic coefficient for potential eye number
 
 
 
-             LAI     = AMAX1(JTLAI, LAI) 
-             LAI     = AMAX1(JTLAI, LAI) 
-             LAI     = AMAX1(LAI3, LAI) 
-             LAI     = AMAX1(LAI4, LAI)  
+             LAI     = AMAX1(JTLAI, LAI)   
 
  
           FRUITS = PLTPOP*(1.-0.10*PLTPOP/65.0)  
@@ -1433,9 +1430,6 @@ C         G2 is genetic coefficient for potential eye number
 
  
              LAI     = AMAX1(JTLAI, LAI) 
-             LAI     = AMAX1(JTLAI, LAI) 
-             LAI     = AMAX1(LAI3, LAI) 
-             LAI     = AMAX1(LAI4, LAI)
              !BIOMAS= (LFWT + STMWT + BASLFWT + FLRWT)*PLTPOP  
 
         
@@ -1454,9 +1448,6 @@ C         G2 is genetic coefficient for potential eye number
            STGDOY (ISTAGE) = YRDOY
 
              LAI     = AMAX1(JTLAI, LAI) 
-             LAI     = AMAX1(JTLAI, LAI) 
-             LAI     = AMAX1(LAI3, LAI) 
-             LAI     = AMAX1(LAI4, LAI)  
 
 c         YIELD = FRTWT*10.0*FRUITS                         ! Smooth Cayenne yield 'only fruit weight'
           YIELD = (FRTWT*10.0*FRUITS) + (CRWNWT*10.0*FRUITS) ! Only fruit but MD-2 yield is fruit + crown
@@ -1486,12 +1477,14 @@ c         YIELD = FRTWT*10.0*FRUITS                         ! Smooth Cayenne yie
      &    ROOTN, SENESCE, STOVN, TANC, UNH4, UNO3, WTNUP) !Output
 
 !=======================================================================
-      END SELECT
+!      END SELECT
+      ENDIF
+
 !=======================================================================
       RETURN
       END SUBROUTINE Aloha2_GROSUB
 
-! PLAG (cm^2) is daily green leaf area growth    ! O sea debo modificar PLAG para hacer que aumentar el area foliar 
+! PLAG (cm^2) is daily green leaf area growth     
 ! leaf area index (m2 leaf/m2 ground)
 ! LFWT (g/plant) is green leaf weight which is assumed to be 53% of initial crown weight
 ! RTWT (g/plant) is root weight
@@ -1514,9 +1507,9 @@ c         YIELD = FRTWT*10.0*FRUITS                         ! Smooth Cayenne yie
 !YIELDB =  Fresh fruit yield (lb/acre)
 !LAI     = leaf area index (m2 leaf/m2 ground)
  
-!LFWT    = LFWT (g/plant) is green leaf weight which is assumed to be 53% of initial crown weight
+!LFWT    = LFWT (g/plant) is green leaf weight 
 !BASLFWT = Basal white leaf weight is 66% of green leaf weight
-!STMWT   = STMWT is 115% of initial crown weight
+!STMWT   = Stem weight
 !STOVWT  = STOVWT (g/plant) is stover weight
 !FBIOM  =  Record biomass at forcing
 !SUMP   =  SUMP is the total weight of biomass cumulated in Istage 4.

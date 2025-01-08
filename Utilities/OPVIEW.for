@@ -420,8 +420,12 @@ c OK - compromise - keep Simulated=-99 for physiological maturity     !
           IF (IDETO .EQ. 'Y') THEN
             IF (CONTROL % ErrCode == 0) THEN
               Length = LenString(CROPD)
-              WRITE(NOUTDO,270) 
-              WRITE(NOUTDO,300) CROPD(1:Length), YIELD
+              WRITE(NOUTDO,270)
+              IF(CROP == 'PI') THEN
+                WRITE(NOUTDO,301) CROPD(1:Length), YIELD
+              ELSE
+                WRITE(NOUTDO,300) CROPD(1:Length), YIELD
+              ENDIF
             ENDIF
             WRITE(NOUTDO,'(110("*"))')
           ENDIF
@@ -429,7 +433,8 @@ c OK - compromise - keep Simulated=-99 for physiological maturity     !
         CLOSE (NOUTDO)
   270 FORMAT(/,'------------------------------------------------------',
      &'--------------------------------------------------------')
-  300 FORMAT(/,10X,A," YIELD : ",I8," kg/ha    [Dry weight Fruit + Crown] ",/)
+  300 FORMAT(/,10X,A," YIELD : ",I8," kg/ha    [Dry weight] ",/)
+  301 FORMAT(/,10X,A," YIELD : ",I8," kg/ha    [Dry weight Fruit + Crown] ",/)
 
 !***********************************************************************
 !***********************************************************************
