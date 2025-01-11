@@ -1,8 +1,8 @@
 *Codes for Simulations Options
-! DSSAT v4.8; 11/01/2024
-!
-! Codes currently used for simulation options for the DSSAT crop simulation
-! models.
+! DSSAT v4.8; 2024-12-01
+
+! Codes currently used for simulation options for the DSSAT Cropping System
+! Model
 
 *Start Simulation
 @CDE     DESCRIPTION                                                          SO

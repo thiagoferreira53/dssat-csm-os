@@ -21,8 +21,8 @@ PROJECT(DSSAT-CSM Fortran)
 
 SET(MAJOR 4)
 SET(MINOR 8)
-SET(MODEL 2)
-SET(BUILD 24)
+SET(MODEL 5)
+SET(BUILD 0)
 
 # Get the current working branch
 execute_process(
@@ -349,6 +349,7 @@ set(
         "Plant/CROPGRO/INCOMP.for"
         "Plant/CROPGRO/Ipphenol.for"
         "Plant/CROPGRO/IPPLNT.for"
+        "Plant/CROPGRO/LTGROW.for"
         "Plant/CROPGRO/MOBIL.for"
         "Plant/CROPGRO/NFIX.for"
         "Plant/CROPGRO/NUPTAK.for"

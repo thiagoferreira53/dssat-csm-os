@@ -274,7 +274,8 @@ end Subroutine CsvOut_cscer
 !---------------------------------------------------------------------------------   
 ! Sub for plantgro.csv output CRGRO
 Subroutine CsvOut_crgro(EXCODE, RUN, TN, ROTNUM, REPNO, YEAR, DOY, DAS, DAP, &
-   VSTAGE, RSTAGE, XLAI, WTLF, STMWT, SDWT, RTWT, VWAD, TOPWT, SEEDNO, SDSIZE, HI, &
+   VSTAGE, RSTAGE, XLAI, WTLF, STMWT, SDWT, LINTW, LINTP, &
+   RTWT, VWAD, TOPWT, SEEDNO, SDSIZE, HI, &
    PODWT, PODNO, SWF_AV, TUR_AV, NST_AV, PS1_AV, PS2_AV, KST_AV, EXW_AV, PCNLP, & 
    SHELPC, HIP, PODWTD, SLAP, CANHT, CANWH, DWNOD, RTDEP, N_LYR, RLV, CUMSENSURF, & 
    CUMSENSOIL, Csvline, pCsvline, lngth) 
@@ -288,7 +289,8 @@ Subroutine CsvOut_crgro(EXCODE, RUN, TN, ROTNUM, REPNO, YEAR, DOY, DAS, DAP, &
    Real,Intent(IN) :: VSTAGE, XLAI, WTLF, STMWT, SDWT, RTWT, TOPWT, SEEDNO     
    Real,Intent(in) :: SDSIZE, HI, PODWT, PODNO, SWF_AV, TUR_AV, NST_AV, PS1_AV
    Real,Intent(IN) :: PS2_AV, KST_AV, EXW_AV, PCNLP, SHELPC, HIP, PODWTD, SLAP
-   Real,Intent(IN) :: CANHT, CANWH, DWNOD, RTDEP, CUMSENSURF, CUMSENSOIL     
+   Real,Intent(IN) :: CANHT, CANWH, DWNOD, RTDEP, CUMSENSURF, CUMSENSOIL
+   Real,Intent(IN) :: LINTW, LINTP     
    Integer,Intent(IN) :: RSTAGE, VWAD
 
    Integer,Intent(IN) :: N_LYR
@@ -296,7 +298,7 @@ Subroutine CsvOut_crgro(EXCODE, RUN, TN, ROTNUM, REPNO, YEAR, DOY, DAS, DAP, &
   
 !  Recalculated vars
    Integer :: cWTLF1, cSTMWT1, cSDWT1, cRTWT1, cTOPWT1, cSEEDNO1, cPODWT1
-   Integer :: cPODNO1, cPODWTD1, cPodSum, cCUMSENSURF1, cCUMSENSOIL1 
+   Integer :: cPODNO1, cPODWTD1, cPodSum, cCUMSENSURF1, cCUMSENSOIL1,cLINTW
    Real :: cDWNOD1, cRTDEP1
   
    Integer :: i, size
@@ -313,6 +315,7 @@ Subroutine CsvOut_crgro(EXCODE, RUN, TN, ROTNUM, REPNO, YEAR, DOY, DAS, DAP, &
    cWTLF1 = NINT(WTLF * 10.0)
    cSTMWT1 = NINT(STMWT * 10.0)
    cSDWT1 = NINT(SDWT * 10.0)
+   cLINTW = NINT(LINTW * 10.0)
    cRTWT1 = NINT(RTWT * 10.0)
    cTOPWT1 = NINT(TOPWT * 10.0)
    cSEEDNO1 = NINT(SEEDNO)
@@ -326,8 +329,9 @@ Subroutine CsvOut_crgro(EXCODE, RUN, TN, ROTNUM, REPNO, YEAR, DOY, DAS, DAP, &
    cCUMSENSOIL1 = NINT(CUMSENSOIL) 
    
    ! Unformatted string output
-   Write(tmp,'(42(g0,","))') RUN, EXCODE, TN, ROTNUM, REPNO, YEAR, DOY, DAS,DAP,&
-      VSTAGE, RSTAGE, XLAI, cWTLF1, cSTMWT1, cSDWT1, cRTWT1, VWAD, cTOPWT1, &
+   Write(tmp,'(44(g0,","))') RUN, EXCODE, TN, ROTNUM, REPNO, YEAR, DOY, DAS,DAP,&
+      VSTAGE, RSTAGE, XLAI, cWTLF1, cSTMWT1, cSDWT1, cLINTW, LINTP, &
+      cRTWT1, VWAD, cTOPWT1, &
       cSEEDNO1, SDSIZE, HI, cPODWT1, cPODNO1, SWF_AV, TUR_AV, NST_AV, PS1_AV, &
       PS2_AV, KST_AV, EXW_AV, PCNLP, SHELPC, HIP, cPODWTD1, cPodSum, SLAP, &
       CANHT, CANWH, cDWNOD1, cRTDEP1, cCUMSENSURF1, cCUMSENSOIL1 
