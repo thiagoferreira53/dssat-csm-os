@@ -50,15 +50,17 @@ C=======================================================================
       REAL, DIMENSION(NL) :: NH4, NO3, RLV, SW, UNH4, UNO3
 
       REAL        HARVFRAC(2)
+      REAL        BIOMAS12, BIOMAS13, BIOMAS1, BIOMAS2, BIOMAS3, BIOMAS4
       REAL        FBIOM, FDINT, MAXLAI, WEATHERFact, TMAXGROF, SRADGROF
-      REAL        LN, CRWNWT, EYEWT, FRTWT, FRUITS, FLRWT 
+      REAL        LN, LN2, LN3, LN4
+      REAL        CRWNWT, EYEWT, FRTWT, FRUITS, FLRWT 
       REAL        LFWT, STMWT, GPSM, GPP, GRAINN
       REAL        BASLFWT, BIOMAS, LAI, NSTRES, STOVN, RTDEP, RTWT
       REAL        SKWT, GRORT, XSTAGE, STOVWT, ROOTN, WTNUP, XGNP
       REAL        CANNAA,CANWAA
       REAL        DTT, CUMDTT, SUMDTT, SUMDTTGRO
       REAL        SUMTMAXGRO, SUMTMAX, TMAXGRO, GDDFR
-      REAL        LAI1, LAI2, LAI3, LAI4, HIFact
+      REAL        LAI1, LAI2, LAI3, LAI4, HIFact, LAI13, JTLAI
       REAL        XLAT, SUMSRADGRO, SUMSRAD, SRADGRO, SUMPARGRO, SUMPAR
       REAL        EOP, EP1, TRWUP, RWUEP1
       REAL        SWFAC, TURFAC, TEMPM
@@ -132,11 +134,12 @@ C-----------------------------------------------------------------------
      &    AGEFAC, BASLFWT, BIOMAS, CRWNWT, EYEWT, FBIOM,                !Output
      &    MAXLAI, WEATHERFact, TMAXGROF, SRADGROF, FLRWT, FRTWT,        !Output
      &    FRUITS, GPP, GPSM, GRAINN, GRORT, SUMSRADGRO, SUMSRAD,        !Output
-     &    SRADGRO, SUMPARGRO, SUMPAR, LAI, LFWT, LN,                    !Output
-     &    NSTRES, RLV, ROOTN, RTWT, SUMDTTGRO, SUMTMAXGRO,              !Output
-     &    SENESCE, SKWT, STMWT, STOVN, STOVWT,  TEMPM, SUMTMAX,         !Output
-     &    TMAXGRO, GDDFR, LAI4, HIFact, UNH4, UNO3, WTNUP,              !Output
-     &    WTINITIAL, XGNP, YIELD, LAI1, LAI3)                           !Output
+     &    SRADGRO, SUMPARGRO, SUMPAR, LAI, 
+     &    BIOMAS1, BIOMAS2, BIOMAS3, BIOMAS4, BIOMAS12, BIOMAS13,       !Output
+     &    LFWT, LN, LN2, LN3, LN4, NSTRES, RLV, ROOTN, RTWT, SUMDTTGRO, !Output
+     &    SUMTMAXGRO, SENESCE, SKWT, STMWT, STOVN, STOVWT,  TEMPM,      !Output
+     &    SUMTMAX, TMAXGRO, GDDFR, HIFact, LAI1, LAI2, LAI3, LAI4,      !Output
+     &    LAI13, UNH4, UNO3, WTNUP, WTINITIAL, XGNP, YIELD, JTLAI)      !Output
      
       CALL Aloha2_ROOTGR (CONTROL,
      &     CUMDTT, DTT, GRORT, ISTAGE, ISWITCH, NO3, NH4,     !Input
@@ -156,13 +159,16 @@ C-----------------------------------------------------------------------
       CALL Aloha2_OPHARV(CONTROL, ISWITCH, 
      &   AGEFAC, BIOMAS, CNAM, CRWNWT, EYEWT, FBIOM,      !Input
      &   FRTWT, FRUITS, GPSM, GPP, HARVFRAC, ISDATE,      !Input
-     &   ISTAGE, LAI, LN, MDATE, NSTRES, PLTPOP, PMDATE,  !Input
+     &   ISTAGE, LAI, LN, LN2, LN3, LN4,
+     &   MDATE, NSTRES, PLTPOP, PMDATE,  
      &   PSTRES1, PSTRES2, STGDOY, STOVER, SWFAC,         !Input
      &   TURFAC, VWATM, WTINITIAL, WTNCAN, WTNGRN,        !Input
      &   WTNUP, YIELD, YRDOY, YRPLT, EDATE,
      &   DTLC1, DTLC2, DTLC3, EDATE5, EDATE6,
+     &   BIOMAS1, BIOMAS2, BIOMAS3, BIOMAS4, BIOMAS12, BIOMAS13,
      &   DTRTINIT, DTFRLF, LAI1, LAI2,
-     &   LAI3, LAI4, HIFact, MAXLAI)                      !Input
+     &   LAI3, LAI4, LAI13, HIFact, MAXLAI) 
+
 
 !=======================================================================
 C     Beginning of daily simulation loop
@@ -220,11 +226,12 @@ C-----------------------------------------------------------------------
      &    AGEFAC, BASLFWT, BIOMAS, CRWNWT, EYEWT, FBIOM,                !Output
      &    MAXLAI, WEATHERFact, TMAXGROF, SRADGROF, FLRWT, FRTWT,        !Output
      &    FRUITS, GPP, GPSM, GRAINN, GRORT, SUMSRADGRO, SUMSRAD,        !Output
-     &    SRADGRO, SUMPARGRO, SUMPAR, LAI, LFWT, LN,                    !Output
-     &    NSTRES, RLV, ROOTN, RTWT, SUMDTTGRO, SUMTMAXGRO,              !Output
-     &    SENESCE, SKWT, STMWT, STOVN, STOVWT,  TEMPM, SUMTMAX,         !Output
-     &    TMAXGRO, GDDFR, LAI4, HIFact, UNH4, UNO3, WTNUP,              !Output
-     &    WTINITIAL, XGNP, YIELD, LAI1, LAI3)                           !Output
+     &    SRADGRO, SUMPARGRO, SUMPAR, LAI, 
+     &    BIOMAS1, BIOMAS2, BIOMAS3, BIOMAS4, BIOMAS12, BIOMAS13,       !Output
+     &    LFWT, LN, LN2, LN3, LN4, NSTRES, RLV, ROOTN, RTWT, SUMDTTGRO, !Output
+     &    SUMTMAXGRO, SENESCE, SKWT, STMWT, STOVN, STOVWT,  TEMPM,      !Output
+     &    SUMTMAX, TMAXGRO, GDDFR, HIFact, LAI1, LAI2, LAI3, LAI4,      !Output
+     &    LAI13, UNH4, UNO3, WTNUP, WTINITIAL, XGNP, YIELD, JTLAI)      !Output
 
          IF (YRDOY .EQ. STGDOY(3)) THEN
             CANNAA = STOVN*PLTPOP
@@ -261,11 +268,12 @@ C-----------------------------------------------------------------------
      &    AGEFAC, BASLFWT, BIOMAS, CRWNWT, EYEWT, FBIOM,                !Output
      &    MAXLAI, WEATHERFact, TMAXGROF, SRADGROF, FLRWT, FRTWT,        !Output
      &    FRUITS, GPP, GPSM, GRAINN, GRORT, SUMSRADGRO, SUMSRAD,        !Output
-     &    SRADGRO, SUMPARGRO, SUMPAR, LAI, LFWT, LN,                    !Output
-     &    NSTRES, RLV, ROOTN, RTWT, SUMDTTGRO, SUMTMAXGRO,              !Output
-     &    SENESCE, SKWT, STMWT, STOVN, STOVWT,  TEMPM, SUMTMAX,         !Output
-     &    TMAXGRO, GDDFR, LAI4, HIFact, UNH4, UNO3, WTNUP,              !Output
-     &    WTINITIAL, XGNP, YIELD, LAI1, LAI3)                           !Output
+     &    SRADGRO, SUMPARGRO, SUMPAR, LAI, 
+     &    BIOMAS1, BIOMAS2, BIOMAS3, BIOMAS4, BIOMAS12, BIOMAS13,       !Output
+     &    LFWT, LN, LN2, LN3, LN4, NSTRES, RLV, ROOTN, RTWT, SUMDTTGRO, !Output
+     &    SUMTMAXGRO, SENESCE, SKWT, STMWT, STOVN, STOVWT,  TEMPM,      !Output
+     &    SUMTMAX, TMAXGRO, GDDFR, HIFact, LAI1, LAI2, LAI3, LAI4,      !Output
+     &    LAI13, UNH4, UNO3, WTNUP, WTINITIAL, XGNP, YIELD, JTLAI)      !Output
 
 !=======================================================================
 C        Call daily output subroutine
@@ -287,13 +295,15 @@ C-----------------------------------------------------------------------
       CALL Aloha2_OPHARV(CONTROL, ISWITCH, 
      &   AGEFAC, BIOMAS, CNAM, CRWNWT, EYEWT, FBIOM,      !Input
      &   FRTWT, FRUITS, GPSM, GPP, HARVFRAC, ISDATE,      !Input
-     &   ISTAGE, LAI, LN, MDATE, NSTRES, PLTPOP, PMDATE,  !Input
+     &   ISTAGE, LAI, LN, LN2, LN3, LN4,
+     &   MDATE, NSTRES, PLTPOP, PMDATE,  
      &   PSTRES1, PSTRES2, STGDOY, STOVER, SWFAC,         !Input
      &   TURFAC, VWATM, WTINITIAL, WTNCAN, WTNGRN,        !Input
      &   WTNUP, YIELD, YRDOY, YRPLT, EDATE,
      &   DTLC1, DTLC2, DTLC3, EDATE5, EDATE6,
+     &   BIOMAS1, BIOMAS2, BIOMAS3, BIOMAS4, BIOMAS12, BIOMAS13,
      &   DTRTINIT, DTFRLF, LAI1, LAI2,
-     &   LAI3, LAI4, HIFact, MAXLAI)                      !Input
+     &   LAI3, LAI4, LAI13, HIFact, MAXLAI) 
 
 !=======================================================================
 C     Call end of season output routine
@@ -314,13 +324,15 @@ C-----------------------------------------------------------------------
       CALL Aloha2_OPHARV(CONTROL, ISWITCH,
      &   AGEFAC, BIOMAS, CNAM, CRWNWT, EYEWT, FBIOM,      !Input
      &   FRTWT, FRUITS, GPSM, GPP, HARVFRAC, ISDATE,      !Input
-     &   ISTAGE, LAI, LN, MDATE, NSTRES, PLTPOP, PMDATE,  !Input
+     &   ISTAGE, LAI, LN, LN2, LN3, LN4,
+     &   MDATE, NSTRES, PLTPOP, PMDATE,  
      &   PSTRES1, PSTRES2, STGDOY, STOVER, SWFAC,         !Input
      &   TURFAC, VWATM, WTINITIAL, WTNCAN, WTNGRN,        !Input
      &   WTNUP, YIELD, YRDOY, YRPLT, EDATE,
      &   DTLC1, DTLC2, DTLC3, EDATE5, EDATE6,
+     &   BIOMAS1, BIOMAS2, BIOMAS3, BIOMAS4, BIOMAS12, BIOMAS13,
      &   DTRTINIT, DTFRLF, LAI1, LAI2,
-     &   LAI3, LAI4, HIFact, MAXLAI)                      !Input
+     &   LAI3, LAI4, LAI13, HIFact, MAXLAI) 
 
         !Set senescence variable to zero for next season
         SENESCE % ResWt    = 0.0

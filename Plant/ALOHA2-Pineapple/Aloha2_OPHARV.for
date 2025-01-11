@@ -10,13 +10,15 @@
       SUBROUTINE Aloha2_OPHARV(CONTROL, ISWITCH,
      &   AGEFAC, BIOMAS, CNAM, CRWNWT, EYEWT, FBIOM,      
      &   FRTWT, FRUITS, GPSM, GPP, HARVFRAC, ISDATE,      
-     &   ISTAGE, LAI, LN, MDATE, NSTRES, PLTPOP, PMDATE,  
+     &   ISTAGE, LAI, LN, LN2, LN3, LN4,
+     &   MDATE, NSTRES, PLTPOP, PMDATE,  
      &   PSTRES1, PSTRES2, STGDOY, STOVER, SWFAC,         
      &   TURFAC, VWATM, WTINITIAL, WTNCAN, WTNGRN,        
      &   WTNUP, YIELD, YRDOY, YRPLT, EDATE,
      &   DTLC1, DTLC2, DTLC3, EDATE5, EDATE6,
+     &   BIOMAS1, BIOMAS2, BIOMAS3, BIOMAS4, BIOMAS12, BIOMAS13,
      &   DTRTINIT, DTFRLF, LAI1, LAI2,
-     &   LAI3, LAI4, HIFact, MAXLAI) 
+     &   LAI3, LAI4, LAI13, HIFact, MAXLAI) 
 
 !-----------------------------------------------------------------------
       USE Aloha2_mod
@@ -58,13 +60,15 @@
       REAL LEBIO, LELAI
       REAL L1BIO, L1LAI, LAI2, L1LN
       REAL L2BIO, L2LAI, LAI3, L2LN
-      REAL L3BIO, L3LAI, LAI4, L3LN, HIFact
+      REAL L3BIO, L3LAI, LAI4, L3LN, HIFact, LAI13
       REAL MAXLAI, NSTRES, PBIOMS, PEYEWT, PSDWT, PLTPOP 
       REAL Pstres1, Pstres2   
       REAL SDRATE
+      REAL BIOMAS12, BIOMAS13, BIOMAS1, BIOMAS2,BIOMAS3, BIOMAS4
       REAL SDWT, SDWTAH, SDWTAM, STOVER   !, StovSenes  
       REAL SWFAC, BIOMAS, Biomass_kg_ha, TURFAC
       REAL WTINITIAL, WTNCAN, WTNGRN, WTNUP, LAI, LN
+      REAL LN2, LN3, LN4
       REAL YIELD, YIELDB, YieldFresh
       REAL VWATM, CNAM, BWAM, HWAH, StovSenes
 
@@ -390,24 +394,25 @@ C-----------------------------------------------------------------------
       BWAH = (BWAM + StovSenes) * HARVFRAC(2) 
 !-----------------------------------------------------------------------
 
-      RIBIO = BIOMAS*10
-      RILAI = LAI
+      RIBIO = BIOMAS13*10
+      RILAI = LAI13
       
-      
-      LEBIO = BIOMAS*10
+      LEBIO = BIOMAS1*10
       LELAI = LAI1
 
-      L1BIO = BIOMAS*10
+      L1BIO = BIOMAS2*10
       L1LAI = LAI2
-      L1LN  = LN
+      L1LN  = LN2
       
-      L2BIO = BIOMAS*10
+      L2BIO = BIOMAS3*10
       L2LAI = LAI3
-      L2LN  = LN
+      L2LN  = LN3
 
-      L3BIO = BIOMAS*10
+      L3BIO = BIOMAS4*10
       L3LAI = LAI4
-      L3LN  = LN
+      L3LN  = LN4
+      
+      WRITE(*,*) "LAI:", LAI, "LAI1", LAI1, "LAI2", LAI2, "LAI3", LAI3, "LAI4", LAI4
 !-----------------------------------------------------------------------
   
       IF ((INDEX('YE',IDETO) > 0 .OR. INDEX('IAEBCGDT',RNMODE) .GT. 0) 

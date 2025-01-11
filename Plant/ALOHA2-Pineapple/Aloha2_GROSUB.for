@@ -54,12 +54,12 @@
      &    AGEFAC, BASLFWT, BIOMAS, CRWNWT, EYEWT, FBIOM, MAXLAI,            ! Output
      &    WEATHERFact, TMAXGROF, SRADGROF,                                  ! Output
      &    FLRWT, FRTWT, FRUITS, GPP, GPSM, GRAINN, JTGRORT, SUMSRADGRO,     ! Output
-     &    SUMSRAD, SRADGRO, SUMPARGRO, SUMPAR, LAI,                      ! Output
-     &    LFWT, LN, NSTRES, RLV, ROOTN, RTWT, SUMDTTGRO, SUMTMAXGRO,   ! Output
-     &    SENESCE, SKWT, STMWT, STOVN, STOVWT,  TEMPM, SUMTMAX,             ! Output
-     &    TMAXGRO, GDDFR, LAI4, HIFact,             ! Output
-     &    UNH4, UNO3, WTNUP, WTINITIAL, XGNP, YIELD, JTLAI,        ! Output
-     &    LAI3)                                 ! Output
+     &    SUMSRAD, SRADGRO, SUMPARGRO, SUMPAR, LAI,                         ! Output
+     &    BIOMAS1, BIOMAS2, BIOMAS3, BIOMAS4, BIOMAS12, BIOMAS13,
+     &    LFWT, LN, LN2, LN3, LN4, NSTRES, RLV, ROOTN, RTWT, SUMDTTGRO,     ! Output
+     &    SUMTMAXGRO, SENESCE, SKWT, STMWT, STOVN, STOVWT,  TEMPM,          ! Output
+     &    SUMTMAX, TMAXGRO, GDDFR, HIFact, LAI1, LAI2, LAI3, LAI4,          ! Output
+     &    LAI13, UNH4, UNO3, WTNUP, WTINITIAL, XGNP, YIELD, JTLAI)          ! Output
 
       USE Aloha2_mod
       USE Interface_SenLig_Ceres
@@ -87,13 +87,14 @@
       REAL    PLA, LAI, BIOMAS, LFWT, BASLFWT, STMWT, STOVWT 
       REAL    WTINITIAL
       REAL    SEEDQLY 
+      REAL    BIOMAS1, BIOMAS2, BIOMAS3, BIOMAS4, BIOMAS12, BIOMAS13
       REAL    RSTMWT13, JTLAI, PLA13, LFWT13, BASLFWT13, STMWT13
       REAL    ADJGDDF13, ADJTMAX13, ADJSRAD13  !CASE 13
       REAL    JTRLAE, JTRLDW, JTRSTMWT, JTPLA, JTLFWT, JTBASLFWT
       REAL    JTSTMWT, GRORTI, JTRGRORT, GRORT1, JTTI, ADJGDDF1
       REAL    ADJTMAX, ADJSRAD1  !CASE 1
       REAL    JTRBWTDW, GRORT2 !CASE 2
-      REAL    LAI3, GRORT3 !CASE 3
+      REAL    LAI13, LAI1, LAI2, LAI3, GRORT3 !CASE 3
       REAL    LAI4, GRORT4, HIFact, YIELDFact !CASE 4
       REAL    DAP1, DAP3, DAP4, DAP5, DAP6, DAP7, DAP9
       REAL    DAP10, DAP12, DAP13, DAP14, DAP15, DAP16, DAP17
@@ -102,6 +103,7 @@
       REAL    GDDFR, TMAXGRO
       REAL    PLACASE, PLTadj, WEATHERFact, TMAXGROF, SRADGROF
       REAL    GROBSL, GROLF, CUMPH, LN, CUMDEP, SUMP, PLAMX, GROFLR
+      REAL    LN2, LN3, LN4
       REAL    GROCRWN, GROFRT, FRTWT, CRWNWT, SKWT, GROSK, PTF, EYEWT
       REAL    SWMAX, SWMIN, NDEF3, NSTRES, AGEFAC, LIFAC, SRADGRO
       REAL    PAR, CC, TRF2, CARBO, SWFAC, TEMPM
@@ -1015,6 +1017,7 @@ C-----------------------------------------------------------------------
           
          ENDIF 
           BIOMAS= (LFWT + STMWT + BASLFWT)*PLTPOP
+          BIOMAS12 = BIOMAS
           YRPLT   = YRDOY
 !-----------------------------------------------------------------------    
          CASE (13)   !Planting to Root initiation
@@ -1070,7 +1073,9 @@ C-----------------------------------------------------------------------
           STMWT       = STMWT13                 
           STOVWT= STMWT
           BIOMAS= (LFWT + STMWT + BASLFWT)*PLTPOP
+          BIOMAS13 = BIOMAS
           JTLAI = LAI
+          LAI13 = LAI
           MAXLAI = LAI
 
 !-----------------------------------------------------------------------                 
@@ -1139,7 +1144,9 @@ C-----------------------------------------------------------------------
           STMWT       = JTSTMWT                 
           STOVWT= STMWT
           BIOMAS= (LFWT + STMWT + BASLFWT)*PLTPOP
-          JTLAI = LAI 
+          BIOMAS1 = BIOMAS
+          JTLAI = LAI
+          LAI1 = LAI
           MAXLAI = LAI
           
 !-----------------------------------------------------------------------         
@@ -1184,8 +1191,11 @@ C-----------------------------------------------------------------------
           BASLFWT     = JTBASLFWT                     
           STMWT       = JTSTMWT                       
           STOVWT= STMWT
-          BIOMAS= (LFWT + STMWT + BASLFWT)*PLTPOP         
+          BIOMAS= (LFWT + STMWT + BASLFWT)*PLTPOP
+          BIOMAS2 = BIOMAS         
           JTLAI = LAI
+          LAI2 = LAI
+          LN2  = LN
           MAXLAI = LAI
             
 !-----------------------------------------------------------------------
@@ -1235,7 +1245,9 @@ C-----------------------------------------------------------------------
           STMWT       = JTSTMWT                       
           STOVWT= STMWT
           BIOMAS= (LFWT + STMWT + BASLFWT)*PLTPOP  
+          BIOMAS3 = BIOMAS
           LAI3 = LAI
+          LN3  = LN
           MAXLAI = LAI
 
 !-------------------------------------------------------- 
@@ -1282,6 +1294,7 @@ C-----------------------------------------------------------------------
              STOVWT= STMWT
              BIOMAS= (LFWT + STMWT + BASLFWT)*PLTPOP  
              LAI4 = LAI
+             LN4  = LN
   
 !--------------------------------------------------------   
 
@@ -1315,6 +1328,7 @@ C-----------------------------------------------------------------------
           LAI     = AMAX1(LAI3, LAI) 
           LAI     = AMAX1(LAI4, LAI) 
           BIOMAS= (LFWT + STMWT + BASLFWT + FLRWT)*PLTPOP
+          BIOMAS4 = BIOMAS
          
 !---------------------------------------------------------NEW END          
 
