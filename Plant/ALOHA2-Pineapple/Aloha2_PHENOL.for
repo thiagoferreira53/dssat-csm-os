@@ -15,7 +15,9 @@ C=======================================================================
 
       SUBROUTINE Aloha2_PHENOL (CONTROL, ISWITCH,
      &    SW, WEATHER, SOILPROP, YRPLT, SUMDTTGRO, SUMTMAXGRO,
-     &    SUMTMAX, DTT, EDATE, ISDATE, ISTAGE, MDATE, PMDATE, 
+     &    SUMTMAX, DTT, EDATE, ISDATE, ISTAGE, MDATE, PMDATE,
+     &    DTLC1, DTLC2, DTLC3, 
+     &    EDATE5, EDATE6, DTRTINIT, DTFRLF,
      &    SUMSRADGRO, SUMSRAD, SUMPARGRO, SUMPAR, STGDOY, SUMDTT, 
      &    TBASE, TEMPM, XSTAGE)               
 
@@ -28,6 +30,8 @@ C=======================================================================
       REAL        TTMP,SWSD,XLAT,ROOTINGTIME
 
       INTEGER      DYNAMIC, EDATE, MDATE, HAREND
+      INTEGER      DTLC1, DTLC2, DTLC3 
+      INTEGER      EDATE5, EDATE6, DTRTINIT, DTFRLF
       REAL         XSTAGE
 
       CHARACTER*1 ISWWAT, IDETO, ISWNIT
@@ -350,7 +354,7 @@ c           ENDIF
           SUMSRADGRO= SUMSRAD
           SUMPARGRO= SUMPAR
           STGDOY(ISTAGE) = YRDOY
-          EDATE = YRDOY
+          DTRTINIT = YRDOY
           
           !        CALL PHASEI (ISWWAT,ISWNIT)
 
@@ -378,7 +382,7 @@ c           ENDIF
          
                  
           STGDOY(ISTAGE) = YRDOY            
-          EDATE = YRDOY                   
+          DTFRLF = YRDOY                   
           SUMDTTGRO= SUMDTT               
           SUMTMAXGRO= SUMTMAX
           SUMSRADGRO= SUMSRAD
@@ -411,7 +415,7 @@ c           ENDIF
 !         Ready for next stage                                               
 
           STGDOY(ISTAGE) = YRDOY
-          EDATE = YRDOY 
+          DTLC1 = YRDOY 
           SUMDTTGRO= SUMDTT              
           SUMTMAXGRO= SUMTMAX
           SUMSRADGRO= SUMSRAD
@@ -448,7 +452,7 @@ c           ENDIF
 !         Ready for next stage
  
           STGDOY(ISTAGE) = YRDOY
-          EDATE = YRDOY                  
+          DTLC2 = YRDOY                  
           SUMDTTGRO= SUMDTT              
           SUMTMAXGRO= SUMTMAX
           SUMSRADGRO= SUMSRAD
@@ -484,7 +488,7 @@ c           ENDIF
 
 !         Ready for next stage
           STGDOY(ISTAGE) = YRDOY
-          EDATE = YRDOY
+          DTLC3 = YRDOY
 
           ISTAGE = 4
           SUMDTTGRO= SUMDTT               
@@ -572,7 +576,7 @@ c           ENDIF
 
 !         Ready for next stage
           STGDOY(ISTAGE) = YRDOY
-          EDATE = YRDOY
+          EDATE5 = YRDOY
 
           ISTAGE = 6
           SUMDTTGRO= SUMDTT             
@@ -595,7 +599,7 @@ c           ENDIF
 
 !         Ready for next stage
           STGDOY(ISTAGE) = YRDOY
-          EDATE = YRDOY
+          EDATE6 = YRDOY
 
           ISTAGE = 7                    
           SUMDTTGRO= SUMDTT               

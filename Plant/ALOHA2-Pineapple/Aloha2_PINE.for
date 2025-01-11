@@ -42,6 +42,8 @@ C=======================================================================
 
       CHARACTER*1 ISWWAT
       INTEGER EDATE, ISTAGE, YRDOY, YRPLT, MDATE, ISDATE, PMDATE, DAP1
+      INTEGER DTLC1, DTLC2, DTLC3
+      INTEGER EDATE5, EDATE6, DTRTINIT, DTFRLF
       INTEGER DAP3, DAP5, DAP7, DAP9, DAP13, DAP15, DAP17, DAP19, JTDAP
       INTEGER, DIMENSION(20) :: STGDOY
       
@@ -117,7 +119,9 @@ C-----------------------------------------------------------------------
 
       CALL Aloha2_PHENOL (CONTROL, ISWITCH,
      &    SW, WEATHER, SOILPROP, YRPLT, SUMDTTGRO, SUMTMAXGRO, SUMTMAX, !Input
-     &    DTT, EDATE, ISDATE, ISTAGE, MDATE, PMDATE, SUMSRADGRO,        !Output
+     &    DTT, EDATE, ISDATE, ISTAGE, MDATE, PMDATE,
+     &    DTLC1, DTLC2, DTLC3, 
+     &    EDATE5, EDATE6, DTRTINIT, DTFRLF, SUMSRADGRO,    !Output
      &    SUMSRAD, SUMPARGRO, SUMPAR, STGDOY, SUMDTT, TBASE, TEMPM,     !Output
      &    XSTAGE)                                                       !Output
 
@@ -156,7 +160,8 @@ C-----------------------------------------------------------------------
      &   PSTRES1, PSTRES2, STGDOY, STOVER, SWFAC,         !Input
      &   TURFAC, VWATM, WTINITIAL, WTNCAN, WTNGRN,        !Input
      &   WTNUP, YIELD, YRDOY, YRPLT, EDATE,
-     &   LAI1,  LAI2,
+     &   DTLC1, DTLC2, DTLC3, EDATE5, EDATE6,
+     &   DTRTINIT, DTFRLF, LAI1, LAI2,
      &   LAI3, LAI4, HIFact, MAXLAI)                      !Input
 
 !=======================================================================
@@ -229,7 +234,9 @@ C-----------------------------------------------------------------------
         IF (YRDOY .EQ. YRPLT .OR. ISTAGE .NE. 10) THEN              
             CALL Aloha2_PHENOL (CONTROL, ISWITCH,
      &    SW, WEATHER, SOILPROP, YRPLT, SUMDTTGRO, SUMTMAXGRO, SUMTMAX, !Input
-     &    DTT, EDATE, ISDATE, ISTAGE, MDATE, PMDATE, SUMSRADGRO,        !Output
+     &    DTT, EDATE, ISDATE, ISTAGE, MDATE, PMDATE,
+     &    DTLC1, DTLC2, DTLC3, 
+     &    EDATE5, EDATE6, DTRTINIT, DTFRLF, SUMSRADGRO,    !Output
      &    SUMSRAD, SUMPARGRO, SUMPAR, STGDOY, SUMDTT, TBASE, TEMPM,     !Output
      &    XSTAGE)
         ENDIF
@@ -284,7 +291,8 @@ C-----------------------------------------------------------------------
      &   PSTRES1, PSTRES2, STGDOY, STOVER, SWFAC,         !Input
      &   TURFAC, VWATM, WTINITIAL, WTNCAN, WTNGRN,        !Input
      &   WTNUP, YIELD, YRDOY, YRPLT, EDATE,
-     &   LAI1,  LAI2,
+     &   DTLC1, DTLC2, DTLC3, EDATE5, EDATE6,
+     &   DTRTINIT, DTFRLF, LAI1, LAI2,
      &   LAI3, LAI4, HIFact, MAXLAI)                      !Input
 
 !=======================================================================
@@ -310,7 +318,8 @@ C-----------------------------------------------------------------------
      &   PSTRES1, PSTRES2, STGDOY, STOVER, SWFAC,         !Input
      &   TURFAC, VWATM, WTINITIAL, WTNCAN, WTNGRN,        !Input
      &   WTNUP, YIELD, YRDOY, YRPLT, EDATE,
-     &   LAI1,  LAI2, 
+     &   DTLC1, DTLC2, DTLC3, EDATE5, EDATE6,
+     &   DTRTINIT, DTFRLF, LAI1, LAI2,
      &   LAI3, LAI4, HIFact, MAXLAI)                      !Input
 
         !Set senescence variable to zero for next season

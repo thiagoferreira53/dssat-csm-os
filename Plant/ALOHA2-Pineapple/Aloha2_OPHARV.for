@@ -14,7 +14,8 @@
      &   PSTRES1, PSTRES2, STGDOY, STOVER, SWFAC,         
      &   TURFAC, VWATM, WTINITIAL, WTNCAN, WTNGRN,        
      &   WTNUP, YIELD, YRDOY, YRPLT, EDATE,
-     &   LAI1, LAI2,
+     &   DTLC1, DTLC2, DTLC3, EDATE5, EDATE6,
+     &   DTRTINIT, DTFRLF, LAI1, LAI2,
      &   LAI3, LAI4, HIFact, MAXLAI) 
 
 !-----------------------------------------------------------------------
@@ -35,6 +36,8 @@
       INTEGER DNR7, DYNAMIC, ERRNUM, FOUND
       INTEGER IMAT, IFORC, IHARV, DFR1, DFORC, DHARV, HDAP
       INTEGER DROOT, IROOT, RIDAP, EDATE
+      INTEGER DTLC1, DTLC2, DTLC3
+      INTEGER EDATE5, EDATE6, DTRTINIT, DTFRLF
       INTEGER DFNL, IFNL, LEDAP
       INTEGER DLC1, ILC1, L1DAP
       INTEGER DLC2, ILC2, L2DAP
@@ -564,7 +567,7 @@ C-----------------------------------------------------------------------
 
 !       Root Initiation date to DAP PART2
         IF (YRPLT .GT. 0) THEN
-          RIDAP = TIMDIF (YRPLT,EDATE)
+          RIDAP = TIMDIF (YRPLT,DTRTINIT)
           
 
           IF (RIDAP .LE. 0) THEN
@@ -577,7 +580,7 @@ C-----------------------------------------------------------------------
 !       First new leaf date to DAP PART2
 
        IF (YRPLT .GT. 0) THEN
-          LEDAP = TIMDIF (YRPLT,EDATE)
+          LEDAP = TIMDIF (YRPLT,DTFRLF)
           IF (LEDAP .LE. 0) THEN
             LEDAP = -99
           ENDIF
@@ -587,8 +590,8 @@ C-----------------------------------------------------------------------
 
 !       Leaf cycle 1 date to DAP PART2
 
-       IF (EDATE .GT. 0 .AND. EDATE .LE. ISDATE) THEN
-          L1DAP = TIMDIF (YRPLT,EDATE)
+       IF (DTLC1 .GT. 0 .AND. DTLC1 .LE. ISDATE) THEN
+          L1DAP = TIMDIF (YRPLT,DTLC1)
           IF (L1DAP .LE. 0) THEN
             L1DAP = -99
           ENDIF
@@ -598,8 +601,8 @@ C-----------------------------------------------------------------------
 
 !       Leaf cycle 2 date to DAP PART2
 
-       IF (EDATE .GT. 0 .AND. EDATE .LE. ISDATE) THEN
-          L2DAP = TIMDIF (YRPLT,EDATE)
+       IF (DTLC2 .GT. 0 .AND. DTLC2 .LE. ISDATE) THEN
+          L2DAP = TIMDIF (YRPLT,DTLC2)
           IF (L2DAP .LE. 0) THEN
             L2DAP = -99
           ENDIF
@@ -609,8 +612,8 @@ C-----------------------------------------------------------------------
 
 !       Leaf cycle 3 date to DAP PART2
 
-       IF (EDATE .GT. 0 .AND. EDATE .LE. ISDATE) THEN
-          L3DAP = TIMDIF (YRPLT,EDATE)
+       IF (DTLC3 .GT. 0 .AND. DTLC3 .LE. ISDATE) THEN
+          L3DAP = TIMDIF (YRPLT,DTLC3)
           IF (L3DAP .LE. 0) THEN
             L3DAP = -99
           ENDIF
@@ -660,7 +663,7 @@ C-----------------------------------------------------------------------
       !       Reproductive Open Heart date to DAP PART2
 
        IF (YRPLT .GT. 0) THEN
-          OHDAF = (TIMDIF (YRPLT,EDATE)) - DFR1
+          OHDAF = (TIMDIF (YRPLT,EDATE5)) - DFR1
           IF (OHDAF .LE. 0) THEN
             OHDAF = -99
           ENDIF
@@ -671,7 +674,7 @@ C-----------------------------------------------------------------------
 !       Reproductive Early Anthesys date to DAP PART2
 
        IF (YRPLT .GT. 0) THEN
-          EADAF = (TIMDIF (YRPLT,EDATE)) - DFR1
+          EADAF = (TIMDIF (YRPLT,EDATE6)) - DFR1
           IF (EADAF .LE. 0) THEN
             EADAF = -99
           ENDIF
