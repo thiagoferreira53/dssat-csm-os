@@ -1363,10 +1363,8 @@ C         G2 is genetic coefficient for potential eye number
           VANC   = TANC                 
           VMNC   = TMNC          
 
-          LAI     = AMAX1(JTLAI, LAI) 
-          LAI     = AMAX1(JTLAI, LAI) 
-          LAI     = AMAX1(LAI3, LAI) 
           LAI     = AMAX1(LAI4, LAI)
+          JTLAI = LAI
           BIOMAS= (LFWT + STMWT + BASLFWT + FLRWT)*PLTPOP   
 !-----------------------------------------------------------------------
    
@@ -1418,8 +1416,8 @@ C         G2 is genetic coefficient for potential eye number
 
 
 
-             LAI     = AMAX1(JTLAI, LAI)   
-
+             LAI     = AMAX1(LAI4, LAI)    
+             JTLAI = LAI
  
           FRUITS = PLTPOP*(1.-0.10*PLTPOP/65.0)  
 
@@ -1443,7 +1441,8 @@ C         G2 is genetic coefficient for potential eye number
          
 
  
-             LAI     = AMAX1(JTLAI, LAI) 
+             LAI     = AMAX1(LAI4, LAI)
+             JTLAI = LAI
              !BIOMAS= (LFWT + STMWT + BASLFWT + FLRWT)*PLTPOP  
 
         
@@ -1455,7 +1454,6 @@ C         G2 is genetic coefficient for potential eye number
           
           YRDOY   = CONTROL % YRDOY
           NDOF = TIMDIF(YRPLT, YRDOY)
-          JTDAP = NDOF
           JTDAP = NDOF-DAP18
           !JTDAP = (DAP13 + DAP15 + DAP17 + DAP19) 
 
