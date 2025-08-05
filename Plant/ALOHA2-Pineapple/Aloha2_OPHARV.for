@@ -697,7 +697,7 @@ C-----------------------------------------------------------------------
           LADAF = -99
         ENDIF
 
-      WRITE(Simulated(1),'(I8)') RIDAP;         WRITE(Measured(1),'(A8)') TRIM(X(1))    !RIDAP
+!      WRITE(Simulated(1),'(I8)') RIDAP;         WRITE(Measured(1),'(A8)') TRIM(X(1))    !RIDAP
       WRITE(Simulated(2),'(I8)') LEDAP;         WRITE(Measured(2),'(A8)') TRIM(X(2))    !LEDAP
       WRITE(Simulated(3),'(I8)') L1DAP;         WRITE(Measured(3),'(A8)') TRIM(X(3))   !DLC1    !L1DAP
       WRITE(Simulated(4),'(I8)') L2DAP;         WRITE(Measured(4),'(A8)') TRIM(X(4))    !DLC2    !L2DAP
@@ -708,8 +708,8 @@ C-----------------------------------------------------------------------
       WRITE(Simulated(9),'(I8)') LADAF;         WRITE(Measured(9),'(A8)') TRIM(X(9))    !DRLA    !LADAF
       WRITE(Simulated(10),'(I8)') DNR7;         WRITE(Measured(10),'(I8)') DMAT   !MDAT  
       WRITE(Simulated(11),'(I8)') HDAP;         WRITE(Measured(11),'(I8)') DHARV  !HDAT   
-      WRITE(Simulated(12),'(F8.1)') RIBIO;      WRITE(Measured(12),'(A8)') TRIM(X(12))  !RIBIO
-      WRITE(Simulated(13),'(F8.2)') RILAI;      WRITE(Measured(13),'(A8)') TRIM(X(13))  !RILAI
+      !WRITE(Simulated(12),'(F8.1)') RIBIO;      WRITE(Measured(12),'(A8)') TRIM(X(12))  !RIBIO
+      !WRITE(Simulated(13),'(F8.2)') RILAI;      WRITE(Measured(13),'(A8)') TRIM(X(13))  !RILAI
       WRITE(Simulated(14),'(F8.1)') LEBIO;      WRITE(Measured(14),'(A8)') TRIM(X(14))  !LEBIO
       WRITE(Simulated(15),'(F8.2)') LELAI;      WRITE(Measured(15),'(A8)') TRIM(X(15))  !LELAI
       WRITE(Simulated(16),'(F8.1)') L1BIO;      WRITE(Measured(16),'(A8)') TRIM(X(16))  !L1BIO
@@ -727,19 +727,19 @@ C-----------------------------------------------------------------------
                                                 WRITE(Measured(26),'(A8)') TRIM(X(26))  !YDWAH 
       WRITE(Simulated(27),'(F8.1)') FBTONS                                      
                                                 WRITE(Measured(27),'(A8)') TRIM(X(27))  !BADMF     
-      WRITE(Simulated(28),'(F8.1)') PBIOMS                                        
-                                                WRITE(Measured(28),'(A8)') TRIM(X(28)) !BADMH    
-      WRITE(Simulated(29),'(F8.2)')VWATM;       WRITE(Measured(29),'(A8)') TRIM(X(29)) !VWATM  
+      !WRITE(Simulated(28),'(F8.1)') PBIOMS                                        
+      !                                          WRITE(Measured(28),'(A8)') TRIM(X(28)) !BADMH    
+      !WRITE(Simulated(29),'(F8.2)')VWATM;       WRITE(Measured(29),'(A8)') TRIM(X(29)) !VWATM  
       WRITE(Simulated(30),'(F8.2)') MAXLAI                                          
                                                 WRITE(Measured(30),'(A8)') TRIM(X(30))  !LAIX     
-      WRITE(Simulated(31),'(F8.1)') LN;         WRITE(Measured(31),'(A8)') TRIM(X(31))   !L#SM 
+      !WRITE(Simulated(31),'(F8.1)') LN;         WRITE(Measured(31),'(A8)') TRIM(X(31))   !L#SM 
       WRITE(Simulated(32),'(F8.3)') HI;         WRITE(Measured(32),'(A8)') TRIM(X(32))   !HIAM
-      WRITE(Simulated(33),'(I8)') NINT(GPSM)                                      
-                                                WRITE(Measured(33),'(A8)') TRIM(X(33))   !E#AM 
+      !WRITE(Simulated(33),'(I8)') NINT(GPSM)                                      
+      !                                          WRITE(Measured(33),'(A8)') TRIM(X(33))   !E#AM 
       WRITE(Simulated(34),'(F8.1)') GPP;        WRITE(Measured(34),'(A8)') TRIM(X(34))   !E#UM     
       WRITE(Simulated(35),'(F8.3)') EYEWT                                          
                                                 WRITE(Measured(35),'(A8)') TRIM(X(35))   !EWUM    
-      WRITE(Simulated(36),'(F8.1)')CNAM;        WRITE(Measured(36),'(A8)') TRIM(X(36))   !CNAM
+!      WRITE(Simulated(36),'(F8.1)')CNAM;        WRITE(Measured(36),'(A8)') TRIM(X(36))   !CNAM
   
 !     These aren't calculated - remove from Overview output
 !     WRITE(Simulated(3),'(I8)') -99 ;  WRITE(Measured(3),'(I8)') -99     !PDFT - not used
