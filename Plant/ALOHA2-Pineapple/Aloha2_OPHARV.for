@@ -707,7 +707,7 @@ C-----------------------------------------------------------------------
       WRITE(Simulated(8),'(I8)') EADAF;         WRITE(Measured(8),'(A8)') TRIM(X(8))    !DREA    !EADAF
       WRITE(Simulated(9),'(I8)') LADAF;         WRITE(Measured(9),'(A8)') TRIM(X(9))    !DRLA    !LADAF
       WRITE(Simulated(10),'(I8)') DNR7;         WRITE(Measured(10),'(I8)') DMAT   !MDAT  
-      WRITE(Simulated(11),'(I8)') HDAP;         WRITE(Measured(11),'(I8)') DHARV  !HDAT   
+      !WRITE(Simulated(11),'(I8)') HDAP;         WRITE(Measured(11),'(I8)') DHARV  !HDAT   
       !WRITE(Simulated(12),'(F8.1)') RIBIO;      WRITE(Measured(12),'(A8)') TRIM(X(12))  !RIBIO
       !WRITE(Simulated(13),'(F8.2)') RILAI;      WRITE(Measured(13),'(A8)') TRIM(X(13))  !RILAI
       WRITE(Simulated(14),'(F8.1)') LEBIO;      WRITE(Measured(14),'(A8)') TRIM(X(14))  !LEBIO

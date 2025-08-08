@@ -65,7 +65,7 @@ DWAP   Sowing wt kg/ha Planting material weight (kg [dm]/ha)                    
 DAYLA  Avg day (hr)    Average daylength (hr/d), planting to harvest            .
 E#AM   Number #/m2     Eye number at maturity (no/m2)                           .
 E#UM   Number #/unit   Eye number at maturity (no/fruit)                        .
-EADAF  Early anth dap  Pineapple early anthesis (dap)                           .
+EADAF  Early anth dap  Early anthesis (dap)                                     .
 EDAP   Emergence day   Emergence day (dap)                                      .
 EDAT   Emergence date  Emergence date (YrDoy)                                   .
 ELEV   Elevation  m    Elevation (m) 
@@ -115,24 +115,24 @@ KICM   K applied kg/ha Inorganic K applied (kg/ha)                              
 KUPC   K uptake kg/ha  Seasonal cumulative K uptake (kg[K]/ha)                  .
 L#SM   Leaf number #   Leaf number per stem at maturity                         .
 L#SX   Leaf number #   Leaf number per stem, maximum                            .
-L1DAP  Leaf cycle 1    Pineapple leaf cycle 1 (dap)                             .
-L2DAP  Leaf cycle 2    Pineapple leaf cycle 2 (dap)                             .
-L3DAP  Leaf cycle 3    Pineapple leaf cycle 3 (dap)                             .
-L1BIO  Biomass leaf 1  Pineapple biomass at Leaf Cycle 1 (kg/ha)                .
-L2BIO  Biomass leaf 2  Pineapple biomass at Leaf Cycle 2 (kg/ha)                .
-L3BIO  Biomass leaf 3  Pineapple biomass at Leaf Cycle 3 (kg/ha)                .
-L1LAI  LAI leaf 1      Pineapple LAI at Leaf Cycle 1 (m2/m2)                    .
-L2LAI  LAI leaf 2      Pineapple LAI at Leaf Cycle 2 (m2/m2)                    .
-L3LAI  LAI leaf 3      Pineapple LAI at Leaf Cycle 3 (m2/m2)                    .
-L1LN   Leaf Num Cyc.1  Pineapple leaf number al Leaf Cycle 1 (#)                .
-L2LN   Leaf Num Cyc.2  Pineapple leaf number al Leaf Cycle 2 (#)                .
-L3LN   Leaf Num Cyc.3  Pineapple leaf number al Leaf Cycle 3 (#)                .
-LADAF  Last anth dap   Pineapple last anthesis (dap)                            .
+L1DAP  Leaf cycle 1    Leaf cycle 1 (dap).                                      .
+L2DAP  Leaf cycle 2    Leaf cycle 2 (dap).                                      .
+L3DAP  Leaf cycle 3    Leaf cycle 3 (dap).                                      .
+L1BIO  Biomass leaf 1  Biomass at Leaf Cycle 1 (kg/ha)                          .
+L2BIO  Biomass leaf 2  Biomass at Leaf Cycle 2 (kg/ha)                          .
+L3BIO  Biomass leaf 3  Biomass at Leaf Cycle 3 (kg/ha)                          .
+L1LAI  LAI leaf 1      LAI at Leaf Cycle 1 (m2/m2)                              .
+L2LAI  LAI leaf 2      LAI at Leaf Cycle 2 (m2/m2)                              .
+L3LAI  LAI leaf 3      LAI at Leaf Cycle 3 (m2/m2)                              .
+L1LN   Leaf Num Cyc.1  Leaf number al Leaf Cycle 1 (#)                          .
+L2LN   Leaf Num Cyc.2  Leaf number al Leaf Cycle 2 (#)                          .
+L3LN   Leaf Num Cyc.3  Leaf number al Leaf Cycle 3 (#)                          .
+LADAF  Last anth dap   Last anthesis (dap)                                      .
 LAIH   LAI harvest     Leaf area index, at harvest                              .
 LAIX   LAI maximum     Leaf area index, maximum                                 .
-LEBIO  Bio first leaf  Pineapple biomass at first new leaf (kg/ha)              .
-LEDAP  First leaf em   Pineapple first leaf emergence (dap)                     .
-LELAI  LAI first leaf  Pineapple LAI at first new leaf (m2/m2)                  .
+LEBIO  Bio first leaf  Biomass at first new leaf (kg/ha)                        .
+LEDAP  First leaf em   First leaf emergence (dap)                               .
+LELAI  LAI first leaf  LAI at first new leaf (m2/m2)                            .
 LIWAM  Lint Yld kg/ha  Lint Yield at maturity (kg [dm]/ha)                      .
 LINTP  Lint %          Lint Percentage (%)                                      .
 LONG   Longitude o     Longitude (degrees)                                      .
@@ -150,7 +150,7 @@ NUCM   N uptake kg/ha  N uptake during season (kg [N]/ha)                       
 NMINC  Net N mineraliz Cumulative seasonal net N mineralization (kg[N]/ha)      .
 OCAM   Organic C kg/ha Organic soil C at maturity (kg/ha)                       .
 OCTAM  Tot Org C kg/ha Total Organic C at maturity, soil and surface (kg/ha)    .
-OHDAF  Open heart dap  Pineapple Open Heart (dap)                               .
+OHDAF  Open heart dap  Open Heart (dap)                                         .
 ONAM   Organic N kg/ha Organic soil N at maturity (kg/ha)                       .
 ONTAM  Tot Org N kg/ha Total Organic N at maturity, soil and surface (kg/ha)    .
 OPAM   Organic P kg/ha Organic soil P at maturity (kg/ha)                       .
@@ -179,9 +179,9 @@ R7AT   First maturity  Beginning Maturity Stage                                 
 R8AP   Harv maturity   Harvest maturity day (dap)                               .
 R8AT   Harv maturity   Date of Harvest Maturity Stage (YrDoy)                   .
 R9AT   Over-mature     Over-Mature Pod Stage                                    .
-RIBIO  Bio root init   Pineapple biomass at root initiation (kg/ha)             .
-RIDAP  Root initiat    Pineapple root initiation (dap)                          .
-RILAI  LAI initiat     Pineapple LAI at root initiation (kg/ha)                 .
+RIBIO  Bio root init   Biomass at root initiation (kg/ha)                       .
+RIDAP  Root initiat    Root initiation (dap)                                    .
+RILAI  LAI initiat     LAI at root initiation (kg/ha)                           .
 RECM   Residue kg/ha   Residue applied (kg/ha)                                  .
 RNAH   Rt N upt kg/ha  Root N uptake (kg/ha)                                    .
 ROCM   Runoff mm       Season surface runoff (mm)                               .
