@@ -104,6 +104,7 @@ C-----------------------------------------------------------------------
       REAL XHLAI, XLAI
       REAL KSEVAP, KTRANS
       REAL, Dimension(NL) :: PUptake, RLV, FracRts, UNH4, UNO3, KUptake
+      CHARACTER*5  IPESTID
       Type (ResidueType) HARVRES  !type defined in ModuleDefs
       Type (ResidueType) SENESCE  
       
@@ -221,6 +222,8 @@ C***********************************************************************
 
       IF(ISWDIS.EQ.'Y') THEN
           YRPLT = YRDOY
+          call fio%get("PEST","IPESTID",IPESTID)
+          !WRITE(*,*) 'IPESTID = ',IPESTID
           CALL READPEST(FILEP, 'WH005', 0)
       ENDIF
 
@@ -249,6 +252,12 @@ C-----------------------------------------------------------------------
       IF (YRPLT < YRSIM .AND. CROP /= 'FA' .AND.
      &    INDEX('AF', IPLTI) == 0) THEN
           CALL ERROR(ERRKEY,2,' ',0)
+      ENDIF
+
+      !FHB - get planting date
+      IF(ISWDIS.EQ.'Y') THEN
+            call fio%set("PEST","YRPLT",YRPLT)
+            !WRITE(*,*) "YRPLT", YRPLT
       ENDIF
 
 C-----------------------------------------------------------------------

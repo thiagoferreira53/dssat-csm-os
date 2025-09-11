@@ -180,6 +180,11 @@
       USE CSVOUTPUT  ! VSH
       USE ModuleDefs
       USE CER_First_Trans_m
+
+!------ Generic Disease Purpose -----!      
+      USE flexibleio
+      USE, intrinsic :: iso_c_binding
+!----------------END-----------------! 
       
       IMPLICIT NONE
       EXTERNAL CER_Init, CER_Growth, CER_Integrate, CER_Output, PEST
@@ -260,6 +265,8 @@
      &     WINDSP, YEARPLTCSM, LAI)
 
         IF (ISWDIS.EQ.'Y') THEN
+        
+        call fio%set("PEST","ZSTAGE",ZSTAGE)
           CALL PEST(CONTROL, ISWITCH, 
      &      LAI, LFWTGM, STWTGM, LAGSD, LNGPEG, NR2, CARBO,     !Input
      &      PHTIM, PLTPOP, RTWTGM, SLA, SLDOT, SOILPROP,        !Input
