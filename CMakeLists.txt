@@ -4,7 +4,7 @@
 # Define the project and the dependencies that it has
 ##########################################################################################
 
-CMAKE_MINIMUM_REQUIRED(VERSION 2.8.12)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.10.0)
 
 if("${CMAKE_SOURCE_DIR}" STREQUAL "${CMAKE_BINARY_DIR}")
    message(FATAL_ERROR "DSSAT in-source builds are not permitted. \nMake a separate folder"
@@ -21,8 +21,8 @@ PROJECT(DSSAT-CSM Fortran C CXX)
 
 SET(MAJOR 4)
 SET(MINOR 8)
-SET(MODEL 1)
-SET(BUILD 26)
+SET(MODEL 5)
+SET(BUILD 31)
 
 # Get the current working branch
 execute_process(
@@ -362,6 +362,7 @@ set(
         "Plant/CROPGRO/INCOMP.for"
         "Plant/CROPGRO/Ipphenol.for"
         "Plant/CROPGRO/IPPLNT.for"
+        "Plant/CROPGRO/LTGROW.for"
         "Plant/CROPGRO/MOBIL.for"
         "Plant/CROPGRO/NFIX.for"
         "Plant/CROPGRO/NUPTAK.for"
@@ -642,6 +643,7 @@ set(
         "Soil/SoilUtilities/TextureClass.for"
         "Soil/SoilWater/CapFringe.f90"
         "Soil/SoilWater/INFIL.for"
+        "Soil/SoilWater/OPSWBL.for"
         "Soil/SoilWater/OPWBAL.for"
         "Soil/SoilWater/RETC_VG.for"
         "Soil/SoilWater/RNOFF.for"
