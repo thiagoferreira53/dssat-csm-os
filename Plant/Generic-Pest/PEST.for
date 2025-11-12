@@ -474,7 +474,7 @@ C-----------------------------------------------------------------------
      &    CLAI, CLFM, CSTEM, DISLA, DISLAP,               
      &    LAIDOT, WSIDOT, SDWT, WSDD, PSDD, DAS)
 
-        call fio%set("PEST","PCLMT",PCLMT)
+        CALL fio%set("PEST","PCLMT",PCLMT)
         CALL PUT('PDLABETA','BETA',1.0)
         CALL PUT('PDLABETA','PDLA',PDLA)
         CALL PUT('PDLABETA','PSDD',PSDD)

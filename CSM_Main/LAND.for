@@ -256,7 +256,8 @@ C-----------------------------------------------------------------------
 
       !FHB - get planting date
       IF(ISWDIS.EQ.'Y') THEN
-            call fio%set("PEST","YRPLT",YRPLT)
+            CALL fio%set("PEST","YRPLT",YRPLT)
+            CALL fio%set("PEST","YRSIM",YRSIM)
             !WRITE(*,*) "YRPLT", YRPLT
       ENDIF
 
@@ -326,7 +327,7 @@ C***********************************************************************
         CALL fio%set("PEST","SSAT1",SSAT1)
         CALL fio%set("PEST","TAVG",WEATHER % TAVG)
       
-            ENDIF
+      ENDIF
 C-----------------------------------------------------------------------
 C     Call WEATHER Subroutine to input weather data and to
 C     calculate hourly radiation and air temperature values
