@@ -8,7 +8,10 @@
  * @license BSD-3-Clause. See the LICENSE file in the root folder for details.
  */
 #include "include/simulator.h"
-#include<cmath>
+#include <cmath>
+#include <vector>
+#include <string>
+#include <cstdlib>
 #include "include/basic.h"
 #include "../FlexibleIO/Data/FlexibleIO.hpp"
 using namespace std;
@@ -373,6 +376,15 @@ int couplingRate(int *YRDOY,
     return (1);
 }
 
+// Structure to represent a disease cohort
+struct DiseaseCohort {
+    int infection_day;        // YRDOY when cohort was created
+    int age;                  // days since infection
+    double biomass;           // fungal biomass in this cohort (g)
+    double damaged_tissue;    // amount of grain tissue damaged by this cohort (g)
+    std::string stage;        // "latent", "infectious", or "necrotic"
+};
+
 int couplingIntegration(int *YRDOY,
     float *AREALF, float *CLW, float *CSW, float *PCLMT, float *PCSTMD,
     float *PDLA, float *PLFAD, float *PLFMD, float *PSTMD, float *PVSTGD,
@@ -383,7 +395,148 @@ int couplingIntegration(int *YRDOY,
     float *LAIDOT, float *WSIDOT, float *SDWT, 
     float *WSDD, float *PSDD, int *DAS) {
       
+    // Fungal growth model parameters
+    double Y = 0.4;                // yield: fraction of consumed substrate converted to biomass
+    double r_max = 0.3;            // intrinsic fungal growth rate (1/day)
+    double t_lag = 5;              // lag duration (days)
+    double lag_slope = 1.0;        // controls sharpness of lag activation
+    
+    // Cohort life cycle parameters (days)
+    int latent_period = 5;         // days before lesion becomes infectious
+    int necrotic_start = 20;       // day when lesion becomes necrotic
+    
+    // Initial infection parameters
+    double B0 = 0.001;             // initial fungal biomass per new infection (g)
+    
+    // Static variables to persist between calls
+    static std::vector<DiseaseCohort> cohorts; //Cohorts -- check if this sort of implementation is ok
+    static double total_damaged_tissue = 0.0;  // cumulative damaged grain tissue (g)
+    static int last_YRDOY = -1;
+    static int simulation_year = -1;
+    
+    // Reset cohorts when new simulation year starts
+    FlexibleIO *fio = FlexibleIO::getInstance();
+    int YRSIM = fio->getReal("PEST", "YRSIM");
+    double ZSTAGE = fio->getReal("PEST", "ZSTAGE");
+    if (simulation_year != YRSIM) {
+        cohorts.clear();
+        total_damaged_tissue = 0.0;
+        simulation_year = YRSIM;
+        last_YRDOY = -1;
+    }
+        
+    // SDWT - current grain weight (substrate - g/m²)
+    // HSDWT - healthy grain weight
+    double HSDWT = std::max(0.0, *SDWT - total_damaged_tissue);
+    
+    // Only process if there's available substrate
+    if (HSDWT > 0) {
+        
+        if (dIdt > 0.0) {
+            DiseaseCohort new_cohort;
+            new_cohort.infection_day = *YRDOY;
+            new_cohort.age = 0;
+            new_cohort.biomass = B0;
+            new_cohort.damaged_tissue = 0.0;
+            new_cohort.stage = "latent";
+            cohorts.push_back(new_cohort);
+            
+            //printf("  [NEW COHORT] Day %i - New infection created (Total cohorts: %zu)\n", 
+            //       *YRDOY, cohorts.size());
+        }
+        
+        double total_cohort_biomass = 0.0;
+        double daily_new_damage = 0.0;
+        
+        for (auto& cohort : cohorts) {
+            // Update cohort age
+            cohort.age = (*YRDOY - cohort.infection_day);
+            
+            // Update cohort stage based on age
+            if (cohort.age < latent_period) {
+                cohort.stage = "latent";
+            } else if (cohort.age < necrotic_start) {
+                cohort.stage = "infectious";
+            } else {
+                cohort.stage = "necrotic";
+            }
+            
+            // Process infectious cohorts
+            if (cohort.stage == "infectious") {
+                // Time relative to start of infectious period
+                double t_infectious = cohort.age - latent_period;
+                
+                // Lag-phase activation (sigmoid)
+                double activation = 1.0 / (1.0 + std::exp(-lag_slope * (t_infectious - t_lag)));
+                double r_eff = r_max * activation;
+                
+                // Calculate total biomass across all cohorts for competition
+                total_cohort_biomass = 0.0;
+                for (const auto& c : cohorts) {
+                    total_cohort_biomass += c.biomass;
+                }
+                
+                // Growth is proportional to available healthy tissue
+                double growth_limit = 1.0 - (total_cohort_biomass / (Y * HSDWT));
+                growth_limit = std::max(0.0, std::min(1.0, growth_limit));
+                
+                double dB = r_eff * cohort.biomass * growth_limit;
+                cohort.biomass += dB;
+                
+                // Calculate tissue damage (substrate consumption)
+                // Damaged tissue = fungal biomass / yield coefficient
+                double tissue_consumed = (1.0 / Y) * dB;
+                cohort.damaged_tissue += tissue_consumed;
+                daily_new_damage += tissue_consumed;
+                
+            } else if (cohort.stage == "necrotic") {
 
+            }
+            // Latent cohorts no growth, right? 
+        }
+        
+        total_damaged_tissue += daily_new_damage;
+        // *PSDD is % seed mass damaged
+        // *WSDD is the actual mass damaged (g/m²)
+        *WSDD = total_damaged_tissue; 
+        
+        if (total_damaged_tissue > HSDWT) {
+            total_damaged_tissue = HSDWT;
+        }
+        
+        // Count cohorts by stage
+        int n_latent = 0, n_infectious = 0, n_necrotic = 0;
+        double total_biomass = 0.0;
+        for (const auto& c : cohorts) {
+            if (c.stage == "latent") n_latent++;
+            else if (c.stage == "infectious") n_infectious++;
+            else if (c.stage == "necrotic") n_necrotic++;
+            total_biomass += c.biomass;
+        }
+        
+        // Detailed cohort information
+        //if (n_infectious > 0) {
+        //    printf("  COHORT DETAILS Day %i:\n", *YRDOY);
+        //    for (size_t i = 0; i < cohorts.size(); i++) {
+        //        if (cohorts[i].stage == "infectious") {
+        //            printf("    Cohort %zu: Age=%i, Stage=%s, Biomass=%.6f, Damage=%.6f\n",
+        //                   i+1, cohorts[i].age, cohorts[i].stage.c_str(), 
+        //                   cohorts[i].biomass, cohorts[i].damaged_tissue);
+        //        }
+        //    }
+        //}
+        
+    } 
+
+    printf("YRDOY: , %i, ZSTAGE: %.4f, dIdt: %.4f, HSDWT: %.4f, total_damaged_tissue: %.4f, cohorts.size(): %zu, WSDD: %.6f\n",
+           *YRDOY, ZSTAGE, dIdt, HSDWT, total_damaged_tissue,
+           cohorts.size(), *WSDD);
+    
+
+    
+    last_YRDOY = *YRDOY;
+    
+    return 1;
 }
 int couplingOutput(int *doy) {
     
