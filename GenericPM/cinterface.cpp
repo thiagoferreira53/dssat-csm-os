@@ -11,7 +11,6 @@
 #include <cmath>
 #include <vector>
 #include <string>
-#include <cstdlib>
 #include "include/basic.h"
 #include "../FlexibleIO/Data/FlexibleIO.hpp"
 using namespace std;
@@ -59,7 +58,8 @@ double S , W , I ;
 using Vec3 = std::array<double,3>;
 Vec3 y = {S, W, I};
 double dSdt, dWdt, dIdt;
-
+double daily_dI;           // daily increment in infection (for cohort biomass calculation)
+double daily_dW;           // daily increment in wheat (for cohort biomass calculation)
 
 
 // NEW **************************************************
@@ -90,6 +90,8 @@ int couplingInit(int *YRDOY, int *YRPLT) {
         dSdt = S;
         dWdt = W;
         dIdt = I;
+        daily_dI = 0.0;
+        daily_dW = 0.0;
         y = {S, W, I};
     return (1);
 }
@@ -142,9 +144,9 @@ Vec3 ode_rhs(Vec3 &state, double Rain_t, double day, double SW, int is_rainy_day
     
     double temp_factor = temperature_beta(TAVG, inf_temp_min, inf_temp_opt, inf_temp_max);
 
-    dSdt = spore_release_rate - (kd * S) - (kg * S);
-    dWdt = (alpha * kg * S) - (kdw * W);
-    dIdt = (k_inf * W * is_rainy_day * anther_prop_t * temp_factor) - (k_rec * I);
+    dSdt = std::max(0.0,spore_release_rate - (kd * S) - (kg * S));
+    dWdt = std::max(0.0, (alpha * kg * S) - (kdw * W));
+    dIdt = std::max(0.0,(k_inf * W * is_rainy_day * anther_prop_t * temp_factor) - (k_rec * I));
 
     // infection floor (prevent negative across dt)
     double dt = time_step_size;
@@ -312,11 +314,19 @@ int couplingRate(int *YRDOY,
 
     Vec3 out_dis = rk4_step(y, h, Rain_t, day, SW, is_rainy_day, TAVG, inf_temp_max, inf_temp_min, inf_temp_opt);
     
-    double dSdt = out_dis[0];
-    double dWdt = out_dis[1];
-    double dIdt = out_dis[2];
+    // Store old infection level before integration
+    double I_old = y[2];
+    double W_old = y[1];
+    
+    dSdt = out_dis[0];
+    dWdt = out_dis[1];
+    dIdt = out_dis[2];
     
     y = {dSdt, dWdt, dIdt};
+    
+    daily_dI = dIdt - I_old;
+    daily_dW = dWdt - W_old;
+    
         
     //printf("DEPOIS YRDOY %i S %f W %f I %f\n", *YRDOY, S, W , I);
 
@@ -368,6 +378,9 @@ int couplingRate(int *YRDOY,
     //printf("YRSIM %i YRSIMp %i SUSTAGE %i \n", YRSIM, YRSIMp, SUSTAGE);
 
     // Append new row each day
+    // Also print to terminal for debugging/traceability
+    //printf("CSV YRDOY=%d, dSdt=%.6f, dWdt=%.6f, dIdt=%.6f, ZSTAGE=%.3f, SW=%.4f, SRAD=%.3f, TMAX=%.2f, TMIN=%.2f, RAIN=%.3f\n",
+    //    *YRDOY, dSdt, dWdt, dIdt, ZSTAGE, SW, SRAD_t, TMAX_t, TMIN_t, Rain_t);
     std::ofstream fout(fileName, std::ios::app);
     fout << *YRDOY << ',' << dSdt << ',' << dWdt << ',' << dIdt << ',' << ZSTAGE << ',' << SW << ',' << SRAD_t << ',' << TMAX_t << ',' << TMIN_t << ',' << Rain_t <<'\n';
     fout.close();
@@ -402,8 +415,8 @@ int couplingIntegration(int *YRDOY,
     double lag_slope = 1.0;        // controls sharpness of lag activation
     
     // Cohort life cycle parameters (days)
-    int latent_period = 5;         // days before lesion becomes infectious
-    int necrotic_start = 20;       // day when lesion becomes necrotic
+    // int latent_period = 5;         // days before lesion becomes infectious
+    // int necrotic_start = 20;       // day when lesion becomes necrotic
     
     // Initial infection parameters
     double B0 = 0.001;             // initial fungal biomass per new infection (g)
@@ -432,17 +445,27 @@ int couplingIntegration(int *YRDOY,
     // Only process if there's available substrate
     if (HSDWT > 0) {
         
+        //printf("AAAAAABBCCCCCCC YRDOY=%d, dSdt=%.6f, dWdt=%.6f, dIdt=%.6f, ZSTAGE=%.3f, SW=%.4f\n",
+        //*YRDOY, dSdt, dWdt, dIdt, ZSTAGE, SW);
+        
+        //printf("(dIdt*dWdt): %.6f\n", (dIdt*dWdt));
+        //printf("(daily_dI*daily_dW): %.6f\n", (daily_dI*daily_dW));
+        
         if (dIdt > 0.0) {
             DiseaseCohort new_cohort;
             new_cohort.infection_day = *YRDOY;
             new_cohort.age = 0;
-            new_cohort.biomass = B0;
+            //new_cohort.biomass = B0; // this should be B0 * (dIdt*dWdt)?
+            //new_cohort.biomass = B0 * dIdt; 
+            //new_cohort.biomass = B0 * (dIdt*dWdt); 
+            //new_cohort.biomass = B0 * (daily_dI*daily_dW);
+            new_cohort.biomass = B0 * (daily_dI);
             new_cohort.damaged_tissue = 0.0;
-            new_cohort.stage = "latent";
+            //new_cohort.stage = "latent";
             cohorts.push_back(new_cohort);
             
-            //printf("  [NEW COHORT] Day %i - New infection created (Total cohorts: %zu)\n", 
-            //       *YRDOY, cohorts.size());
+            //printf("  [NEW COHORT] Day %i - daily_dI=%.6f, initial_biomass=%.8f (Total cohorts: %zu)\n", 
+            //       *YRDOY, daily_dI, new_cohort.biomass, cohorts.size());
         }
         
         double total_cohort_biomass = 0.0;
@@ -452,22 +475,31 @@ int couplingIntegration(int *YRDOY,
             // Update cohort age
             cohort.age = (*YRDOY - cohort.infection_day);
             
+            // When it there is infection, it already starts at latent stage?
+
             // Update cohort stage based on age
-            if (cohort.age < latent_period) {
-                cohort.stage = "latent";
-            } else if (cohort.age < necrotic_start) {
-                cohort.stage = "infectious";
-            } else {
-                cohort.stage = "necrotic";
-            }
+            //if (cohort.age < latent_period) {
+            //    cohort.stage = "latent";
+            //} else
+            
+            // Removed infection and necrotic stages for now
+            
+            //if (cohort.age < necrotic_start) {
+            //    cohort.stage = "infectious";
+            //} else {
+            //    cohort.stage = "necrotic";
+            //}
             
             // Process infectious cohorts
-            if (cohort.stage == "infectious") {
-                // Time relative to start of infectious period
-                double t_infectious = cohort.age - latent_period;
+            //if (cohort.stage == "infectious") {
                 
+                // Removed infection and necrotic stages for now
+                // Time relative to start of infectious period
+                //double t_infectious = cohort.age - latent_period;
                 // Lag-phase activation (sigmoid)
-                double activation = 1.0 / (1.0 + std::exp(-lag_slope * (t_infectious - t_lag)));
+                //double activation = 1.0 / (1.0 + std::exp(-lag_slope * (t_infectious - t_lag)));
+
+                double activation = 1.0 / (1.0 + std::exp(-lag_slope * (cohort.age - t_lag)));
                 double r_eff = r_max * activation;
                 
                 // Calculate total biomass across all cohorts for competition
@@ -489,10 +521,7 @@ int couplingIntegration(int *YRDOY,
                 cohort.damaged_tissue += tissue_consumed;
                 daily_new_damage += tissue_consumed;
                 
-            } else if (cohort.stage == "necrotic") {
-
-            }
-            // Latent cohorts no growth, right? 
+            //}
         }
         
         total_damaged_tissue += daily_new_damage;
@@ -505,14 +534,14 @@ int couplingIntegration(int *YRDOY,
         }
         
         // Count cohorts by stage
-        int n_latent = 0, n_infectious = 0, n_necrotic = 0;
-        double total_biomass = 0.0;
-        for (const auto& c : cohorts) {
-            if (c.stage == "latent") n_latent++;
-            else if (c.stage == "infectious") n_infectious++;
-            else if (c.stage == "necrotic") n_necrotic++;
-            total_biomass += c.biomass;
-        }
+        //int n_latent = 0, n_infectious = 0, n_necrotic = 0;
+        //double total_biomass = 0.0;
+        //for (const auto& c : cohorts) {
+        //    if (c.stage == "latent") n_latent++;
+        //    else if (c.stage == "infectious") n_infectious++;
+        //    else if (c.stage == "necrotic") n_necrotic++;
+        //    total_biomass += c.biomass;
+        //}
         
         // Detailed cohort information
         //if (n_infectious > 0) {
@@ -528,7 +557,7 @@ int couplingIntegration(int *YRDOY,
         
     } 
 
-    printf("YRDOY: , %i, ZSTAGE: %.4f, dIdt: %.4f, HSDWT: %.4f, total_damaged_tissue: %.4f, cohorts.size(): %zu, WSDD: %.6f\n",
+    printf("YRDOY: %i, ZSTAGE: %.4f, dIdt: %.4f, HSDWT: %.4f, total_damaged_tissue: %.4f, cohorts.size(): %zu, WSDD: %.6f\n",
            *YRDOY, ZSTAGE, dIdt, HSDWT, total_damaged_tissue,
            cohorts.size(), *WSDD);
     
