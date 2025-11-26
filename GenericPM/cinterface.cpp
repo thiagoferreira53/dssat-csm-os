@@ -277,40 +277,6 @@ int couplingRate(int *YRDOY,
         
     ////double h = dap;
     double h = 1; // daily step
-    //
-//    double k1[3], k2[3], k3[3], k4[3], yt[3];
-//        
-//    // k1
-//    k1[0] = spore_release_rate - (kd * y[0]) - (kg * y[0]);
-//    k1[1] = (alpha * kg * y[0]) - (kdw * y[1]);
-//    k1[2] = (k_inf * y[1] * is_rainy_day * anther_prop_t) - (k_rec * y[2]);
-//    
-//    // k2
-//    for (int i = 0; i < 3; i++) yt[i] = y[i] + 0.5 * h * k1[i];
-//    k2[0] = spore_release_rate - (kd * yt[0]) - (kg * yt[0]);
-//    k2[1] = (alpha * kg * yt[0]) - (kdw * yt[1]);
-//    k2[2] = (k_inf * yt[1] * is_rainy_day * anther_prop_t) - (k_rec * yt[2]);
-//    
-//    // k3
-//    for (int i = 0; i < 3; i++) yt[i] = y[i] + 0.5 * h * k2[i];
-//    k3[0] = spore_release_rate - (kd * yt[0]) - (kg * yt[0]);
-//    k3[1] = (alpha * kg * yt[0]) - (kdw * yt[1]);
-//    k3[2] = (k_inf * yt[1] * is_rainy_day * anther_prop_t) - (k_rec * yt[2]);
-//    
-//    // k4
-//    for (int i = 0; i < 3; i++) yt[i] = y[i] + h * k3[i];
-//    k4[0] = spore_release_rate - (kd * yt[0]) - (kg * yt[0]);
-//    k4[1] = (alpha * kg * yt[0]) - (kdw * yt[1]);
-//    k4[2] = (k_inf * yt[1] * is_rainy_day * anther_prop_t) - (k_rec * yt[2]);
-//    
-//    // Update
-//    for (int i = 0; i < 3; i++) {
-//        y[i] += (h / 6.0) * (k1[i] + 2.0 * k2[i] + 2.0 * k3[i] + k4[i]);
-//        if (y[i] < 0.0) y[i] = 0.0; // enforce non-negativity
-//    }
-    
-    
-    //printf("ANTES YRDOY %i S %f W %f I %f\n", *YRDOY, S, W , I);
 
     Vec3 out_dis = rk4_step(y, h, Rain_t, day, SW, is_rainy_day, TAVG, inf_temp_max, inf_temp_min, inf_temp_opt);
     
@@ -326,26 +292,6 @@ int couplingRate(int *YRDOY,
     
     daily_dI = dIdt - I_old;
     daily_dW = dWdt - W_old;
-    
-        
-    //printf("DEPOIS YRDOY %i S %f W %f I %f\n", *YRDOY, S, W , I);
-
-    // NEW **************************************************
-    
-
-    //printf("YRDOY %i spore_release_rate %f S %f - (kd * S) - (kg * S) %f\n", *YRDOY, spore_release_rate, S, - (kd * S) - (kg * S));
-    
-    //double dSdt = std::max(0.0, spore_release_rate - (kd * S) - (kg * S));
-    //double dWdt = std::max(0.0, (alpha * kg * S) - (kdw * W));
-    //double dIdt = std::max(0.0, (k_inf * W * is_rainy_day * anther_prop_t) - (k_rec * I));
-
-    //double dSdt = spore_release_rate - (kd * S) - (kg * S);
-    //double dWdt = (alpha * kg * S) - (kdw * W);
-    //double dIdt = (k_inf * W * is_rainy_day * anther_prop_t) - (k_rec * I);
-
-    //std::ofstream fout("simulation_results.csv");
-    //fout << *YRDOY << ',' << dSdt << ',' << dWdt << ',' << dIdt << '\n';
-    //fout.close();
 
     
     int YRSIM = fio->getReal("PEST", "YRSIM");
@@ -461,7 +407,6 @@ int couplingIntegration(int *YRDOY,
             //new_cohort.biomass = B0 * (daily_dI*daily_dW);
             new_cohort.biomass = B0 * (daily_dI);
             new_cohort.damaged_tissue = 0.0;
-            //new_cohort.stage = "latent";
             cohorts.push_back(new_cohort);
             
             //printf("  [NEW COHORT] Day %i - daily_dI=%.6f, initial_biomass=%.8f (Total cohorts: %zu)\n", 
@@ -475,57 +420,31 @@ int couplingIntegration(int *YRDOY,
             // Update cohort age
             cohort.age = (*YRDOY - cohort.infection_day);
             
-            // When it there is infection, it already starts at latent stage?
-
-            // Update cohort stage based on age
-            //if (cohort.age < latent_period) {
-            //    cohort.stage = "latent";
-            //} else
+            double activation = 1.0 / (1.0 + std::exp(-lag_slope * (cohort.age - t_lag)));
+            double r_eff = r_max * activation;
             
-            // Removed infection and necrotic stages for now
+            // Calculate total biomass across all cohorts for competition
+            total_cohort_biomass = 0.0;
+            for (const auto& c : cohorts) {
+                total_cohort_biomass += c.biomass;
+            }
             
-            //if (cohort.age < necrotic_start) {
-            //    cohort.stage = "infectious";
-            //} else {
-            //    cohort.stage = "necrotic";
-            //}
+            // Growth is proportional to available healthy tissue
+            double growth_limit = 1.0 - (total_cohort_biomass / (Y * HSDWT));
+            growth_limit = std::max(0.0, std::min(1.0, growth_limit));
             
-            // Process infectious cohorts
-            //if (cohort.stage == "infectious") {
+            double dB = r_eff * cohort.biomass * growth_limit;
+            cohort.biomass += dB;
+            
+            // Calculate damage (substrate consumption)
+            // Damaged tissue = fungal biomass / yield coefficient
+            double tissue_consumed = (1.0 / Y) * dB;
+            cohort.damaged_tissue += tissue_consumed;
+            daily_new_damage += tissue_consumed;
                 
-                // Removed infection and necrotic stages for now
-                // Time relative to start of infectious period
-                //double t_infectious = cohort.age - latent_period;
-                // Lag-phase activation (sigmoid)
-                //double activation = 1.0 / (1.0 + std::exp(-lag_slope * (t_infectious - t_lag)));
-
-                double activation = 1.0 / (1.0 + std::exp(-lag_slope * (cohort.age - t_lag)));
-                double r_eff = r_max * activation;
-                
-                // Calculate total biomass across all cohorts for competition
-                total_cohort_biomass = 0.0;
-                for (const auto& c : cohorts) {
-                    total_cohort_biomass += c.biomass;
-                }
-                
-                // Growth is proportional to available healthy tissue
-                double growth_limit = 1.0 - (total_cohort_biomass / (Y * HSDWT));
-                growth_limit = std::max(0.0, std::min(1.0, growth_limit));
-                
-                double dB = r_eff * cohort.biomass * growth_limit;
-                cohort.biomass += dB;
-                
-                // Calculate tissue damage (substrate consumption)
-                // Damaged tissue = fungal biomass / yield coefficient
-                double tissue_consumed = (1.0 / Y) * dB;
-                cohort.damaged_tissue += tissue_consumed;
-                daily_new_damage += tissue_consumed;
-                
-            //}
         }
         
         total_damaged_tissue += daily_new_damage;
-        // *PSDD is % seed mass damaged
         // *WSDD is the actual mass damaged (g/m²)
         *WSDD = total_damaged_tissue; 
         
@@ -533,35 +452,17 @@ int couplingIntegration(int *YRDOY,
             total_damaged_tissue = HSDWT;
         }
         
-        // Count cohorts by stage
-        //int n_latent = 0, n_infectious = 0, n_necrotic = 0;
-        //double total_biomass = 0.0;
-        //for (const auto& c : cohorts) {
-        //    if (c.stage == "latent") n_latent++;
-        //    else if (c.stage == "infectious") n_infectious++;
-        //    else if (c.stage == "necrotic") n_necrotic++;
-        //    total_biomass += c.biomass;
-        //}
-        
-        // Detailed cohort information
-        //if (n_infectious > 0) {
-        //    printf("  COHORT DETAILS Day %i:\n", *YRDOY);
-        //    for (size_t i = 0; i < cohorts.size(); i++) {
-        //        if (cohorts[i].stage == "infectious") {
-        //            printf("    Cohort %zu: Age=%i, Stage=%s, Biomass=%.6f, Damage=%.6f\n",
-        //                   i+1, cohorts[i].age, cohorts[i].stage.c_str(), 
-        //                   cohorts[i].biomass, cohorts[i].damaged_tissue);
-        //        }
-        //    }
-        //}
-        
     } 
 
-    printf("YRDOY: %i, ZSTAGE: %.4f, dIdt: %.4f, HSDWT: %.4f, total_damaged_tissue: %.4f, cohorts.size(): %zu, WSDD: %.6f\n",
-           *YRDOY, ZSTAGE, dIdt, HSDWT, total_damaged_tissue,
-           cohorts.size(), *WSDD);
-    
+    // Compute total fungal biomass across all cohorts for reporting
+    double total_biomass = 0.0;
+    for (const auto& c : cohorts) {
+        total_biomass += c.biomass;
+    }
 
+    printf("YRDOY: %i, ZSTAGE: %.4f, dIdt: %.4f, HSDWT: %.4f, total_damaged_tissue: %.4f, cohorts.size(): %zu, WSDD: %.6f, total_biomass: %.6f\n",
+           *YRDOY, ZSTAGE, dIdt, HSDWT, total_damaged_tissue,
+           cohorts.size(), *WSDD, total_biomass);
     
     last_YRDOY = *YRDOY;
     
