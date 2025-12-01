@@ -61,6 +61,10 @@ double dSdt, dWdt, dIdt;
 double daily_dI;           // daily increment in infection (for cohort biomass calculation)
 double daily_dW;           // daily increment in wheat (for cohort biomass calculation)
 
+// Global variables for DON model (shared between couplingRate and couplingIntegration)
+int heading_yrdoy_global = -1;
+bool heading_detected_global = false;
+int first_day_sus_global = 0;
 
 // NEW **************************************************
 
@@ -93,6 +97,12 @@ int couplingInit(int *YRDOY, int *YRPLT) {
         daily_dI = 0.0;
         daily_dW = 0.0;
         y = {S, W, I};
+        
+    // Initialize DON model global variables
+    heading_yrdoy_global = -1;
+    heading_detected_global = false;
+    first_day_sus_global = 0;
+    
     return (1);
 }
 
@@ -236,7 +246,7 @@ int couplingRate(int *YRDOY,
     //*****************************************************************
     
     int day = 0;
-    static int SUSTAGE = 0, first_day_sus = 0;
+    static int SUSTAGE = 0;
 
     
     double Rain_t = fio->getRealYrdoy("WTH", std::to_string(*YRDOY), "RAIN");
@@ -246,11 +256,13 @@ int couplingRate(int *YRDOY,
     int is_rainy_day = (Rain_t > rain_threshold) ? 1 : 0;
     
     if(ZSTAGE >= 51 && SUSTAGE == 0){
-        first_day_sus = *YRDOY;
+        first_day_sus_global = *YRDOY;
+        heading_yrdoy_global = *YRDOY;
+        heading_detected_global = true;
         SUSTAGE = 1;
     }
     
-    day = *YRDOY - first_day_sus;
+    day = *YRDOY - first_day_sus_global;
     
 
     double A = 0.022900;
@@ -295,20 +307,22 @@ int couplingRate(int *YRDOY,
 
     
     int YRSIM = fio->getReal("PEST", "YRSIM");
+    int RUN = fio->getInteger("PEST", "RUN");
     
     double SRAD_t = fio->getRealYrdoy("WTH", std::to_string(*YRDOY), "SRAD");
     double TMAX_t = fio->getRealYrdoy("WTH", std::to_string(*YRDOY), "TMAX");
     double TMIN_t = fio->getRealYrdoy("WTH", std::to_string(*YRDOY), "TMIN");
     
-    static int YRSIMp = -1;
+    static int last_run_output = -1;
+    static int last_yrsim_output = -1;
 
     std::string YRSIM_str = std::to_string(YRSIM);
     std::string year = YRSIM_str.substr(0, YRSIM_str.size() - 3);
-    std::string fileName = "simulation_results_" + year + ".csv";
+    std::string fileName = "simulation_results_RUN" + std::to_string(RUN) + "_" + year + ".csv";
 
-    // Check if new simulation year started
-    if (YRSIM != YRSIMp) {
-        // Remove any previous results for this simulation year
+    // Check if new run or new simulation year started
+    if (RUN != last_run_output || YRSIM != last_yrsim_output) {
+        // Remove any previous results for this run/year combination
         std::remove(fileName.c_str());
         
         // Initialize new results file with header
@@ -318,7 +332,8 @@ int couplingRate(int *YRDOY,
 
         // Reset disease susceptibility stage tracker
         SUSTAGE = 0;
-        YRSIMp = YRSIM;
+        last_run_output = RUN;
+        last_yrsim_output = YRSIM;
     }
     
     //printf("YRSIM %i YRSIMp %i SUSTAGE %i \n", YRSIM, YRSIMp, SUSTAGE);
@@ -371,16 +386,18 @@ int couplingIntegration(int *YRDOY,
     static std::vector<DiseaseCohort> cohorts; //Cohorts -- check if this sort of implementation is ok
     static double total_damaged_tissue = 0.0;  // cumulative damaged grain tissue (g)
     static int last_YRDOY = -1;
-    static int simulation_year = -1;
+    static int last_run = -1;
     
-    // Reset cohorts when new simulation year starts
+    // Reset cohorts when new run starts (critical for sequential runs in batch mode)
     FlexibleIO *fio = FlexibleIO::getInstance();
     int YRSIM = fio->getReal("PEST", "YRSIM");
+    int RUN = fio->getInteger("PEST", "RUN");
     double ZSTAGE = fio->getReal("PEST", "ZSTAGE");
-    if (simulation_year != YRSIM) {
+    
+    if (last_run != RUN) {
         cohorts.clear();
         total_damaged_tissue = 0.0;
-        simulation_year = YRSIM;
+        last_run = RUN;
         last_YRDOY = -1;
     }
         
@@ -459,10 +476,109 @@ int couplingIntegration(int *YRDOY,
     for (const auto& c : cohorts) {
         total_biomass += c.biomass;
     }
+    
+    // ═══════════════════════════════════════════════════════════════════════
+    // DAILY DON PRODUCTION MODEL (Temperature and Weather-Dependent)
+    // ═══════════════════════════════════════════════════════════════════════
+    
+    // Get weather data for current day
+    double TAVG = fio->getReal("PEST", "TAVG");
+    double TMIN = fio->getRealYrdoy("WTH", std::to_string(*YRDOY), "TMIN");
+    double TMAX = fio->getRealYrdoy("WTH", std::to_string(*YRDOY), "TMAX");
+    double RAIN = fio->getRealYrdoy("WTH", std::to_string(*YRDOY), "RAIN");
+    
+    // Calculate days after heading (using global tracking variable)
+    int days_after_heading = heading_detected_global ? (*YRDOY - heading_yrdoy_global) : 0;
+    
+    // ═══════════════════════════════════════════════════════════════════════
+    // TEMPERATURE-DEPENDENT BASE RATE
+    // ═══════════════════════════════════════════════════════════════════════
+    // Double sigmoid bell curve: optimal 15-25°C, max rate 75 µg/mg
+    // Centers at 10°C (left) and 30°C (right), 1% minimum baseline
+    double base_rate = 75.0 * (0.01 + 0.99 / ((1.0 + std::exp(-0.5 * (TAVG - 10.0))) * 
+                                                (1.0 + std::exp(0.5 * (TAVG - 30.0)))));
+    
+    // ═══════════════════════════════════════════════════════════════════════
+    // RELATIVE HUMIDITY FACTOR
+    // ═══════════════════════════════════════════════════════════════════════
+    
+    // Spore type parameters
+    std::string spore_type = "combined";  // Options: "macroconidia", "ascospores", "combined"
+    double macro_proportion = 0.6;        // Weight for macroconidia (60%) vs ascospores (40%)
+    
+    double rh_factor = 1.0;
+    double relative_humidity_percent = -1.0; // Set to -1 to indicate RH not available
+    
+    // Optional: Estimate RH from TMIN/TMAX (uncomment if you want to use this)
+    // relative_humidity_percent = 100.0 * std::exp(0.06 * (TMIN - TMAX));
+    
+    if (relative_humidity_percent < 0) {
+        // If RH not provided, assume optimal conditions
+        rh_factor = 1.0;
+    } else {
+        // Constrain RH to valid range
+        double rh = std::max(0.0, std::min(100.0, relative_humidity_percent));
+        
+        if (spore_type == "macroconidia") {
+            // Rain-splash dispersed: optimal >90%, center 85%, range 0.1-1.0
+            rh_factor = 0.1 + 0.9 / (1.0 + std::exp(-0.15 * (rh - 85.0)));
+            
+        } else if (spore_type == "ascospores") {
+            // Wind-dispersed: optimal >85%, center 80%, range 0.2-1.0
+            rh_factor = 0.2 + 0.8 / (1.0 + std::exp(-0.12 * (rh - 80.0)));
+            
+        } else {  // combined (default)
+            // Weighted average of both spore types
+            double macro_factor = 0.1 + 0.9 / (1.0 + std::exp(-0.15 * (rh - 85.0)));
+            double asco_factor = 0.2 + 0.8 / (1.0 + std::exp(-0.12 * (rh - 80.0)));
+            rh_factor = macro_proportion * macro_factor + (1.0 - macro_proportion) * asco_factor;
+        }
+    }
+    
+    // ═══════════════════════════════════════════════════════════════════════
+    // WEATHER MODULATION FACTOR
+    // ═══════════════════════════════════════════════════════════════════════
+    // Combined weather: rain (0.5-1.2), cold penalty (<10°C), hot penalty (>32°C)
+    double weather_factor = (0.5 + 0.7 / (1.0 + std::exp(-1.2 * (RAIN - 3.0)))) * 
+                           (1.0 - 0.7 / (1.0 + std::exp(0.8 * (TMIN - 8.0)))) * 
+                           (1.0 - 0.6 / (1.0 + std::exp(-0.8 * (TMAX - 34.0))));
+    
+    // ═══════════════════════════════════════════════════════════════════════
+    // TEMPORAL FACTOR (Days after heading)
+    // ═══════════════════════════════════════════════════════════════════════
+    // Gompertz decay: optimal 0-10 DAH, asymptotic minimum 0.1 at 40+ DAH
+    double temporal_factor = 0.1 + 0.9 * std::exp(-std::exp(-2.0 + 0.12 * days_after_heading));
+    
+    // ═══════════════════════════════════════════════════════════════════════
+    // CALCULATE DAILY DON PRODUCTION
+    // ═══════════════════════════════════════════════════════════════════════
+    // Convert fungal biomass g/m² to mg/m²
+    double fungal_biomass_mg_m2 = total_biomass * 1000.0;
+    
+    // DON = base_rate(T) × biomass × weather × temporal × RH
+    double daily_DON_total_ug = base_rate * fungal_biomass_mg_m2 * weather_factor * 
+                                temporal_factor * rh_factor;
+    
+    // Convert to concentration (µg/kg grain)
+    double grain_yield_g_m2 = *SDWT;
+    double daily_DON_ug_kg = (grain_yield_g_m2 > 0) ? 
+                             (daily_DON_total_ug / grain_yield_g_m2) : 0.0;
+    
+    // Accumulate total DON over season
+    static double cumulative_DON_ug_kg = 0.0;
+    static int last_run_don = -1;
+    
+    // Reset cumulative DON when new run starts
+    if (last_run_don != RUN) {
+        cumulative_DON_ug_kg = 0.0;
+        last_run_don = RUN;
+    }
+    
+    cumulative_DON_ug_kg += daily_DON_ug_kg;
 
-    printf("YRDOY: %i, ZSTAGE: %.4f, dIdt: %.4f, HSDWT: %.4f, total_damaged_tissue: %.4f, cohorts.size(): %zu, WSDD: %.6f, total_biomass: %.6f\n",
+    printf("YRDOY: %i, ZSTAGE: %.4f, dIdt: %.4f, HSDWT: %.4f, total_damaged_tissue: %.4f, cohorts.size(): %zu, WSDD: %.6f, total_biomass: %.6f, daily_DON: %.2f ug/kg, cumulative_DON: %.2f ug/kg\n",
            *YRDOY, ZSTAGE, dIdt, HSDWT, total_damaged_tissue,
-           cohorts.size(), *WSDD, total_biomass);
+           cohorts.size(), *WSDD, total_biomass, daily_DON_ug_kg, cumulative_DON_ug_kg);
     
     last_YRDOY = *YRDOY;
     

@@ -258,6 +258,7 @@ C-----------------------------------------------------------------------
       IF(ISWDIS.EQ.'Y') THEN
             CALL fio%set("PEST","YRPLT",YRPLT)
             CALL fio%set("PEST","YRSIM",YRSIM)
+            CALL fio%set("PEST","RUN",CONTROL % RUN)
             !WRITE(*,*) "YRPLT", YRPLT
       ENDIF
 
