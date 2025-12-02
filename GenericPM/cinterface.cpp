@@ -11,6 +11,10 @@
 #include <cmath>
 #include <vector>
 #include <string>
+#include <fstream>
+#include <map>
+#include <tuple>
+#include <utility>
 #include "include/basic.h"
 #include "../FlexibleIO/Data/FlexibleIO.hpp"
 using namespace std;
@@ -43,6 +47,22 @@ extern "C" {
 float CLWp, SLAp, SDWTp, SW, SL1, SLL1, SSAT1, SDUL1;
 
 // NEW **************************************************
+
+// Structure to hold treatment summary data for DON output
+struct TreatmentSummary {
+    int last_YRDOY;
+    double cumulative_DON;
+    double total_biomass;
+    double total_damaged_tissue;
+    size_t cohort_count;
+};
+
+// Global static variables for DON summary tracking
+static std::map<std::pair<int,int>, TreatmentSummary> treatment_summaries;
+static std::map<std::pair<int,int>, bool> summary_written;
+static bool header_written_summary = false;
+static int last_run_summary = -1;
+static int last_yrsim_summary = -1;
 
 double kr;
 double M_thresh;
@@ -567,11 +587,32 @@ int couplingIntegration(int *YRDOY,
     // Accumulate total DON over season
     static double cumulative_DON_ug_kg = 0.0;
     static int last_run_don = -1;
+    static int last_yrsim_don = -1;
+    
+    // IMPORTANT: Save final values BEFORE resetting for new RUN
+    static double saved_cumulative_DON = 0.0;
+    static double saved_total_biomass = 0.0;
+    static double saved_total_damaged_tissue = 0.0;
+    static size_t saved_cohort_count = 0;
+    
+    if (last_run_don != -1 && last_run_don != RUN) {
+        // Save the previous RUN's final values before reset
+        saved_cumulative_DON = cumulative_DON_ug_kg;
+        saved_total_biomass = total_biomass;
+        saved_total_damaged_tissue = total_damaged_tissue;
+        saved_cohort_count = cohorts.size();
+        
+        printf("\n>>> SAVED FINAL VALUES for RUN %d, YRSIM %d before reset:\n", last_run_don, last_yrsim_don);
+        printf("    Final DON: %.2f µg/kg\n", saved_cumulative_DON);
+        printf("    Final Biomass: %.4f g/m²\n", saved_total_biomass);
+        printf("    Cohorts: %zu\n\n", saved_cohort_count);
+    }
     
     // Reset cumulative DON when new run starts
     if (last_run_don != RUN) {
         cumulative_DON_ug_kg = 0.0;
         last_run_don = RUN;
+        last_yrsim_don = YRSIM;
     }
     
     cumulative_DON_ug_kg += daily_DON_ug_kg;
@@ -580,10 +621,150 @@ int couplingIntegration(int *YRDOY,
            *YRDOY, ZSTAGE, dIdt, HSDWT, total_damaged_tissue,
            cohorts.size(), *WSDD, total_biomass, daily_DON_ug_kg, cumulative_DON_ug_kg);
     
+    // ═══════════════════════════════════════════════════════════════════════
+    // WRITE DAILY DON OUTPUT FILE (grouped by RUN and YRSIM like simulation_results)
+    // ═══════════════════════════════════════════════════════════════════════
+    static int last_run_file = -1;
+    static int last_yrsim_file = -1;
+    
+    std::string YRSIM_str = std::to_string(YRSIM);
+    std::string year = YRSIM_str.substr(0, YRSIM_str.size() - 3);
+    std::string don_fileName = "DON_results_RUN" + std::to_string(RUN) + "_" + year + ".csv";
+    
+    // Check if new run or new simulation year started - create new file with header
+    if (RUN != last_run_file || YRSIM != last_yrsim_file) {
+        std::remove(don_fileName.c_str());
+        std::ofstream fdon(don_fileName);
+        fdon << "YRDOY,ZSTAGE,Infection_Rate,Fungal_Biomass_g_m2,Damaged_Tissue_g_m2,Cohorts,"
+             << "WSDD_g_m2,Daily_DON_ug_kg,Cumulative_DON_ug_kg\n";
+        fdon.close();
+        last_run_file = RUN;
+        last_yrsim_file = YRSIM;
+    }
+    
+    // Append daily DON data
+    std::ofstream fdon(don_fileName, std::ios::app);
+    fdon << *YRDOY << ',' 
+         << ZSTAGE << ',' 
+         << dIdt << ',' 
+         << total_biomass << ',' 
+         << total_damaged_tissue << ',' 
+         << cohorts.size() << ',' 
+         << *WSDD << ',' 
+         << daily_DON_ug_kg << ',' 
+         << cumulative_DON_ug_kg << '\n';
+    fdon.close();
+    
+    // ═══════════════════════════════════════════════════════════════════════
+    // WRITE END-OF-SEASON DON SUMMARY (last value for each TRT)
+    // ═══════════════════════════════════════════════════════════════════════
+    
+    std::string summary_fileName = "DON_concentration_summary.csv";
+    
+    // DEBUG: Print current RUN/YRSIM on first day of each treatment
+    static int debug_last_run = -1;
+    if (debug_last_run != RUN) {
+        printf("\n>>> DEBUG: Treatment changed! RUN=%d, YRSIM=%d, YRDOY=%d\n", RUN, YRSIM, *YRDOY);
+        printf("    Previous: last_run_summary=%d, last_yrsim_summary=%d\n", last_run_summary, last_yrsim_summary);
+        printf("    cumulative_DON so far: %.2f µg/kg\n\n", cumulative_DON_ug_kg);
+        debug_last_run = RUN;
+    }
+    
+    // When treatment changes, write summary for previous treatment FIRST before updating the map
+    if (last_run_summary != -1 && (RUN != last_run_summary || YRSIM != last_yrsim_summary)) {
+        // FIRST: Update the map with the SAVED final values from before the reset
+        std::pair<int,int> prev_key = std::make_pair(last_run_summary, last_yrsim_summary);
+        if (treatment_summaries.find(prev_key) != treatment_summaries.end()) {
+            treatment_summaries[prev_key].cumulative_DON = saved_cumulative_DON;
+            treatment_summaries[prev_key].total_biomass = saved_total_biomass;
+            treatment_summaries[prev_key].total_damaged_tissue = saved_total_damaged_tissue;
+            treatment_summaries[prev_key].cohort_count = saved_cohort_count;
+            
+            TreatmentSummary& prev_summary = treatment_summaries[prev_key];
+            
+            printf("\n>>> UPDATED MAP with saved values for RUN %d:\n", last_run_summary);
+            printf("    Saved DON: %.2f µg/kg\n", saved_cumulative_DON);
+            printf("    Saved Biomass: %.4f g/m²\n\n", saved_total_biomass);
+            
+            // NOW write immediately to file (only if not already written)
+            if (!summary_written[prev_key]) {
+                std::string summary_fileName = "DON_concentration_summary.csv";
+                std::ofstream fsum;
+                if (!header_written_summary) {
+                fsum.open(summary_fileName);
+                fsum << "RUN,YRSIM,Last_YRDOY,Final_DON_Concentration_ug_kg\n";
+                header_written_summary = true;
+            } else {
+                fsum.open(summary_fileName, std::ios::app);
+            }
+            
+            fsum << last_run_summary << ','
+                 << last_yrsim_summary << ','
+                 << prev_summary.last_YRDOY << ','
+                 << prev_summary.cumulative_DON << '\n';
+            fsum.close();
+            
+            summary_written[prev_key] = true;
+            
+            printf("\n>>> TREATMENT SUMMARY WRITTEN (on change) - RUN %d, YRSIM %d <<<\n", 
+                   last_run_summary, last_yrsim_summary);
+            printf("    Final DON Concentration: %.2f µg/kg\n", prev_summary.cumulative_DON);
+            printf("    Final Fungal Biomass: %.4f g/m²\n", prev_summary.total_biomass);
+            printf("    Final YRDOY: %d\n", prev_summary.last_YRDOY);
+            printf("    Summary written to DON_concentration_summary.csv\n\n");
+            }  // Close the if (!summary_written[prev_key]) block
+        }
+    }
+    
+    // NOW update the map with current treatment's latest data EVERY day
+    // This ensures we always have the most recent values, including for the last treatment
+    std::pair<int,int> trt_key = std::make_pair(RUN, YRSIM);
+    
+    TreatmentSummary current_summary;
+    current_summary.last_YRDOY = *YRDOY;
+    current_summary.cumulative_DON = cumulative_DON_ug_kg;
+    current_summary.total_biomass = total_biomass;
+    current_summary.total_damaged_tissue = total_damaged_tissue;
+    current_summary.cohort_count = cohorts.size();
+    treatment_summaries[trt_key] = current_summary;
+    
+    // Write current treatment summary ONLY once at the end of the season
+    // We detect end-of-season when ZSTAGE reaches near physiological maturity (>= 89)
+    // This captures the final accumulated DON for all treatments including the last one
+    if (ZSTAGE >= 89.0 && !summary_written[trt_key]) {
+        std::string summary_fileName = "DON_concentration_summary.csv";
+        std::ofstream fsum;
+        if (!header_written_summary) {
+            fsum.open(summary_fileName);
+            fsum << "RUN,YRSIM,Last_YRDOY,Final_DON_Concentration_ug_kg\n";
+            header_written_summary = true;
+        } else {
+            fsum.open(summary_fileName, std::ios::app);
+        }
+        
+        fsum << RUN << ','
+             << YRSIM << ','
+             << current_summary.last_YRDOY << ','
+             << current_summary.cumulative_DON << '\n';
+        fsum.close();
+        
+        summary_written[trt_key] = true;
+        
+        printf("\n>>> TREATMENT SUMMARY WRITTEN (at maturity) - RUN %d, YRSIM %d <<<\n", RUN, YRSIM);
+        printf("    Final DON Concentration: %.2f µg/kg\n", current_summary.cumulative_DON);
+        printf("    Final Fungal Biomass: %.4f g/m²\n", current_summary.total_biomass);
+        printf("    Final YRDOY: %d, ZSTAGE: %.2f\n", current_summary.last_YRDOY, ZSTAGE);
+        printf("    Summary written to DON_concentration_summary.csv\n\n");
+    }
+    
+    // Update tracking variables
+    last_run_summary = RUN;
+    last_yrsim_summary = YRSIM;
     last_YRDOY = *YRDOY;
     
     return 1;
 }
+
 int couplingOutput(int *doy) {
     
 }
