@@ -22,6 +22,7 @@
 
 !-----------------------------------------------------------------------
       USE Aloha2_mod
+      USE SumModule
       IMPLICIT NONE
       SAVE
 
