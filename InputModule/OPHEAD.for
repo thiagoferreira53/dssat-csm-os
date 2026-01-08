@@ -630,7 +630,7 @@ C=======================================================================
            WRITE (HEADER(I),851) WTPSD,SDPDVR,SFDUR,PODUR,XFRUIT; I=I+1
 
         ELSEIF (INDEX ('AM,BC,BH,BM,BR,CB,CI,CN,CO,CU,GY,NP,PR,QU,
-     &     SF,SR,SU,TM,CV,HM',CROP) .GT. 0) THEN
+     &     SF,SR,SU,TM,CV,HM,CM',CROP) .GT. 0) THEN   ! VSH added CM
            WRITE (HEADER(I), 850) CSDVAR,PPSEN,PH2T5,
      &                        PHTHRS(8),PHTHRS(10); I=I+1
            WRITE (HEADER(I),852) WTPSD,SDPDVR,SFDUR,PODUR,XFRUIT; I=I+1
@@ -1058,7 +1058,7 @@ C========================================================================
       INTEGER ShortCount
 
       DATA PREV_RUN /0/
-      INTEGER, PARAMETER :: MAXLUN = 200
+      INTEGER, PARAMETER :: MAXLUN = 1000
       logical NOHEADER(MAXLUN)
 
       TYPE (ControlType) CONTROL
