@@ -236,6 +236,34 @@ C
             ISWDIS = 'Y'
          ENDIF
 
+         SELECT CASE (CROP)
+           CASE ('BN','SB','PN','PE','CH','PP','GY',
+     &              'VB','CP','CB','FB','GB','LT','AL',
+     &              'CV','BG')
+!          Do nothing -- these crops fix N and can have Y or N
+           CASE DEFAULT; ISWSYM = 'N'  !other crops, no choice
+         END SELECT
+!        ENDIF
+         IF (ISWCHE .EQ. ' ') THEN
+            ISWCHE = 'N'
+         ENDIF
+         IF (ISWTIL .EQ. ' ') THEN
+            ISWTIL = 'N'
+         ENDIF
+         IF (ISWWAT .EQ. 'N') THEN
+            ISWNIT = 'N'
+            ISWPHO = 'N'
+!            ISWCHE = 'N'
+         ENDIF
+
+         IF (INDEX('FNQS',RNMODE) > 0) THEN
+!          For sequence, seasonal runs, default CO2 uses static value
+           IF (INDEX ('WMD', ICO2) < 1) ICO2 = 'D'
+         ELSE
+!          For experimental runs, default CO2 uses measured values
+           IF (INDEX ('WMD', ICO2) < 1) ICO2 = 'M'
+         ENDIF
+
 !     ==============================================================
 C        Read THIRD line of simulation control - METHODS
 C
@@ -865,11 +893,16 @@ C     TF, FO & DP - 2022-07-12 - AutomaticMOW Switch
 !     Line 6
 !     -------------------------------------------------
 C  FO - 05/07/2020 Add new Y4K subroutine call to convert YRDOY
+!     2026-01-24 FO Added ERROR call for PWDINF and PWDINL
       !CALL Y2K_DOY (PWDINF)
       !CALL Y2K_DOY (PWDINL)
       IF(IPLTI .EQ. 'A' .OR. IPLTI .EQ. 'F') THEN
         CALL Y4K_DOY (PWDINF,FILEX,LINEXP,ERRKEY,9)
         CALL Y4K_DOY (PWDINL,FILEX,LINEXP,ERRKEY,9)
+        IF (PWDINF .LT. YRSIM .OR. PWDINL .LT. YRSIM)
+     &      CALL ERROR (ERRKEY,9,FILEX,LINEXP)        
+        IF (PWDINF .GT. PWDINL)
+     &      CALL ERROR (ERRKEY,12,FILEX,LINEXP)
       ELSE
         PWDINF = -99
         PWDINL = -99

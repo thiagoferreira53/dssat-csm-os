@@ -29,6 +29,7 @@ C-----------------------------------------------------------------------
       USE ModuleDefs      
       USE FloodModule      
       USE CsvOutput   ! VSH 
+      USE SumModule
 
 !------ Generic Disease Purpose -----!      
       USE flexibleio
@@ -37,7 +38,7 @@ C-----------------------------------------------------------------------
 
       IMPLICIT NONE
       EXTERNAL INFO, ERROR, WARNING, IPIBS, WEATHR, SOIL, SPAM, PLANT, 
-     &  OPSUM, MGMTOPS
+     &  MGMTOPS
       SAVE
       
       CHARACTER*1 ISWDIS
