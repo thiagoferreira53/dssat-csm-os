@@ -48,22 +48,6 @@ float CLWp, SLAp, SDWTp, SW, SL1, SLL1, SSAT1, SDUL1;
 
 // NEW **************************************************
 
-// Structure to hold treatment summary data for DON output
-struct TreatmentSummary {
-    int last_YRDOY;
-    double cumulative_DON;
-    double total_biomass;
-    double total_damaged_tissue;
-    size_t cohort_count;
-};
-
-// Global static variables for DON summary tracking
-static std::map<std::pair<int,int>, TreatmentSummary> treatment_summaries;
-static std::map<std::pair<int,int>, bool> summary_written;
-static bool header_written_summary = false;
-static int last_run_summary = -1;
-static int last_yrsim_summary = -1;
-
 double kr;
 double M_thresh;
 double kd;
@@ -73,7 +57,6 @@ double kdw;
 double k_inf;
 double k_rec;
 double rain_threshold;
-double time_step_size;
 double S , W , I ;
 using Vec3 = std::array<double,3>;
 Vec3 y = {S, W, I};
@@ -109,13 +92,7 @@ int couplingInit(int *YRDOY, int *YRPLT) {
         k_inf = 0.0025;
         k_rec = 0.0;
         rain_threshold = 2.0;
-        time_step_size = 1;
         S = 100, W = 0.0, I = 0.0;
-        dSdt = S;
-        dWdt = W;
-        dIdt = I;
-        daily_dI = 0.0;
-        daily_dW = 0.0;
         y = {S, W, I};
         
     // Initialize DON model global variables
@@ -128,16 +105,17 @@ int couplingInit(int *YRDOY, int *YRPLT) {
 
 // NEW **************************************************
 
-double temperature_beta(double T, double tmin, double topt, double tmax) {
+// Temperature-dependent factor using beta function
+double temperature_factor(double TAVG, double tmin, double topt, double tmax) {
     // Check for invalid or non-finite inputs
-    if (!std::isfinite(T) || !std::isfinite(tmin) || !std::isfinite(topt) || !std::isfinite(tmax))
+    if (!std::isfinite(TAVG) || !std::isfinite(tmin) || !std::isfinite(topt) || !std::isfinite(tmax))
         return 0.0;
 
     // Degenerate parameter case
     if (tmin >= topt || topt >= tmax)
         return 1.0;
 
-    if (T <= tmin || T >= tmax)
+    if (TAVG <= tmin || TAVG >= tmax)
         return 0.0;
 
     // Avoid division by zero
@@ -147,72 +125,14 @@ double temperature_beta(double T, double tmin, double topt, double tmax) {
     double a = denom1 / denom2;
     double b = denom2 / denom1;
 
-    double x1 = std::max((T - tmin) / denom1, 1e-12);
-    double x2 = std::max((tmax - T) / denom2, 1e-12);
+    double x1 = std::max((TAVG - tmin) / denom1, 1e-12);
+    double x2 = std::max((tmax - TAVG) / denom2, 1e-12);
 
     double f = std::pow(x1, a) * std::pow(x2, b);
 
     return std::min(std::max(f, 0.0), 1.0);
 }
 
-Vec3 ode_rhs(Vec3 &state, double Rain_t, double day, double SW, int is_rainy_day, double TAVG, double inf_temp_max, double inf_temp_min, double inf_temp_opt) {
-
-    
-    double A = 0.022900;
-    double B = 3.612468;
-    double C = 0.464022;
-    double anther_prop_t = A * std::pow(day, B) * std::exp(-C * day);
-    anther_prop_t = std::max(0.0, std::min(1.0, anther_prop_t));
-
-    double spore_release_rate = kr * std::max(0.0, SW - M_thresh);
-
-    double S = state[0];
-    double W = state[1];
-    double I = state[2];
-
-    Rain_t = std::max(0.0, Rain_t);
-    
-    double temp_factor = temperature_beta(TAVG, inf_temp_min, inf_temp_opt, inf_temp_max);
-
-    dSdt = std::max(0.0,spore_release_rate - (kd * S) - (kg * S));
-    dWdt = std::max(0.0, (alpha * kg * S) - (kdw * W));
-    dIdt = std::max(0.0,(k_inf * W * is_rainy_day * anther_prop_t * temp_factor) - (k_rec * I));
-
-    // infection floor (prevent negative across dt)
-    double dt = time_step_size;
-    if ((I + dIdt * dt) < 0.0) dIdt = -I / dt;
-    
-    //printf("DEPOIS S %f W %f I %f SW %f \n", S, W , I, SW);
-    
-    //std::ofstream fout("simulation_results.csv", std::ios::app);
-    //fout << spore_release_rate << ',' << S << ',' << W << ',' << I <<'\n';
-    //fout.close();    
-    
-
-    return Vec3{dSdt, dWdt, dIdt};
-}
-
-Vec3 rk4_step(Vec3 &y, double h, double Rain_t, double day, double SW, int is_rainy_day, 
-    double TAVG, double inf_temp_max, double inf_temp_min, double inf_temp_opt) {
-    Vec3 k1 = ode_rhs(y, Rain_t, day, SW, is_rainy_day, TAVG, inf_temp_max, inf_temp_min, inf_temp_opt);
-    Vec3 y2;
-    for (int i = 0; i < 3; ++i) y2[i] = y[i] + 0.5*h*k1[i];
-    Vec3 k2 = ode_rhs(y2, Rain_t, day, SW, is_rainy_day, TAVG, inf_temp_max, inf_temp_min, inf_temp_opt);
-    Vec3 y3;
-    for (int i = 0; i < 3; ++i) y3[i] = y[i] + 0.5*h*k2[i];
-    Vec3 k3 = ode_rhs(y3, Rain_t, day, SW, is_rainy_day, TAVG, inf_temp_max, inf_temp_min, inf_temp_opt);
-    Vec3 y4;
-    for (int i = 0; i < 3; ++i) y4[i] = y[i] + h*k3[i];
-    Vec3 k4 = ode_rhs(y4, Rain_t, day, SW, is_rainy_day, TAVG, inf_temp_max, inf_temp_min, inf_temp_opt);
-    Vec3 ynew;
-    for (int i = 0; i < 3; ++i) ynew[i] = y[i] + (h/6.0)*(k1[i] + 2.0*k2[i] + 2.0*k3[i] + k4[i]);
-    // enforce non-negatives on some states
-    if (ynew[0] < 0.0) ynew[0] = 0.0; // S
-    if (ynew[1] < 0.0) ynew[1] = 0.0; // W
-    if (ynew[2] < 0.0) ynew[2] = 0.0; // I
-        
-    return ynew;
-}
 // NEW **************************************************
 
 
@@ -284,46 +204,43 @@ int couplingRate(int *YRDOY,
     
     day = *YRDOY - first_day_sus_global;
     
-
+    // ═══════════════════════════════════════════════════════════════════════
+    // DAILY INTEGRATION
+    // ═══════════════════════════════════════════════════════════════════════
+    
+    // Anther maturation phenology (fraction of anthers mature)
     double A = 0.022900;
     double B = 3.612468;
     double C = 0.464022;
     double anther_prop_t = A * std::pow(day, B) * std::exp(-C * day);
     anther_prop_t = std::max(0.0, std::min(1.0, anther_prop_t));
-
-    //double S = fio->getReal("PST", "II"); // Initial number of spores in the air
-    //double W = 0; // Initial number of spores on wheat spikes
-    //double I = 0; // Initial level of infection
     
-    //double S = 0, W = 0.0, I = 0.0;
-
-
-    //printf("YRDOY %i kr %f SW %f SL1 %f M_thresh %f\n", *YRDOY, kr, SW, SL1, M_thresh);
-
-    //double spore_release_rate = kr * std::max(0.0, SW - M_thresh);
-    
-
-    // **************************************************
-
-    // ---- RK4 integration ----
-        
-    ////double h = dap;
-    double h = 1; // daily step
-
-    Vec3 out_dis = rk4_step(y, h, Rain_t, day, SW, is_rainy_day, TAVG, inf_temp_max, inf_temp_min, inf_temp_opt);
-    
-    // Store old infection level before integration
-    double I_old = y[2];
+    // Store old state values before integration
+    double S_old = y[0];
     double W_old = y[1];
+    double I_old = y[2];
     
-    dSdt = out_dis[0];
-    dWdt = out_dis[1];
-    dIdt = out_dis[2];
+    // Calculate rates of change for current day
+    double spore_release_rate = kr * std::max(0.0, SW - M_thresh);
+    double temp_fact = temperature_factor(TAVG, inf_temp_min, inf_temp_opt, inf_temp_max);
     
-    y = {dSdt, dWdt, dIdt};
+    double rate_S = std::max(0.0, spore_release_rate - (kd * S_old) - (kg * S_old));
+    double rate_W = std::max(0.0, (alpha * kg * S_old) - (kdw * W_old));
+    double rate_I = std::max(0.0, (k_inf * W_old * is_rainy_day * anther_prop_t * temp_fact) - (k_rec * I_old));
     
-    daily_dI = dIdt - I_old;
-    daily_dW = dWdt - W_old;
+    // Update state: state_new = state_old + rate * 1.0 day
+    y[0] = std::max(0.0, S_old + rate_S);  // S (spores in air)
+    y[1] = std::max(0.0, W_old + rate_W);  // W (spores on wheat)
+    y[2] = std::max(0.0, I_old + rate_I);  // I (infection level)
+    
+    // Store rates and daily changes for output and biomass calculation
+    // (mimicking original code naming for compatibility)
+    dSdt = y[0];  // new S
+    dWdt = y[1];  // new W
+    dIdt = y[2];  // new I
+    
+    daily_dI = y[2] - I_old;  // Daily change in infection
+    daily_dW = y[1] - W_old;  // Daily change in wheat spores
 
     
     int YRSIM = fio->getReal("PEST", "YRSIM");
@@ -427,9 +344,6 @@ int couplingIntegration(int *YRDOY,
     
     // Only process if there's available substrate
     if (HSDWT > 0) {
-        
-        //printf("AAAAAABBCCCCCCC YRDOY=%d, dSdt=%.6f, dWdt=%.6f, dIdt=%.6f, ZSTAGE=%.3f, SW=%.4f\n",
-        //*YRDOY, dSdt, dWdt, dIdt, ZSTAGE, SW);
         
         //printf("(dIdt*dWdt): %.6f\n", (dIdt*dWdt));
         //printf("(daily_dI*daily_dW): %.6f\n", (daily_dI*daily_dW));
@@ -560,8 +474,8 @@ int couplingIntegration(int *YRDOY,
     // ═══════════════════════════════════════════════════════════════════════
     // Combined weather: rain (0.5-1.2), cold penalty (<10°C), hot penalty (>32°C)
     double weather_factor = (0.5 + 0.7 / (1.0 + std::exp(-1.2 * (RAIN - 3.0)))) * 
-                           (1.0 - 0.7 / (1.0 + std::exp(0.8 * (TMIN - 8.0)))) * 
-                           (1.0 - 0.6 / (1.0 + std::exp(-0.8 * (TMAX - 34.0))));
+                           (1.0 - 0.7 / (1.0 + std::exp(0.8 * (TMIN - 10.0)))) * 
+                           (1.0 - 0.6 / (1.0 + std::exp(-0.8 * (TMAX - 32.0))));
     
     // ═══════════════════════════════════════════════════════════════════════
     // TEMPORAL FACTOR (Days after heading)
@@ -575,47 +489,40 @@ int couplingIntegration(int *YRDOY,
     // Convert fungal biomass g/m² to mg/m²
     double fungal_biomass_mg_m2 = total_biomass * 1000.0;
     
-    // DON = base_rate(T) × biomass × weather × temporal × RH
+    // DON = base_rate(T) × biomass × weather × temporal
+    // Daily DON production in total mass (µg)
     double daily_DON_total_ug = base_rate * fungal_biomass_mg_m2 * weather_factor * 
-                                temporal_factor * rh_factor;
+                                temporal_factor; //rh_factor;
     
-    // Convert to concentration (µg/kg grain)
-    double grain_yield_g_m2 = *SDWT;
-    double daily_DON_ug_kg = (grain_yield_g_m2 > 0) ? 
-                             (daily_DON_total_ug / grain_yield_g_m2) : 0.0;
-    
-    // Accumulate total DON over season
-    static double cumulative_DON_ug_kg = 0.0;
+    // ═══════════════════════════════════════════════════════════════════════
+    // DON ACCUMULATION STRATEGY
+    // ═══════════════════════════════════════════════════════════════════════
+    // We accumulate total DON MASS (µg) over the season, NOT concentration.
+    // This is critical because:
+    //   1. DON concentration = cumulative_DON_mass / current_grain_weight
+    //   2. As grain fills (SDWT increases), concentration naturally dilutes
+    //   3. Adding concentrations directly (wrong approach) causes mathematical artifacts
+    //   4. This matches laboratory measurement: total toxin per total grain sample
+    static double cumulative_DON_total_ug = 0.0;
     static int last_run_don = -1;
     static int last_yrsim_don = -1;
     
-    // IMPORTANT: Save final values BEFORE resetting for new RUN
-    static double saved_cumulative_DON = 0.0;
-    static double saved_total_biomass = 0.0;
-    static double saved_total_damaged_tissue = 0.0;
-    static size_t saved_cohort_count = 0;
-    
-    if (last_run_don != -1 && last_run_don != RUN) {
-        // Save the previous RUN's final values before reset
-        saved_cumulative_DON = cumulative_DON_ug_kg;
-        saved_total_biomass = total_biomass;
-        saved_total_damaged_tissue = total_damaged_tissue;
-        saved_cohort_count = cohorts.size();
-        
-        printf("\n>>> SAVED FINAL VALUES for RUN %d, YRSIM %d before reset:\n", last_run_don, last_yrsim_don);
-        printf("    Final DON: %.2f µg/kg\n", saved_cumulative_DON);
-        printf("    Final Biomass: %.4f g/m²\n", saved_total_biomass);
-        printf("    Cohorts: %zu\n\n", saved_cohort_count);
-    }
-    
     // Reset cumulative DON when new run starts
     if (last_run_don != RUN) {
-        cumulative_DON_ug_kg = 0.0;
+        cumulative_DON_total_ug = 0.0;
         last_run_don = RUN;
         last_yrsim_don = YRSIM;
     }
     
-    cumulative_DON_ug_kg += daily_DON_ug_kg;
+    // Accumulate total DON mass (µg) produced daily
+    cumulative_DON_total_ug += daily_DON_total_ug;
+    
+    // Calculate current concentration for reporting (µg/kg)
+    double grain_yield_g_m2 = *SDWT;
+    double cumulative_DON_ug_kg = (grain_yield_g_m2 > 0) ? 
+                                   (cumulative_DON_total_ug / grain_yield_g_m2) : 0.0;
+    double daily_DON_ug_kg = (grain_yield_g_m2 > 0) ? 
+                             (daily_DON_total_ug / grain_yield_g_m2) : 0.0;
 
     printf("YRDOY: %i, ZSTAGE: %.4f, dIdt: %.4f, HSDWT: %.4f, total_damaged_tissue: %.4f, cohorts.size(): %zu, WSDD: %.6f, total_biomass: %.6f, daily_DON: %.2f ug/kg, cumulative_DON: %.2f ug/kg\n",
            *YRDOY, ZSTAGE, dIdt, HSDWT, total_damaged_tissue,
@@ -655,116 +562,9 @@ int couplingIntegration(int *YRDOY,
          << cumulative_DON_ug_kg << '\n';
     fdon.close();
     
-    // ═══════════════════════════════════════════════════════════════════════
-    // WRITE END-OF-SEASON DON SUMMARY (last value for each TRT)
-    // ═══════════════════════════════════════════════════════════════════════
-    
-    std::string summary_fileName = "DON_concentration_summary.csv";
-    
-    // DEBUG: Print current RUN/YRSIM on first day of each treatment
-    static int debug_last_run = -1;
-    if (debug_last_run != RUN) {
-        printf("\n>>> DEBUG: Treatment changed! RUN=%d, YRSIM=%d, YRDOY=%d\n", RUN, YRSIM, *YRDOY);
-        printf("    Previous: last_run_summary=%d, last_yrsim_summary=%d\n", last_run_summary, last_yrsim_summary);
-        printf("    cumulative_DON so far: %.2f µg/kg\n\n", cumulative_DON_ug_kg);
-        debug_last_run = RUN;
-    }
-    
-    // When treatment changes, write summary for previous treatment FIRST before updating the map
-    if (last_run_summary != -1 && (RUN != last_run_summary || YRSIM != last_yrsim_summary)) {
-        // FIRST: Update the map with the SAVED final values from before the reset
-        std::pair<int,int> prev_key = std::make_pair(last_run_summary, last_yrsim_summary);
-        if (treatment_summaries.find(prev_key) != treatment_summaries.end()) {
-            treatment_summaries[prev_key].cumulative_DON = saved_cumulative_DON;
-            treatment_summaries[prev_key].total_biomass = saved_total_biomass;
-            treatment_summaries[prev_key].total_damaged_tissue = saved_total_damaged_tissue;
-            treatment_summaries[prev_key].cohort_count = saved_cohort_count;
-            
-            TreatmentSummary& prev_summary = treatment_summaries[prev_key];
-            
-            printf("\n>>> UPDATED MAP with saved values for RUN %d:\n", last_run_summary);
-            printf("    Saved DON: %.2f µg/kg\n", saved_cumulative_DON);
-            printf("    Saved Biomass: %.4f g/m²\n\n", saved_total_biomass);
-            
-            // NOW write immediately to file (only if not already written)
-            if (!summary_written[prev_key]) {
-                std::string summary_fileName = "DON_concentration_summary.csv";
-                std::ofstream fsum;
-                if (!header_written_summary) {
-                fsum.open(summary_fileName);
-                fsum << "RUN,YRSIM,Last_YRDOY,Final_DON_Concentration_ug_kg\n";
-                header_written_summary = true;
-            } else {
-                fsum.open(summary_fileName, std::ios::app);
-            }
-            
-            fsum << last_run_summary << ','
-                 << last_yrsim_summary << ','
-                 << prev_summary.last_YRDOY << ','
-                 << prev_summary.cumulative_DON << '\n';
-            fsum.close();
-            
-            summary_written[prev_key] = true;
-            
-            printf("\n>>> TREATMENT SUMMARY WRITTEN (on change) - RUN %d, YRSIM %d <<<\n", 
-                   last_run_summary, last_yrsim_summary);
-            printf("    Final DON Concentration: %.2f µg/kg\n", prev_summary.cumulative_DON);
-            printf("    Final Fungal Biomass: %.4f g/m²\n", prev_summary.total_biomass);
-            printf("    Final YRDOY: %d\n", prev_summary.last_YRDOY);
-            printf("    Summary written to DON_concentration_summary.csv\n\n");
-            }  // Close the if (!summary_written[prev_key]) block
-        }
-    }
-    
-    // NOW update the map with current treatment's latest data EVERY day
-    // This ensures we always have the most recent values, including for the last treatment
-    std::pair<int,int> trt_key = std::make_pair(RUN, YRSIM);
-    
-    TreatmentSummary current_summary;
-    current_summary.last_YRDOY = *YRDOY;
-    current_summary.cumulative_DON = cumulative_DON_ug_kg;
-    current_summary.total_biomass = total_biomass;
-    current_summary.total_damaged_tissue = total_damaged_tissue;
-    current_summary.cohort_count = cohorts.size();
-    treatment_summaries[trt_key] = current_summary;
-    
-    // Write current treatment summary ONLY once at the end of the season
-    // We detect end-of-season when ZSTAGE reaches near physiological maturity (>= 89)
-    // This captures the final accumulated DON for all treatments including the last one
-    if (ZSTAGE >= 89.0 && !summary_written[trt_key]) {
-        std::string summary_fileName = "DON_concentration_summary.csv";
-        std::ofstream fsum;
-        if (!header_written_summary) {
-            fsum.open(summary_fileName);
-            fsum << "RUN,YRSIM,Last_YRDOY,Final_DON_Concentration_ug_kg\n";
-            header_written_summary = true;
-        } else {
-            fsum.open(summary_fileName, std::ios::app);
-        }
-        
-        fsum << RUN << ','
-             << YRSIM << ','
-             << current_summary.last_YRDOY << ','
-             << current_summary.cumulative_DON << '\n';
-        fsum.close();
-        
-        summary_written[trt_key] = true;
-        
-        printf("\n>>> TREATMENT SUMMARY WRITTEN (at maturity) - RUN %d, YRSIM %d <<<\n", RUN, YRSIM);
-        printf("    Final DON Concentration: %.2f µg/kg\n", current_summary.cumulative_DON);
-        printf("    Final Fungal Biomass: %.4f g/m²\n", current_summary.total_biomass);
-        printf("    Final YRDOY: %d, ZSTAGE: %.2f\n", current_summary.last_YRDOY, ZSTAGE);
-        printf("    Summary written to DON_concentration_summary.csv\n\n");
-    }
-    
-    // Update tracking variables
-    last_run_summary = RUN;
-    last_yrsim_summary = YRSIM;
-    last_YRDOY = *YRDOY;
-    
     return 1;
 }
 
 int couplingOutput(int *doy) {
-    
+    return 1;
 }
