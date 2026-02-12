@@ -14,6 +14,7 @@
 #include<iomanip>
 #include "disease.h"
 #include<iostream>
+#include "../../FlexibleIO/Data/FlexibleIO.hpp"
 
 
 double Utilities::trapezoidalFunction(double value, double v[]) {
@@ -91,4 +92,39 @@ int Utilities::addOneDay(int yearDoy) {
 
 bool Utilities::isLeapYear(int year) {
     return year % 4 == 0 && (year % 100 != 0 || year % 400 == 0);
+}
+
+double Utilities::temperatureFactor(double TAVG) {
+    // Read cardinal temperature parameters from WHGEN048.PST via FlexibleIO
+    // TFS field format: TFS = max, min, opt (e.g., "32,10,23")
+    FlexibleIO *fio = FlexibleIO::getInstance();
+    
+    double tmax = fio->getReal("PST", "TFS1");   // Maximum temperature
+    double tmin = fio->getReal("PST", "TFS2");   // Minimum temperature
+    double topt = fio->getReal("PST", "TFS3");   // Optimal temperature
+    
+    // Check for invalid or non-finite inputs
+    if (!std::isfinite(TAVG) || !std::isfinite(tmin) || !std::isfinite(topt) || !std::isfinite(tmax))
+        return 0.0;
+
+    // Degenerate parameter case
+    if (tmin >= topt || topt >= tmax)
+        return 1.0;
+
+    if (TAVG <= tmin || TAVG >= tmax)
+        return 0.0;
+
+    // Avoid division by zero
+    double denom1 = std::max(topt - tmin, 1e-9);
+    double denom2 = std::max(tmax - topt, 1e-9);
+
+    double a = denom1 / denom2;
+    double b = denom2 / denom1;
+
+    double x1 = std::max((TAVG - tmin) / denom1, 1e-12);
+    double x2 = std::max((tmax - TAVG) / denom2, 1e-12);
+
+    double f = std::pow(x1, a) * std::pow(x2, b);
+
+    return std::min(std::max(f, 0.0), 1.0);
 }

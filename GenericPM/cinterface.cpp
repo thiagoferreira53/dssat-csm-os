@@ -8,6 +8,7 @@
  * @license BSD-3-Clause. See the LICENSE file in the root folder for details.
  */
 #include "include/simulator.h"
+#include "include/utilities.h"
 #include <cmath>
 #include <vector>
 #include <string>
@@ -105,37 +106,6 @@ int couplingInit(int *YRDOY, int *YRPLT) {
 
 // NEW **************************************************
 
-// Temperature-dependent factor using beta function
-double temperature_factor(double TAVG, double tmin, double topt, double tmax) {
-    // Check for invalid or non-finite inputs
-    if (!std::isfinite(TAVG) || !std::isfinite(tmin) || !std::isfinite(topt) || !std::isfinite(tmax))
-        return 0.0;
-
-    // Degenerate parameter case
-    if (tmin >= topt || topt >= tmax)
-        return 1.0;
-
-    if (TAVG <= tmin || TAVG >= tmax)
-        return 0.0;
-
-    // Avoid division by zero
-    double denom1 = std::max(topt - tmin, 1e-9);
-    double denom2 = std::max(tmax - topt, 1e-9);
-
-    double a = denom1 / denom2;
-    double b = denom2 / denom1;
-
-    double x1 = std::max((TAVG - tmin) / denom1, 1e-12);
-    double x2 = std::max((tmax - TAVG) / denom2, 1e-12);
-
-    double f = std::pow(x1, a) * std::pow(x2, b);
-
-    return std::min(std::max(f, 0.0), 1.0);
-}
-
-// NEW **************************************************
-
-
 int couplingRate(int *YRDOY,
         float *AREALF, float *CLW, float *CSW, float *PCLMT, float *PCSTMD,
         float *PDLA, float *PLFAD, float *PLFMD, float *PSTMD, float *PVSTGD,
@@ -161,14 +131,6 @@ int couplingRate(int *YRDOY,
     s->updateCurrentYearDoy(*YRDOY);
 
     TAVG = fio->getReal("PEST", "TAVG");
-    double inf_temp_max = 32.0;//fio->getRealIndex("PST", "TFS", 1);
-    double inf_temp_min = 10.0; //fio->getRealIndex("PST", "TFS", 2);
-    double inf_temp_opt = 23.0;//fio->getRealIndex("PST", "TFS", 3);
-  
-    
-    //printf("inf_temp_max %f inf_temp_min %f inf_temp_opt %f\n");
-    
-    
     double ZSTAGE = fio->getReal("PEST", "ZSTAGE");
     
     fio->setIntegerMemory("PEST", "YRDOY", *YRDOY);
@@ -222,16 +184,16 @@ int couplingRate(int *YRDOY,
     
     // Calculate rates of change for current day
     double spore_release_rate = kr * std::max(0.0, SW - M_thresh);
-    double temp_fact = temperature_factor(TAVG, inf_temp_min, inf_temp_opt, inf_temp_max);
+    double temp_fact = Utilities::temperatureFactor(TAVG);
     
     double rate_S = std::max(0.0, spore_release_rate - (kd * S_old) - (kg * S_old));
     double rate_W = std::max(0.0, (alpha * kg * S_old) - (kdw * W_old));
     double rate_I = std::max(0.0, (k_inf * W_old * is_rainy_day * anther_prop_t * temp_fact) - (k_rec * I_old));
     
     // Update state: state_new = state_old + rate * 1.0 day
-    y[0] = std::max(0.0, S_old + rate_S);  // S (spores in air)
-    y[1] = std::max(0.0, W_old + rate_W);  // W (spores on wheat)
-    y[2] = std::max(0.0, I_old + rate_I);  // I (infection level)
+    y[0] = std::max(0.0, S_old + rate_S);  // S (spores in air) - cloudF
+    y[1] = std::max(0.0, W_old + rate_W);  // W (spores on wheat) - cloudP
+    y[2] = std::max(0.0, I_old + rate_I);  // I (infection level) - cloudO
     
     // Store rates and daily changes for output and biomass calculation
     // (mimicking original code naming for compatibility)

@@ -22,6 +22,7 @@ public:
     static double dispersalRainFunction(double rain, std::string dispersionFreequency);
     static double runExpressionFunction(double value, std::string expressionString);
     static double getHealthAreaProportion(double diseaseArea, double totalArea, double senescedArea);
+    static double temperatureFactor(double TAVG);
     static std::string formatDouble(double value);
     static std::string formatDouble(double value, int decimals);
     static int addOneDay(int yearDoy);
