@@ -127,6 +127,7 @@ set(
         "GenericPM/include/organ.cpp"
         "GenericPM/include/plant.cpp"
         "GenericPM/include/simulator.cpp"
+        "GenericPM/include/toxins.cpp"
         "GenericPM/include/utilities.cpp"
         "GenericPM/include/weather.cpp"
         "FlexibleIO/Interface/FInterface.f90"
