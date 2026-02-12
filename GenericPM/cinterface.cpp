@@ -48,8 +48,6 @@ extern "C" {
 
 float CLWp, SLAp, SDWTp, SW, SL1, SLL1, SSAT1, SDUL1;
 
-// NEW **************************************************
-
 double kr;
 double M_thresh;
 double kd;
@@ -71,7 +69,9 @@ int heading_yrdoy_global = -1;
 bool heading_detected_global = false;
 int first_day_sus_global = 0;
 
-// NEW **************************************************
+// Global variables for output (only data needed for file generation)
+static int current_YRDOY = 0;
+static double current_SW_local = 0.0;
 
 
 // Coupling Functions Implementation 
@@ -104,8 +104,6 @@ int couplingInit(int *YRDOY, int *YRPLT) {
     
     return (1);
 }
-
-// NEW **************************************************
 
 int couplingRate(int *YRDOY,
         float *AREALF, float *CLW, float *CSW, float *PCLMT, float *PCSTMD,
@@ -143,11 +141,6 @@ int couplingRate(int *YRDOY,
 
     SW = std::min(100.0f, std::max(0.0f, (SL1-SLL1)/(SSAT1-SLL1)));
     
-    //printf("YRDOY %i SL1 %f SLL1 %f SDUL1 %f SSAT1 %f SW %f\n", *YRDOY, SL1, SLL1, SDUL1, SSAT1, SW);
-    
-    //NEW CODE
-    //*****************************************************************
-    
     int day = 0;
     static int SUSTAGE = 0;
 
@@ -166,10 +159,6 @@ int couplingRate(int *YRDOY,
     }
     
     day = *YRDOY - first_day_sus_global;
-    
-    // ═══════════════════════════════════════════════════════════════════════
-    // DAILY INTEGRATION
-    // ═══════════════════════════════════════════════════════════════════════
     
     // Anther maturation phenology (fraction of anthers mature)
     double A = 0.022900;
@@ -205,29 +194,10 @@ int couplingRate(int *YRDOY,
     daily_dI = y[2] - I_old;  // Daily change in infection
     daily_dW = y[1] - W_old;  // Daily change in wheat spores
 
+    // Store data for output generation (file writing moved to couplingOutput)
+    current_YRDOY = *YRDOY;
+    current_SW_local = SW;
     
-    int YRSIM = fio->getReal("PEST", "YRSIM");
-    int RUN = fio->getInteger("PEST", "RUN");
-    
-    double SRAD_t = fio->getRealYrdoy("WTH", std::to_string(*YRDOY), "SRAD");
-    double TMAX_t = fio->getRealYrdoy("WTH", std::to_string(*YRDOY), "TMAX");
-    double TMIN_t = fio->getRealYrdoy("WTH", std::to_string(*YRDOY), "TMIN");
-    
-    std::string YRSIM_str = std::to_string(YRSIM);
-    std::string year = YRSIM_str.substr(0, YRSIM_str.size() - 3);
-    std::string fileName = "simulation_results_RUN" + std::to_string(RUN) + "_" + year + ".csv";
-    
-    //printf("YRSIM %i YRSIMp %i SUSTAGE %i \n", YRSIM, YRSIMp, SUSTAGE);
-
-    // Append new row each day
-    // Also print to terminal for debugging/traceability
-    //printf("CSV YRDOY=%d, dSdt=%.6f, dWdt=%.6f, dIdt=%.6f, ZSTAGE=%.3f, SW=%.4f, SRAD=%.3f, TMAX=%.2f, TMIN=%.2f, RAIN=%.3f\n",
-    //    *YRDOY, dSdt, dWdt, dIdt, ZSTAGE, SW, SRAD_t, TMAX_t, TMIN_t, Rain_t);
-    std::ofstream fout(fileName, std::ios::app);
-    fout << *YRDOY << ',' << dSdt << ',' << dWdt << ',' << dIdt << ',' << ZSTAGE << ',' << SW << ',' << SRAD_t << ',' << TMAX_t << ',' << TMIN_t << ',' << Rain_t <<'\n';
-    fout.close();
-    
-    // NEW **************************************************
     return (1);
 }
 
@@ -253,20 +223,15 @@ int couplingIntegration(int *YRDOY,
     // Fungal growth model parameters
     double Y = 0.4;                // yield: fraction of consumed substrate converted to biomass
     double r_max = 0.3;            // intrinsic fungal growth rate (1/day)
-    double t_lag = 5;              // lag duration (days)
+    double t_lag = 5;              // lag duration (days) - latent
     double lag_slope = 1.0;        // controls sharpness of lag activation
-    
-    // Cohort life cycle parameters (days)
-    // int latent_period = 5;         // days before lesion becomes infectious
-    // int necrotic_start = 20;       // day when lesion becomes necrotic
-    
+
     // Initial infection parameters
     double B0 = 0.001;             // initial fungal biomass per new infection (g)
     
     // Static variables to persist between calls
     static std::vector<DiseaseCohort> cohorts; //Cohorts -- check if this sort of implementation is ok
     static double total_damaged_tissue = 0.0;  // cumulative damaged grain tissue (g)
-    static int last_YRDOY = -1;
     static int last_run = -1;
     
     // Reset cohorts when new run starts (critical for sequential runs in batch mode)
@@ -279,7 +244,6 @@ int couplingIntegration(int *YRDOY,
         cohorts.clear();
         total_damaged_tissue = 0.0;
         last_run = RUN;
-        last_YRDOY = -1;
     }
         
     // SDWT - current grain weight (substrate - g/m²)
@@ -289,17 +253,10 @@ int couplingIntegration(int *YRDOY,
     // Only process if there's available substrate
     if (HSDWT > 0) {
         
-        //printf("(dIdt*dWdt): %.6f\n", (dIdt*dWdt));
-        //printf("(daily_dI*daily_dW): %.6f\n", (daily_dI*daily_dW));
-        
         if (dIdt > 0.0) {
             DiseaseCohort new_cohort;
             new_cohort.infection_day = *YRDOY;
             new_cohort.age = 0;
-            //new_cohort.biomass = B0; // this should be B0 * (dIdt*dWdt)?
-            //new_cohort.biomass = B0 * dIdt; 
-            //new_cohort.biomass = B0 * (dIdt*dWdt); 
-            //new_cohort.biomass = B0 * (daily_dI*daily_dW);
             new_cohort.biomass = B0 * (daily_dI);
             new_cohort.damaged_tissue = 0.0;
             cohorts.push_back(new_cohort);
@@ -356,7 +313,7 @@ int couplingIntegration(int *YRDOY,
     }
     
     // ═══════════════════════════════════════════════════════════════════════
-    // DAILY DON PRODUCTION MODEL (Temperature and Weather-Dependent)
+    // DAILY DON PRODUCTION MODEL
     // ═══════════════════════════════════════════════════════════════════════
     
     Toxins::FHB_DON don_result = Toxins::calculateDailyDON(
@@ -370,5 +327,47 @@ int couplingIntegration(int *YRDOY,
 }
 
 int couplingOutput(int *doy) {
+    // Write simulation results file
+    static int last_run_sim = -1;
+    static int last_yrsim_sim = -1;
+    
+    FlexibleIO *fio = FlexibleIO::getInstance();
+    
+    // Get weather data for output
+    double SRAD_t = fio->getRealYrdoy("WTH", std::to_string(current_YRDOY), "SRAD");
+    double TMAX_t = fio->getRealYrdoy("WTH", std::to_string(current_YRDOY), "TMAX");
+    double TMIN_t = fio->getRealYrdoy("WTH", std::to_string(current_YRDOY), "TMIN");
+    double RAIN_t = fio->getRealYrdoy("WTH", std::to_string(current_YRDOY), "RAIN");
+    int RUN = fio->getInteger("PEST", "RUN");
+    int YRSIM = fio->getReal("PEST", "YRSIM");
+    
+    std::string YRSIM_str = std::to_string(YRSIM);
+    std::string year = YRSIM_str.substr(0, YRSIM_str.size() - 3);
+    std::string fileName = "simulation_results_RUN" + std::to_string(RUN) + "_" + year + ".csv";
+
+    // Create new file with header if starting new run/year
+    if (RUN != last_run_sim || YRSIM != last_yrsim_sim) {
+        std::remove(fileName.c_str());
+        std::ofstream fout(fileName);
+        fout << "YRDOY,dSdt,dWdt,dIdt,ZSTAGE,SW,SRAD,TMAX,TMIN,RAIN\n";
+        fout.close();
+        last_run_sim = RUN;
+        last_yrsim_sim = YRSIM;
+    }
+    
+    // Append daily data
+    std::ofstream fout(fileName, std::ios::app);
+    fout << current_YRDOY << ',' 
+         << dSdt << ',' 
+         << dWdt << ',' 
+         << dIdt << ',' 
+         << fio->getReal("PEST", "ZSTAGE") << ',' 
+         << current_SW_local << ',' 
+         << SRAD_t << ',' 
+         << TMAX_t << ',' 
+         << TMIN_t << ',' 
+         << RAIN_t << '\n';
+    fout.close();
+    
     return 1;
 }
