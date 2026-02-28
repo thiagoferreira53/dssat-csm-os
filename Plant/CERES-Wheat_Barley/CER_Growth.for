@@ -35,7 +35,7 @@
         REAL SENCALG(0:20), SENNALG(0:20), SHF(20), SLPF
         REAL SRAD, ST(0:20), SW(20), TMAX, TMIN, TRWUP
         REAL UH2O(20), WINDSP, LAI
-        REAL DAYLT, RWUMX, RWUPM, SNOW, TFAC4, YVALXY
+        REAL DAYLT, RWUMX, RWUPM, SNOW, TFAC4, TXDF, YVALXY
         
         CHARACTER*1 ISWNIT, ISWWAT, RNMODE  !IDETG, 
         
@@ -411,6 +411,16 @@ C-GH      IF (snow.GT.0) THEN
           IF (RSTAGE.GT.PPEND .AND.ISTAGE.LT.7) THEN
             DF = 1.0
           ENDIF
+
+          ! Temperature factor for daylength response
+          IF (TMEAN.LE.10.0) THEN
+            TXDF = 1.0
+          ELSEIF (TMEAN.GE.30.0) THEN
+            TXDF = 0.0
+          ELSE
+            TXDF = (30.0 - TMEAN) / 20.0
+          ENDIF
+          DF = DF * TXDF
           
           ! Light intensity factor
           LIF2 = 1.0
