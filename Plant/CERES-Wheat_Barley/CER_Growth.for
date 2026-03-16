@@ -413,12 +413,13 @@ C-GH      IF (snow.GT.0) THEN
           ENDIF
 
           ! Temperature factor for daylength response
-          IF (TMEAN.LE.10.0) THEN
-            TXDF = 1.0
-          ELSEIF (TMEAN.GE.30.0) THEN
+          ! TXDF increases from 0 (at Tbase<=8C) to 1 (at 30C)
+          IF (TMEAN.LE.8.0) THEN
             TXDF = 0.0
+          ELSEIF (TMEAN.GE.30.0) THEN
+            TXDF = 1.0
           ELSE
-            TXDF = (30.0 - TMEAN) / 20.0
+            TXDF = (TMEAN - 8.0) / 22.0
           ENDIF
           DF = DF * TXDF
           
