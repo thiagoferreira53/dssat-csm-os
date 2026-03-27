@@ -1994,9 +1994,14 @@ C-----------------------------------------------------------------------
       AREALF = MAX(AREALF, 0.0)
 
       XLAI   = AREALF / 10000.
-      IF (AREALF .GT. 0.00001 .AND. WTLF .GT. 0.0) THEN
+      !WRITE(*,*) "WTLF - WCRLF", WTLF - WCRLF
+      IF (AREALF .GT. 0.00001 .AND. WTLF .GT. 1.0E-6) THEN
         SLA    = AREALF / WTLF
-        SLAAD  = AREALF / (WTLF - WCRLF)
+        IF (WTLF - WCRLF .GT. 1.0E-6) THEN
+          SLAAD  = AREALF / (WTLF - WCRLF)
+        ELSE
+          SLAAD  = -99.
+        ENDIF
         IF (SLA .GT. 999.) SLA = -99.
         IF (SLAAD .GT. 999.) SLAAD = -99.
       ENDIF
