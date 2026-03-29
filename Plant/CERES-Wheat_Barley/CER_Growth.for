@@ -413,14 +413,18 @@ C-GH      IF (snow.GT.0) THEN
           ENDIF
 
           ! Temperature factor for daylength response
-          ! TXDF ramps from 0.3 (floor at Tbase=0C) to 1.0 (at Tmax=30C)
+          ! TXDF increases from 0 (at Tbase=0C) to 1 (at Tmax=40C)
           IF (TMEAN.LE.0.0) THEN
-            TXDF = 0.3
+            TXDF = 0.0
           ELSEIF (TMEAN.GE.30.0) THEN
             TXDF = 1.0
           ELSE
-            TXDF = 0.3 + 0.7 * (TMEAN / 30.0)
+            TXDF = TMEAN / 30.0
           ENDIF
+          
+          ! If TXDF is less than 0.3, set to 0.3
+          TXDF = MAX(0.3, TXDF)
+          
           DF = DF * TXDF
           
           ! Light intensity factor
