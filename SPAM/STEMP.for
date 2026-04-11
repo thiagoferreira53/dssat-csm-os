@@ -42,6 +42,7 @@ C-----------------------------------------------------------------------
                          ! which contain control information, soil
                          ! parameters, hourly weather data.
       USE ModuleData
+      
       IMPLICIT  NONE
       EXTERNAL YR_DOY, SOILT, OPSTEMP
       SAVE
@@ -196,7 +197,7 @@ C-----------------------------------------------------------------------
         END DO
 
         DO I = 1, 8
-          CALL SOILT (
+          CALL SOILT (CONTROL,
      &        ALBEDO, B, CUMDPT, DOY, DP, HDAY,           !Input
      &        METMP, NLAYR,                               !Input
      &        PESW, SRAD, TAMP, TAV, TAVG, TMAX, WW, DSMID,!Input
@@ -241,7 +242,7 @@ C-----------------------------------------------------------------------
         PESW = AMAX1(0.0, TDL - TLL)    !cm
       ENDIF
 
-      CALL SOILT (
+      CALL SOILT (CONTROL,
      &    ALBEDO, B, CUMDPT, DOY, DP, HDAY,           !Input
      &    METMP, NLAYR,                               !Input
      &    PESW, SRAD, TAMP, TAV, TAVG, TMAX, WW, DSMID,!Input
@@ -286,7 +287,7 @@ C  Called : STEMP
 C  Calls  : None
 C=======================================================================
 
-      SUBROUTINE SOILT (
+      SUBROUTINE SOILT (CONTROL,
      &    ALBEDO, B, CUMDPT, DOY, DP, HDAY,               !Input
      &    METMP, NLAYR,                                   !Input
      &    PESW, SRAD, TAMP, TAV, TAVG, TMAX, WW, DSMID,   !Input
@@ -301,11 +302,14 @@ C=======================================================================
       IMPLICIT  NONE
       SAVE
 
+      TYPE (ControlType) CONTROL
+
+      
       CHARACTER*1 METMP
       INTEGER  K, L, DOY, NLAYR
       REAL ALBEDO, ALX, ATOT, B, CUMDPT, DD, DP, DT, FX
       REAL HDAY, PESW, SRAD, SRFTEMP, TA, TAMP, TAV, TAVG, TMAX
-      REAL WC, WW, ZD
+      REAL WC, WW, ZD, STAVG
       REAL TMA(5)
       REAL DSMID(NL)
       REAL ST(NL)
@@ -363,12 +367,136 @@ C=======================================================================
 
       TA = TAV + TAMP * COS(ALX) / 2.0
       DT = ATOT / 5.0 - TA
-
+      
       DO L = 1, NLAYR
         ZD    = -DSMID(L) / DD
         ST(L) = TAV + (TAMP / 2.0 * COS(ALX + ZD) + DT) * EXP(ZD)
         ST(L) = NINT(ST(L) * 1000.) / 1000.   !debug vs release fix
+
+       IF(L .LE. 2) THEN        
+        !EXP 1980
+        IF(CONTROL % FILEX .EQ. "NPDA8001.PNX" .AND. 
+     &   CONTROL % YRDOY .GE. 1980225) THEN
+         !IRRIGATED
+         IF(CONTROL % TRTNUM .EQ. 1) THEN
+          ST(L) = 25.1
+         !DROUGHT
+         ELSEIF(CONTROL % TRTNUM .EQ. 2) THEN
+          ST(L) = 28.4
+         !IRRIGATED + HEAT
+         ELSEIF(CONTROL % TRTNUM .EQ. 3) THEN
+          ST(L) = 34.1
+         !DROUGHT + COLD
+         ELSEIF(CONTROL % TRTNUM .EQ. 4) THEN
+          ST(L) = 24.4
+         ENDIF
+         
+        !EXP 1981
+        ELSEIF(CONTROL % FILEX .EQ. "NPDA8101.PNX" .AND. 
+     &   CONTROL % YRDOY .GE. 1981210) THEN
+         !IRRIGATED
+         IF(CONTROL % TRTNUM .EQ. 1) THEN
+          ST(L) = 23.8
+         !DROUGHT + HEATED
+         ELSEIF(CONTROL % TRTNUM .EQ. 2) THEN
+          ST(L) = 30.5
+         !DROUGHT
+         ELSEIF(CONTROL % TRTNUM .EQ. 3) THEN
+          ST(L) = 25.7
+         !DROUGHT + COLD #1
+         ELSEIF(CONTROL % TRTNUM .EQ. 4) THEN
+          ST(L) = 19.8
+         !DROUGHT + COLD #2
+         ELSEIF(CONTROL % TRTNUM .EQ. 5) THEN
+          ST(L) = 21.3
+         !DROUGHT + COLD #3
+         ELSEIF(CONTROL % TRTNUM .EQ. 6) THEN
+          ST(L) = 22.9
+         ENDIF
+
+        !EXP 1982
+        ELSEIF(CONTROL % FILEX .EQ. "NPDA8201.PNX" .AND. 
+     &   CONTROL % YRDOY .GE. 1982209) THEN
+         !IRRIGATED
+         IF(CONTROL % TRTNUM .EQ. 1) THEN
+          ST(L) = 25.6
+         !DROUGHT #6
+         ELSEIF(CONTROL % TRTNUM .EQ. 2) THEN
+          ST(L) = 24.6
+         !DROUGHT #5
+         ELSEIF(CONTROL % TRTNUM .EQ. 3) THEN
+          ST(L) = 26.3
+         !DROUGHT #4
+         ELSEIF(CONTROL % TRTNUM .EQ. 4) THEN
+          ST(L) = 27.8
+         !DROUGHT #3
+         ELSEIF(CONTROL % TRTNUM .EQ. 5) THEN
+          ST(L) = 29.6
+         !DROUGHT #2
+         ELSEIF(CONTROL % TRTNUM .EQ. 6) THEN
+          ST(L) = 31.3
+         ENDIF
+         
+        !EXP 1983
+        ELSEIF(CONTROL % FILEX .EQ. "NPDA8301.PNX") THEN
+         !IRRIGATED
+         IF(CONTROL % TRTNUM .EQ. 1) THEN
+          ST(L) = 25.9
+         !D20
+         ELSEIF(CONTROL % TRTNUM .EQ. 2 .AND. 
+     &   CONTROL % YRDOY .GE. 1983247) THEN
+          ST(L) = 28.9
+         !D30
+         ELSEIF(CONTROL % TRTNUM .EQ. 3 .AND. 
+     &   CONTROL % YRDOY .GE. 1983237) THEN
+          ST(L) = 29.6
+         !D40
+         ELSEIF(CONTROL % TRTNUM .EQ. 4 .AND. 
+     &   CONTROL % YRDOY .GE. 1983227) THEN
+          ST(L) = 30.2
+         !D50
+         ELSEIF(CONTROL % TRTNUM .EQ. 5 .AND. 
+     &   CONTROL % YRDOY .GE. 1983217) THEN
+          ST(L) = 30.5
+         ELSEIF(CONTROL % TRTNUM .EQ. 6 .AND. 
+     &   CONTROL % YRDOY .GE. 1983217) THEN
+          ST(L) = 29.4
+         ENDIF
+        !EXP 1984
+        ELSEIF(CONTROL % FILEX .EQ. "NPDA8401.PNX" .AND. 
+     &   CONTROL % YRDOY .GE. 1984214) THEN
+         !DROUGHT
+         IF(CONTROL % TRTNUM .EQ. 1) ST(L) = 29.1       
+           
+
+        !EXP 1994
+        ELSEIF(CONTROL % FILEX .EQ. "NPDA9401.PNX" .AND. 
+     &   CONTROL % YRDOY .GE. 1994213) THEN
+         IF(CONTROL % TRTNUM .EQ. 1) ST(L) = 30 
+
+        !EXP 1995         
+        ELSEIF(CONTROL % FILEX .EQ. "NPDA9501.PNX" .AND. 
+     &   CONTROL % YRDOY .GE. 1995206) THEN
+         IF(CONTROL % TRTNUM .EQ. 1) ST(L) = 30
+      
+        !EXP 1996
+        ELSEIF(CONTROL % FILEX .EQ. "NPDA9601.PNX" .AND. 
+     &   CONTROL % YRDOY .GE. 1996218) THEN
+        
+         IF(CONTROL % TRTNUM .EQ. 1) ST(L) = 30.0       
+
+        !EXP 1997
+        ELSEIF(CONTROL % FILEX .EQ. "NPDA9701.PNX" .AND. 
+     &   CONTROL % YRDOY .GE. 1997238) THEN
+        
+         IF(CONTROL % TRTNUM .EQ. 1) ST(L) = 30.5   
+
+        ENDIF
+        
+        
+       ENDIF
       END DO
+
 
 !     FO: Compute Hourly Soil Temperature based on first layer only
 !     for Aflatoxin.
@@ -377,11 +505,57 @@ C=======================================================================
 !     Added: soil T for surface litter layer.
 !     NB: this should be done by adding array element 0 to ST(L). Now
 !     temporarily done differently.
-      SRFTEMP = TAV + (TAMP / 2. * COS(ALX) + DT)
+
+      !ALTERING SURFACE TEMP
+      IF(CONTROL % FILEX .EQ. "NPDA8001.PNX" .AND. 
+     &   CONTROL % YRDOY .GE. 1980225 .OR.
+      
+     &   CONTROL % FILEX .EQ. "NPDA8101.PNX" .AND. 
+     &   CONTROL % YRDOY .GE. 1981210 .OR.
+     &   CONTROL % FILEX .EQ. "NPDA8201.PNX" .AND. 
+     &   CONTROL % YRDOY .GE. 1982209 .OR.
+
+     &   CONTROL % FILEX .EQ. "NPDA8301.PNX" .AND.
+     &   CONTROL % TRTNUM .EQ. 1 .OR.
+     &   CONTROL % FILEX .EQ. "NPDA8301.PNX" .AND.
+     &   CONTROL % TRTNUM .EQ. 2 .OR.    
+     &   CONTROL % FILEX .EQ. "NPDA8301.PNX" .AND.
+     &   CONTROL % TRTNUM .EQ. 3 .AND. 
+     &   CONTROL % YRDOY .GE. 1983247 .OR.
+     &   CONTROL % FILEX .EQ. "NPDA8301.PNX" .AND.
+     &   CONTROL % TRTNUM .EQ. 4 .AND. 
+     &   CONTROL % YRDOY .GE. 1983237 .OR.  
+     &   CONTROL % FILEX .EQ. "NPDA8301.PNX" .AND.
+     &   CONTROL % TRTNUM .EQ. 5 .AND. 
+     &   CONTROL % YRDOY .GE. 1983227 .OR.
+     &   CONTROL % FILEX .EQ. "NPDA8301.PNX" .AND.
+     &   CONTROL % TRTNUM .EQ. 6 .AND. 
+     &   CONTROL % YRDOY .GE. 1983217 .OR.
+     
+     &   CONTROL % FILEX .EQ. "NPDA8401.PNX" .AND. 
+     &   CONTROL % YRDOY .GE. 1984214 .OR. 
+     
+     &   CONTROL % FILEX .EQ. "NPDA9401.PNX" .AND. 
+     &   CONTROL % YRDOY .GE. 1994213 .OR.
+     
+     &   CONTROL % FILEX .EQ. "NPDA9501.PNX" .AND. 
+     &   CONTROL % YRDOY .GE. 1995206 .OR. 
+     
+     &   CONTROL % FILEX .EQ. "NPDA9601.PNX" .AND. 
+     &   CONTROL % YRDOY .GE. 1996218 .OR.
+     
+     &   CONTROL % FILEX .EQ. "NPDA9701.PNX" .AND. 
+     &   CONTROL % YRDOY .GE. 1997239) THEN
+        SRFTEMP = ST(1)
+      
+      ELSE
+        SRFTEMP = TAV + (TAMP / 2. * COS(ALX) + DT)
+      ENDIF
 !     Note: ETPHOT calculates TSRF(3), which is surface temperature by
 !     canopy zone.  1=sunlit leaves.  2=shaded leaves.  3= soil.  Should
 !     we combine these variables?  At this time, only SRFTEMP is used
 !     elsewhere. - chp 11/27/01
+      !WRITE(*,*) CONTROL % YRDOY, "SRFTEMP", SRFTEMP
 !-----------------------------------------------------------------------
       RETURN
       END SUBROUTINE SOILT
@@ -444,6 +618,7 @@ C=======================================================================
 ! SRAD     Solar radiation (MJ/m2-d)
 ! SRFTEMP  Temperature of soil surface litter (°C)
 ! ST(L)    Soil temperature in soil layer L (°C)
+! STAVG    Average Soil temperature across NLAYR (#)
 ! SW(L)    Volumetric soil water content in layer L
 !           (cm3 [water] / cm3 [soil])
 ! SWI(L)   Initial soil water content (cm3[water]/cm3[soil])
