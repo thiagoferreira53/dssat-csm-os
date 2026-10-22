@@ -36,6 +36,7 @@
         REAL SRAD, ST(0:20), SW(20), TMAX, TMIN, TRWUP
         REAL UH2O(20), WINDSP, LAI
         REAL DAYLT, RWUMX, RWUPM, SNOW, TFAC4, TXDF, YVALXY
+        REAL P1DXT, OPT
         
         CHARACTER*1 ISWNIT, ISWWAT, RNMODE  !IDETG, 
         
@@ -392,6 +393,19 @@ C-GH      IF (snow.GT.0) THEN
               NFT = AMIN1(1.0,AMAX1(0.0,(LANC-LMNCT)/(LCNCT-LMNCT)))
             ENDIF
           ENDIF
+
+          ! Temperature factor for daylength response
+          ! TXDF increases from 0 (at Tbase=0C) to 1 (at Tmax=40C)
+          TXDF = TMEAN/30.0
+          TXDF = AMIN1(1.0, TXDF)
+          
+          !OPT = 0
+          IF(OPT.EQ.1) TXDF = AMAX1(0.0, TXDF)
+          ! If TXDF is less than 0.3, set to 0.3
+          OPT = 2
+          IF(OPT.EQ.2) TXDF = AMAX1(0.3, TXDF)      
+                    
+          P1DXT = P1D*TXDF
           
           ! Daylength factor. 
           IF (ISTAGE.GE.7) THEN
@@ -401,7 +415,8 @@ C-GH      IF (snow.GT.0) THEN
               ! Below is a possible age adjusted P1D. But not used
               P1DA=AMAX1(.0,(P1D/10000)-(P1D/10000)*P1DAFAC*(LNUMSD-5.))
               !P1DAFAC is an age adjustment factor
-              DF = AMAX1(0.0,AMIN1(1.0,1.0-(P1D/10000)*(P1DT-DAYLT)**2))
+              !DF = AMAX1(0.0,AMIN1(1.0,1.0-(P1D/10000)*(P1DT-DAYLT)**2))
+              DF = AMAX1(0.0,AMIN1(1.0,1.0-(P1DXT/10000)*(P1DT-DAYLT)**2))
             ELSE                      ! Short day plants
               DF = 
      &         AMAX1(0.0,AMIN1(1.0,1.0-(ABS(P1D)/1000)*(DAYLT-P1DT)))
@@ -412,20 +427,8 @@ C-GH      IF (snow.GT.0) THEN
             DF = 1.0
           ENDIF
 
-          ! Temperature factor for daylength response
-          ! TXDF increases from 0 (at Tbase=0C) to 1 (at Tmax=40C)
-          IF (TMEAN.LE.0.0) THEN
-            TXDF = 0.0
-          ELSEIF (TMEAN.GE.30.0) THEN
-            TXDF = 1.0
-          ELSE
-            TXDF = TMEAN / 30.0
-          ENDIF
           
-          ! If TXDF is less than 0.3, set to 0.3
-          TXDF = MAX(0.3, TXDF)
-          
-          DF = DF * TXDF
+          !DF = DF * TXDF
           
           ! Light intensity factor
           LIF2 = 1.0
